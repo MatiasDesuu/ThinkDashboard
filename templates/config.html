@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Configuration</title>
+    <script src="/static/js/theme-loader.js"></script>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link rel="stylesheet" href="/static/css/config.css">
     <link rel="stylesheet" href="/static/css/modal.css">
     <link rel="stylesheet" href="/static/css/search.css">
     <link rel="stylesheet" href="/static/css/status.css">
+    <link rel="stylesheet" href="/static/css/select.css">
     <link rel="stylesheet" href="/static/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,55 +44,50 @@
                     <label for="columns-input">Columns per row:</label>
                     <input type="number" id="columns-input" min="1" max="6" value="3">
                 </div>
-                <div class="form-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="new-tab-checkbox">
-                        Open links in new tab
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="show-title-checkbox">
-                        Show dashboard title
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="show-date-checkbox">
-                        Show date
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="show-config-button-checkbox">
-                        Show config button
-                    </label>
-                </div>
-                <div class="form-group device-settings-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="device-specific-checkbox">
-                        Use device-specific settings
-                    </label>
-                    <div class="device-settings-info">
-                        <small>When enabled, settings will be stored locally on this device instead of the global settings.json file.</small>
+                
+                <div class="checkbox-tree">
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="new-tab-checkbox">
+                            <span class="checkbox-text">Open links in new tab</span>
+                        </label>
                     </div>
-                </div>
-                <div class="form-group status-settings-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="show-status-checkbox">
-                        Show bookmark status (online/offline)
-                    </label>
-                    <div class="status-settings-info">
-                        <small>When enabled, bookmarks will show their online/offline status with colored indicators.</small>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-title-checkbox">
+                            <span class="checkbox-text">Show dashboard title</span>
+                        </label>
                     </div>
-                    <div class="status-settings-nested">
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-date-checkbox">
+                            <span class="checkbox-text">Show date</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-config-button-checkbox">
+                            <span class="checkbox-text">Show config button</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="device-specific-checkbox">
+                            <span class="checkbox-text">Use device-specific settings</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-status-checkbox">
+                            <span class="checkbox-text">Show bookmark status (online/offline)</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item checkbox-tree-child">
+                        <span class="tree-symbol">└──</span>
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-ping-checkbox">
-                            Show ping times (ms)
+                            <span class="checkbox-text">Show ping times (ms)</span>
                         </label>
-                        <div class="status-settings-info">
-                            <small>Display response times next to online bookmarks.</small>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -120,6 +118,7 @@
 
     <script src="/static/js/modal.js"></script>
     <script src="/static/js/status.js"></script>
+    <script src="/static/js/select.js"></script>
     <script src="/static/js/config.js"></script>
 </body>
 </html>

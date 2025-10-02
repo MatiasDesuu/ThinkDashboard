@@ -21,6 +21,14 @@ class ConfigManager {
         this.setupDOM();
         this.setupEventListeners();
         this.renderConfig();
+        
+        // Initialize custom selects after everything is loaded and values are set
+        if (typeof initCustomSelects === 'function') {
+            // Small delay to ensure DOM is fully ready
+            setTimeout(() => {
+                initCustomSelects();
+            }, 0);
+        }
     }
 
     async loadData() {
@@ -53,6 +61,11 @@ class ConfigManager {
         // Apply theme
         document.body.className = this.settings.theme;
         document.body.setAttribute('data-theme', this.settings.theme);
+        
+        // Use ThemeLoader to apply theme styles and prevent FOUC
+        if (window.ThemeLoader) {
+            window.ThemeLoader.applyTheme(this.settings.theme);
+        }
     }
 
     setupEventListeners() {
@@ -238,15 +251,15 @@ class ConfigManager {
         div.innerHTML = `
             <input type="text" value="${bookmark.name}" placeholder="Bookmark name" data-bookmark-index="${index}" data-field="name">
             <input type="url" value="${bookmark.url}" placeholder="https://example.com" data-bookmark-index="${index}" data-field="url">
-            <input type="text" value="${bookmark.shortcut || ''}" placeholder="Keys (e.g. Y, YS, YC)" maxlength="5" data-bookmark-index="${index}" data-field="shortcut" name="shortcut">
+            <input type="text" value="${bookmark.shortcut || ''}" placeholder="Keys (Y, YS, YC)" maxlength="5" data-bookmark-index="${index}" data-field="shortcut" name="shortcut">
             <select data-bookmark-index="${index}" data-field="category">
                 <option value="">No category</option>
                 ${categoryOptions}
             </select>
             <div class="bookmark-status-toggle">
-                <label>
+                <label class="checkbox-label">
                     <input type="checkbox" ${bookmark.checkStatus ? 'checked' : ''} data-bookmark-index="${index}" data-field="checkStatus">
-                    Check status
+                    <span class="checkbox-text">status</span>
                 </label>
             </div>
             <button type="button" class="btn btn-danger" onclick="configManager.removeBookmark(${index})">Remove</button>
@@ -277,6 +290,14 @@ class ConfigManager {
                 }
             });
         });
+
+        // Initialize custom select for the category dropdown
+        const selectElement = div.querySelector('select');
+        if (selectElement && typeof CustomSelect !== 'undefined') {
+            // Mark as initialized to prevent double initialization
+            selectElement.dataset.customSelectInit = 'true';
+            new CustomSelect(selectElement);
+        }
 
         return div;
     }

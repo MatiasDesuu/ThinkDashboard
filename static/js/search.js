@@ -46,6 +46,12 @@ class SearchComponent {
                 return;
             }
 
+            // Don't trigger shortcuts if any modifier key is pressed
+            // This allows browser shortcuts like Ctrl+W, Ctrl+R, Ctrl+Q, etc.
+            if (e.ctrlKey || e.altKey || e.metaKey) {
+                return;
+            }
+
             this.handleKeyPress(e);
         });
 
