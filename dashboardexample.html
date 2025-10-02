@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Source Code Pro', monospace;
+            background-color: #000;
+            color: #E5E7EB;
+            background-image: radial-gradient(#1F2937 1px, transparent 1px);
+            background-size: 15px 15px;
+        }
+        .service-link {
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+        .service-link:hover {
+            transform: translateX(4px);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-10 lg:p-16 relative">
+        
+        <header class="relative mb-24 md:mb-32">
+            <div id="date-element" class="absolute top-0 left-0 text-base md:text-lg text-gray-600 font-black tracking-widest uppercase"></div>
+            <div class="absolute top-4 left-2 transform -rotate-3">
+                <h1 class="text-6xl md:text-8xl font-black text-gray-200 opacity-80 select-none">dashboard</h1>
+            </div>
+        </header>
+
+        <div id="bookmarks-container" class="absolute top-6 right-6 md:right-10 lg:right-16 text-right">
+        </div>
+
+        <main id="dashboard-layout" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-12 md:gap-16">
+        </main>
+        
+    </div>
+
+    <script>
+        const serviceCategories = {
+            'media': {
+                order: 'md:col-span-2 lg:col-span-2',
+                services: [
+                    { name: 'plex', url: 'http://192.168.1.200:32400/' },
+                    { name: 'sonarr', url: 'http://192.168.1.118:10002/' },
+                    { name: 'radarr', url: 'http://192.168.1.118:10001/' },
+                    { name: 'bazarr', url: 'http://192.168.1.118:10005/' },
+                    { name: 'prowlarr', url: 'http://192.168.1.118:10004/' },
+                    { name: 'navidrome', url: 'http://192.168.1.118:10013/' },
+                ]
+            },
+            'infrastructure': {
+                order: 'md:col-start-3 lg:col-start-3',
+                services: [
+                    { name: 'gotify', url: 'http://192.168.1.102/' },
+                    { name: 'gitea', url: 'http://192.168.1.119:10009/' },
+                    { name: 'portainer services', url: 'https://192.168.1.119:9443/' },
+                ]
+            },
+            'utilities': {
+                order: 'md:col-start-1 md:row-start-2 lg:col-start-4 lg:row-start-1',
+                services: [
+                    { name: 'immich', url: 'http://192.168.1.111:10001/' },
+                    { name: 'truenas', url: 'http://192.168.1.127' },
+                    { name: 'transmission', url: 'http://192.168.1.118:10008/' },
+                    { name: 'home assistant', url: 'http://192.168.1.27:8123/' },
+                    { name: 'proxmox 1', url: 'https://192.168.1.13:8006/' },
+                    { name: 'proxmox 2', url: 'https://192.168.1.4:8006/' },
+                ]
+            }
+        };
+
+        const bookmarks = [
+            { name: 'proxmox scripts', url: 'https://community-scripts.github.io/ProxmoxVE/scripts' },
+            { name: 'selfh.st', url: 'https://selfh.st/' },
+            { name: 'lkly.net', url: 'https://lkly.net' },
+            { name: 'killshot.rip', url: 'https://killshot.rip' },
+        ];
+
+        const layoutContainer = document.getElementById('dashboard-layout');
+
+        async function checkStatus(service, linkElement, statusElement) {
+            linkElement.classList.remove('text-green-400', 'text-red-500');
+            linkElement.classList.add('text-yellow-400');
+            statusElement.textContent = '...';
+            
+            const startTime = performance.now();
+            try {
+                await fetch(`${service.url}?t=${new Date().getTime()}`, { mode: 'no-cors', cache: 'no-cache' });
+                const endTime = performance.now();
+                const responseTime = Math.round(endTime - startTime);
+                
+                linkElement.classList.remove('text-yellow-400');
+                linkElement.classList.add('text-green-400');
+                statusElement.textContent = `${responseTime}ms`;
+
+            } catch (error) {
+                linkElement.classList.remove('text-yellow-400');
+                linkElement.classList.add('text-red-500');
+                statusElement.textContent = 'offline';
+            }
+        }
+
+        function initializeDashboard() {
+            layoutContainer.innerHTML = '';
+            
+            Object.keys(serviceCategories).forEach(key => {
+                const category = serviceCategories[key];
+                const categoryWrapper = document.createElement('div');
+                categoryWrapper.className = `space-y-4 ${category.order}`;
+
+                const categoryTitle = document.createElement('h2');
+                categoryTitle.className = 'text-lg text-gray-600 font-bold tracking-wider';
+                categoryTitle.textContent = `// ${key}`;
+                categoryWrapper.appendChild(categoryTitle);
+
+                const serviceList = document.createElement('div');
+                serviceList.className = 'flex flex-col items-start space-y-2';
+
+                category.services.sort((a, b) => a.name.localeCompare(b.name)).forEach(service => {
+                    const serviceItem = document.createElement('a');
+                    serviceItem.href = service.url;
+                    serviceItem.target = '_blank';
+                    serviceItem.rel = 'noopener noreferrer';
+                    serviceItem.className = 'service-link text-xl md:text-2xl font-semibold text-gray-300 hover:text-white';
+                    
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = 'status-text text-sm font-normal ml-3';
+
+                    serviceItem.textContent = service.name;
+                    serviceItem.appendChild(statusSpan);
+
+                    serviceList.appendChild(serviceItem);
+
+                    checkStatus(service, serviceItem, statusSpan);
+                });
+                
+                categoryWrapper.appendChild(serviceList);
+                layoutContainer.appendChild(categoryWrapper);
+            });
+        }
+
+        function refreshAllStatuses() {
+            document.querySelectorAll('.service-link').forEach(link => {
+                const serviceName = link.textContent.replace(/\d+ms$|offline$|\.\.\.$/, '').trim();
+                const statusSpan = link.querySelector('.status-text');
+                
+                let foundService = null;
+                Object.values(serviceCategories).forEach(cat => {
+                    const s = cat.services.find(s => s.name === serviceName);
+                    if (s) foundService = s;
+                });
+                
+                if (foundService && statusSpan) {
+                    checkStatus(foundService, link, statusSpan);
+                }
+            });
+        }
+
+        function renderBookmarks() {
+            const container = document.getElementById('bookmarks-container');
+            if (!container) return;
+
+            const list = document.createElement('div');
+            list.className = 'flex flex-row items-center justify-end space-x-6';
+            
+            bookmarks.forEach(service => {
+                const item = document.createElement('a');
+                item.href = service.url;
+                item.target = '_blank';
+                item.rel = 'noopener noreferrer';
+                item.className = 'text-base text-gray-400 hover:text-white hover:underline transition-colors duration-200';
+                item.textContent = service.name;
+                list.appendChild(item);
+            });
+            container.appendChild(list);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add date to the header
+            const dateElement = document.getElementById('date-element');
+            const today = new Date();
+            const month = today.toLocaleString('default', { month: 'short' });
+            const day = String(today.getDate()).padStart(2, '0');
+            const year = today.getFullYear();
+            dateElement.textContent = `${month}/${day}/${year}`;
+
+            renderBookmarks();
+            initializeDashboard();
+            setInterval(refreshAllStatuses, 30000);
+        });
+    </script>
+</body>
+</html>

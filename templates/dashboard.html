@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="/static/css/modal.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
+</head>
+<body class="{{.Theme}}" data-theme="{{.Theme}}">
+    <div class="container">
+        <header class="header">
+            {{if .ShowDate}}<div id="date-element" class="date"></div>{{end}}
+            {{if .ShowTitle}}<div class="title-wrapper">
+                <h1 class="title">dashboard</h1>
+            </div>{{end}}
+            {{if .ShowConfigButton}}<div class="config-link">
+                <a href="/config">config</a>
+            </div>{{end}}
+        </header>
+
+        <main id="dashboard-layout" class="dashboard-grid">
+            <div class="loading">Loading bookmarks...</div>
+        </main>
+    </div>
+
+    <div id="shortcut-search" class="shortcut-search">
+        <div class="search-container">
+            <div class="search-prompt">
+                <span class="search-prefix">></span>
+                <span id="search-query" class="search-query"></span>
+                <span class="search-cursor">_</span>
+            </div>
+            <div id="search-matches" class="search-matches"></div>
+        </div>
+    </div>
+
+    <script src="/static/js/modal.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

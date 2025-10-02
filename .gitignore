@@ -1,0 +1,21 @@
+# Data directory
+data/
+
+# Binaries
+main
+thinkdashboard
+*.exe
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Go build cache
+go.sum

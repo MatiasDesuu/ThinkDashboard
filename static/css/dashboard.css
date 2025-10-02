@@ -1,0 +1,401 @@
+/* Dashboard Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Source Code Pro', monospace;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme Variables */
+body.dark {
+    background-color: #000;
+    color: #E5E7EB;
+    background-image: radial-gradient(#1F2937 1px, transparent 1px);
+    background-size: 15px 15px;
+}
+
+body.light {
+    background-color: #F9FAFB;
+    color: #1F2937;
+    background-image: radial-gradient(#E5E7EB 1px, transparent 1px);
+    background-size: 15px 15px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+}
+
+/* Header */
+.header {
+    position: relative;
+    margin-bottom: 3rem;
+    min-height: 80px;
+}
+
+.date {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 1.125rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+body.dark .date {
+    color: #6B7280;
+}
+
+body.light .date {
+    color: #9CA3AF;
+}
+
+.title-wrapper {
+    position: absolute;
+    top: 1rem;
+    left: 0.5rem;
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 900;
+    opacity: 0.8;
+    user-select: none;
+}
+
+body.dark .title {
+    color: #E5E7EB;
+}
+
+body.light .title {
+    color: #374151;
+}
+
+.config-link {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.config-link a {
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+body.dark .config-link a {
+    color: #9CA3AF;
+}
+
+body.dark .config-link a:hover {
+    color: #E5E7EB;
+}
+
+body.light .config-link a {
+    color: #6B7280;
+}
+
+body.light .config-link a:hover {
+    color: #1F2937;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    gap: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.dashboard-grid.columns-1 {
+    grid-template-columns: 1fr;
+}
+
+.dashboard-grid.columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.dashboard-grid.columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.dashboard-grid.columns-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.dashboard-grid.columns-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.dashboard-grid.columns-6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+/* Category */
+.category {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.category-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+body.dark .category-title {
+    color: #6B7280;
+}
+
+body.light .category-title {
+    color: #9CA3AF;
+}
+
+.category-title::before {
+    content: '// ';
+}
+
+/* Bookmarks */
+.bookmarks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.bookmark-link {
+    display: block;
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+body.dark .bookmark-link {
+    color: #D1D5DB;
+}
+
+body.dark .bookmark-link:hover {
+    color: #F9FAFB;
+    transform: translateX(4px);
+}
+
+body.light .bookmark-link {
+    color: #374151;
+}
+
+body.light .bookmark-link:hover {
+    color: #111827;
+    transform: translateX(4px);
+}
+
+.bookmark-shortcut {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+
+
+/* Shortcut Search - Con fondo sutil pero visible */
+.shortcut-search {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Source Code Pro', monospace;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+}
+
+body.dark .shortcut-search {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+body.light .shortcut-search {
+    background: rgba(249, 250, 251, 0.3);
+}
+
+.shortcut-search.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.search-container {
+    padding: 1.5rem 2rem;
+    max-width: 400px;
+    width: 90%;
+    border: 1px solid;
+}
+
+body.dark .search-container {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: #374151;
+}
+
+body.light .search-container {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #D1D5DB;
+}
+
+.search-prompt {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    justify-content: flex-start;
+}
+
+.search-prefix {
+    margin-right: 0.5rem;
+}
+
+body.dark .search-prefix {
+    color: #10B981;
+}
+
+body.light .search-prefix {
+    color: #059669;
+}
+
+.search-query {
+    min-width: 2ch;
+}
+
+body.dark .search-query {
+    color: #E5E7EB;
+}
+
+body.light .search-query {
+    color: #1F2937;
+}
+
+.search-cursor {
+    animation: blink 1s infinite;
+    margin-left: 0.25rem;
+}
+
+body.dark .search-cursor {
+    color: #E5E7EB;
+}
+
+body.light .search-cursor {
+    color: #1F2937;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.search-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.search-match {
+    padding: 0.5rem 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background: transparent;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+body.dark .search-match {
+    color: #D1D5DB;
+}
+
+body.dark .search-match:hover,
+body.dark .search-match.selected {
+    color: #F9FAFB;
+    transform: translateX(4px);
+}
+
+body.light .search-match {
+    color: #374151;
+}
+
+body.light .search-match:hover,
+body.light .search-match.selected {
+    color: #111827;
+    transform: translateX(4px);
+}
+
+.search-match-shortcut {
+    font-weight: 700;
+    margin-right: 1rem;
+    min-width: 3ch;
+    font-size: 0.875rem;
+}
+
+body.dark .search-match-shortcut {
+    color: #10B981;
+}
+
+body.light .search-match-shortcut {
+    color: #059669;
+}
+
+.search-match-name {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    font-size: 1.125rem;
+    opacity: 0.7;
+    grid-column: 1 / -1;
+}
+
+/* Visibility Controls */
+body[data-show-title="false"] .title-wrapper {
+    display: none;
+}
+
+body[data-show-date="false"] .date {
+    display: none;
+}
+
+/* Adjust title position when date is hidden */
+body[data-show-date="false"] .title-wrapper {
+    top: 0.5rem;
+}
+
+/* Adjust date position when title is hidden */
+body[data-show-title="false"] .date {
+    top: 0.5rem;
+}
+
+/* Hide config button when showConfigButton is false */
+body[data-show-config-button="false"] .config-button {
+    display: none;
+}
+

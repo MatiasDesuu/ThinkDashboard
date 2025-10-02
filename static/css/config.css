@@ -1,0 +1,417 @@
+/* Configuration Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Source Code Pro', monospace;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme Variables */
+body.dark {
+    background-color: #000;
+    color: #E5E7EB;
+    background-image: radial-gradient(#1F2937 1px, transparent 1px);
+    background-size: 15px 15px;
+}
+
+body.light {
+    background-color: #F9FAFB;
+    color: #1F2937;
+    background-image: radial-gradient(#E5E7EB 1px, transparent 1px);
+    background-size: 15px 15px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 900;
+    opacity: 0.8;
+}
+
+.back-link {
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+body.dark .back-link {
+    color: #9CA3AF;
+}
+
+body.dark .back-link:hover {
+    color: #E5E7EB;
+}
+
+body.light .back-link {
+    color: #6B7280;
+}
+
+body.light .back-link:hover {
+    color: #1F2937;
+}
+
+/* Config Main */
+.config-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.config-section {
+    border: none;
+    padding: 0;
+}
+
+.config-section h2 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+}
+
+body.dark .config-section h2 {
+    color: #6B7280;
+}
+
+body.light .config-section h2 {
+    color: #9CA3AF;
+}
+
+.config-section h2::before {
+    content: '// ';
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    min-width: 120px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.375rem 0.5rem;
+    border: none;
+    border-bottom: 1px solid;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.875rem;
+    transition: border-color 0.3s ease;
+    max-width: 200px;
+}
+
+body.dark .form-group input,
+body.dark .form-group select {
+    border-color: #4B5563;
+    color: #E5E7EB;
+    background-color: #000;
+}
+
+body.dark .form-group select option {
+    background-color: #1F2937;
+    color: #E5E7EB;
+}
+
+body.dark .form-group input:focus,
+body.dark .form-group select:focus {
+    outline: none;
+    border-color: #9CA3AF;
+}
+
+body.light .form-group input,
+body.light .form-group select {
+    border-color: #D1D5DB;
+    color: #1F2937;
+}
+
+body.light .form-group input:focus,
+body.light .form-group select:focus {
+    outline: none;
+    border-color: #6B7280;
+}
+
+.checkbox-label {
+    display: flex !important;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    max-width: none !important;
+    border: 1px solid !important;
+    border-radius: 2px;
+}
+
+/* Lists */
+.categories-list,
+.bookmarks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.category-item,
+.bookmark-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid;
+}
+
+body.dark .category-item,
+body.dark .bookmark-item {
+    border-color: #2D3748;
+}
+
+body.light .category-item,
+body.light .bookmark-item {
+    border-color: #E5E7EB;
+}
+
+.category-item input,
+.bookmark-item input,
+.bookmark-item select {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.375rem 0.5rem;
+    border: none;
+    border-bottom: 1px solid;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.875rem;
+    transition: border-color 0.3s ease;
+}
+
+body.dark .category-item input,
+body.dark .bookmark-item input,
+body.dark .bookmark-item select {
+    border-color: #4B5563;
+    color: #E5E7EB;
+    background-color: #000;
+}
+
+body.dark .bookmark-item select option {
+    background-color: #1F2937;
+    color: #E5E7EB;
+}
+
+body.dark .category-item input:focus,
+body.dark .bookmark-item input:focus,
+body.dark .bookmark-item select:focus {
+    outline: none;
+    border-color: #9CA3AF;
+}
+
+body.light .category-item input,
+body.light .bookmark-item input,
+body.light .bookmark-item select {
+    border-color: #D1D5DB;
+    color: #1F2937;
+}
+
+body.light .category-item input:focus,
+body.light .bookmark-item input:focus,
+body.light .bookmark-item select:focus {
+    outline: none;
+    border-color: #6B7280;
+}
+
+.bookmark-item input[name="shortcut"] {
+    flex: 0 0 100px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0;
+}
+
+.btn-primary,
+.btn-success {
+    border: 1px solid;
+}
+
+body.dark .btn-primary,
+body.dark .btn-success {
+    color: #E5E7EB;
+    border-color: #4B5563;
+}
+
+body.dark .btn-primary:hover,
+body.dark .btn-success:hover {
+    background-color: #1F2937;
+    transform: translateX(2px);
+}
+
+body.light .btn-primary,
+body.light .btn-success {
+    color: #1F2937;
+    border-color: #D1D5DB;
+}
+
+body.light .btn-primary:hover,
+body.light .btn-success:hover {
+    background-color: #F3F4F6;
+    transform: translateX(2px);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid;
+}
+
+body.dark .btn-secondary {
+    color: #9CA3AF;
+    border-color: #4B5563;
+}
+
+body.dark .btn-secondary:hover {
+    color: #E5E7EB;
+    background-color: #1F2937;
+}
+
+body.light .btn-secondary {
+    color: #6B7280;
+    border-color: #D1D5DB;
+}
+
+body.light .btn-secondary:hover {
+    color: #1F2937;
+    background-color: #F3F4F6;
+}
+
+.btn-danger {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border: 1px solid;
+}
+
+body.dark .btn-danger {
+    color: #F87171;
+    border-color: #7F1D1D;
+}
+
+body.dark .btn-danger:hover {
+    background-color: #7F1D1D;
+    color: #FFFFFF;
+}
+
+body.light .btn-danger {
+    color: #DC2626;
+    border-color: #FCA5A5;
+}
+
+body.light .btn-danger:hover {
+    background-color: #DC2626;
+    color: #FFFFFF;
+}
+
+/* Config Actions Top */
+.config-actions-top {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+body.dark .config-actions-top {
+    border-color: #2D3748;
+    background-color: #000;
+}
+
+body.light .config-actions-top {
+    border-color: #E5E7EB;
+    background-color: #F9FAFB;
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body.dark .notification.success {
+    background-color: #1F2937;
+    color: #10B981;
+    border-color: #059669;
+}
+
+body.dark .notification.error {
+    background-color: #1F2937;
+    color: #F87171;
+    border-color: #DC2626;
+}
+
+body.light .notification.success {
+    background-color: #F0FDF4;
+    color: #059669;
+    border-color: #10B981;
+}
+
+body.light .notification.error {
+    background-color: #FEF2F2;
+    color: #DC2626;
+    border-color: #F87171;
+}
+
