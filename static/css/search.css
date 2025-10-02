@@ -1,0 +1,157 @@
+/* Search Component Styles */
+
+/* Shortcut Search - Con fondo sutil pero visible */
+.shortcut-search {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Source Code Pro', monospace;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+}
+
+body.dark .shortcut-search {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+body.light .shortcut-search {
+    background: rgba(249, 250, 251, 0.3);
+}
+
+.shortcut-search.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.search-container {
+    padding: 1.5rem 2rem;
+    max-width: 400px;
+    width: 90%;
+    border: 1px solid;
+}
+
+body.dark .search-container {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: #374151;
+}
+
+body.light .search-container {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #D1D5DB;
+}
+
+.search-prompt {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    justify-content: flex-start;
+}
+
+.search-prefix {
+    margin-right: 0.5rem;
+}
+
+body.dark .search-prefix {
+    color: #10B981;
+}
+
+body.light .search-prefix {
+    color: #059669;
+}
+
+.search-query {
+    min-width: 2ch;
+}
+
+body.dark .search-query {
+    color: #E5E7EB;
+}
+
+body.light .search-query {
+    color: #1F2937;
+}
+
+.search-cursor {
+    animation: blink 1s infinite;
+    margin-left: 0.25rem;
+}
+
+body.dark .search-cursor {
+    color: #E5E7EB;
+}
+
+body.light .search-cursor {
+    color: #1F2937;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.search-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.search-match {
+    padding: 0.5rem 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background: transparent;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+body.dark .search-match {
+    color: #D1D5DB;
+}
+
+body.dark .search-match:hover,
+body.dark .search-match.selected {
+    color: #F9FAFB;
+    transform: translateX(4px);
+}
+
+body.light .search-match {
+    color: #374151;
+}
+
+body.light .search-match:hover,
+body.light .search-match.selected {
+    color: #111827;
+    transform: translateX(4px);
+}
+
+.search-match-shortcut {
+    font-weight: 700;
+    margin-right: 1rem;
+    min-width: 3ch;
+    font-size: 0.875rem;
+}
+
+body.dark .search-match-shortcut {
+    color: #10B981;
+}
+
+body.light .search-match-shortcut {
+    color: #059669;
+}
+
+.search-match-name {
+    font-size: 1rem;
+    font-weight: 600;
+}
