@@ -7,11 +7,12 @@ import (
 )
 
 type Bookmark struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	URL      string `json:"url"`
-	Shortcut string `json:"shortcut"`
-	Category string `json:"category"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	URL         string `json:"url"`
+	Shortcut    string `json:"shortcut"`
+	Category    string `json:"category"`
+	CheckStatus bool   `json:"checkStatus"`
 }
 
 type Category struct {
@@ -26,6 +27,8 @@ type Settings struct {
 	ShowTitle        bool   `json:"showTitle"`
 	ShowDate         bool   `json:"showDate"`
 	ShowConfigButton bool   `json:"showConfigButton"`
+	ShowStatus       bool   `json:"showStatus"`
+	ShowPing         bool   `json:"showPing"`
 }
 
 type Store interface {
@@ -141,6 +144,8 @@ func (fs *FileStore) GetSettings() Settings {
 			ShowTitle:        true,
 			ShowDate:         true,
 			ShowConfigButton: true,
+			ShowStatus:       false,
+			ShowPing:         false,
 		}
 	}
 

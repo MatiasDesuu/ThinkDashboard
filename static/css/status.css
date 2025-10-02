@@ -1,0 +1,220 @@
+/* Status Monitoring Styles */
+
+/* Status indicators */
+.bookmark-link.status-checking {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.bookmark-link.status-online {
+    position: relative;
+}
+
+.bookmark-link.status-offline {
+    position: relative;
+}
+
+/* Status colors for different themes */
+body.dark .bookmark-link.status-online {
+    color: #10B981; /* green-500 */
+}
+
+body.light .bookmark-link.status-online {
+    color: #059669; /* green-600 */
+}
+
+body.dark .bookmark-link.status-offline {
+    color: #EF4444; /* red-500 */
+}
+
+body.light .bookmark-link.status-offline {
+    color: #DC2626; /* red-600 */
+}
+
+body.dark .bookmark-link.status-checking {
+    color: #F59E0B; /* yellow-500 */
+}
+
+body.light .bookmark-link.status-checking {
+    color: #D97706; /* yellow-600 */
+}
+
+/* Status text (ping time) */
+.status-text {
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-left: 0.5rem;
+    margin-right: 0.25rem;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    display: inline;
+}
+
+body.dark .status-text {
+    color: #9CA3AF; /* gray-400 */
+}
+
+body.light .status-text {
+    color: #6B7280; /* gray-500 */
+}
+
+/* Online status ping time */
+body.dark .bookmark-link.status-online .status-text {
+    color: #34D399; /* green-400 */
+}
+
+body.light .bookmark-link.status-online .status-text {
+    color: #10B981; /* green-500 */
+}
+
+/* Offline status text */
+body.dark .bookmark-link.status-offline .status-text {
+    color: #F87171; /* red-400 */
+}
+
+body.light .bookmark-link.status-offline .status-text {
+    color: #EF4444; /* red-500 */
+}
+
+/* Checking status text */
+body.dark .bookmark-link.status-checking .status-text {
+    color: #FCD34D; /* yellow-300 */
+}
+
+body.light .bookmark-link.status-checking .status-text {
+    color: #F59E0B; /* yellow-500 */
+}
+
+/* Status indicator dots - HIDDEN */
+.status-indicator {
+    display: none;
+}
+
+/* Status indicator styles removed - indicator hidden */
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Configuration toggle for individual bookmarks */
+.bookmark-status-toggle {
+    margin-left: 0.75rem;
+    font-size: 0.75rem;
+}
+
+.bookmark-status-toggle input[type="checkbox"] {
+    width: 14px !important;
+    height: 14px !important;
+    margin-right: 0.25rem;
+}
+
+.bookmark-status-toggle label {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+body.dark .bookmark-status-toggle label {
+    color: #9CA3AF;
+}
+
+body.light .bookmark-status-toggle label {
+    color: #6B7280;
+}
+
+/* Status monitoring settings group */
+.status-settings-group {
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+body.dark .status-settings-group {
+    border-color: #374151;
+    background: rgba(31, 41, 55, 0.3);
+}
+
+body.light .status-settings-group {
+    border-color: #D1D5DB;
+    background: rgba(249, 250, 251, 0.5);
+}
+
+.status-settings-info {
+    margin-top: 0.5rem;
+    margin-left: 1.625rem; /* Align with checkbox text */
+}
+
+.status-settings-info small {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    line-height: 1.4;
+}
+
+/* Nested setting for ping display */
+.status-settings-nested {
+    margin-left: 1.625rem;
+    margin-top: 0.75rem;
+    padding-left: 1rem;
+    border-left: 2px solid;
+}
+
+body.dark .status-settings-nested {
+    border-left-color: #374151;
+}
+
+body.light .status-settings-nested {
+    border-left-color: #D1D5DB;
+}
+
+/* Animation for status changes */
+.bookmark-link {
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.bookmark-link:hover {
+    transform: translateX(2px);
+}
+
+/* Refresh button for manual status check */
+.status-refresh-btn {
+    margin-left: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border: 1px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+body.dark .status-refresh-btn {
+    background: rgba(31, 41, 55, 0.8);
+    border-color: #4B5563;
+    color: #9CA3AF;
+}
+
+body.light .status-refresh-btn {
+    background: rgba(249, 250, 251, 0.8);
+    border-color: #D1D5DB;
+    color: #6B7280;
+}
+
+body.dark .status-refresh-btn:hover {
+    background: rgba(75, 85, 99, 0.8);
+    border-color: #6B7280;
+    color: #E5E7EB;
+}
+
+body.light .status-refresh-btn:hover {
+    background: rgba(229, 231, 235, 0.8);
+    border-color: #9CA3AF;
+    color: #374151;
+}

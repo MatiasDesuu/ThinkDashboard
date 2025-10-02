@@ -6,6 +6,8 @@
     <title>Dashboard Configuration</title>
     <link rel="stylesheet" href="/static/css/config.css">
     <link rel="stylesheet" href="/static/css/modal.css">
+    <link rel="stylesheet" href="/static/css/search.css">
+    <link rel="stylesheet" href="/static/css/status.css">
     <link rel="stylesheet" href="/static/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,6 +65,33 @@
                         Show config button
                     </label>
                 </div>
+                <div class="form-group device-settings-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="device-specific-checkbox">
+                        Use device-specific settings
+                    </label>
+                    <div class="device-settings-info">
+                        <small>When enabled, settings will be stored locally on this device instead of the global settings.json file.</small>
+                    </div>
+                </div>
+                <div class="form-group status-settings-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="show-status-checkbox">
+                        Show bookmark status (online/offline)
+                    </label>
+                    <div class="status-settings-info">
+                        <small>When enabled, bookmarks will show their online/offline status with colored indicators.</small>
+                    </div>
+                    <div class="status-settings-nested">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-ping-checkbox">
+                            Show ping times (ms)
+                        </label>
+                        <div class="status-settings-info">
+                            <small>Display response times next to online bookmarks.</small>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="config-section">
@@ -90,6 +119,7 @@
     </div>
 
     <script src="/static/js/modal.js"></script>
+    <script src="/static/js/status.js"></script>
     <script src="/static/js/config.js"></script>
 </body>
 </html>

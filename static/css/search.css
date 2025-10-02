@@ -155,3 +155,29 @@ body.light .search-match-shortcut {
     font-size: 1rem;
     font-weight: 600;
 }
+
+/* Special styling for config entry */
+
+body.dark .search-match.config-entry {
+    border-left-color: #F59E0B;
+}
+
+body.light .search-match.config-entry {
+    border-left-color: #D97706;
+}
+
+body.dark .search-match.config-entry .search-match-shortcut {
+    color: #F59E0B;
+}
+
+body.light .search-match.config-entry .search-match-shortcut {
+    color: #D97706;
+}
+
+body.dark .search-match.config-entry .search-match-name {
+    color: #FCD34D;
+}
+
+body.light .search-match.config-entry .search-match-name {
+    color: #92400E;
+}

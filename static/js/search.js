@@ -152,9 +152,18 @@ class SearchComponent {
         this.searchMatches = [];
         this.shortcuts.forEach((bookmark, shortcut) => {
             if (shortcut.startsWith(this.currentQuery.toLowerCase())) {
-                this.searchMatches.push({ shortcut, bookmark });
+                this.searchMatches.push({ shortcut, bookmark, type: 'bookmark' });
             }
         });
+
+        // Check if 'config' matches the current query
+        if ('config'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
+            this.searchMatches.push({ 
+                shortcut: 'config', 
+                bookmark: { name: 'Configuration', url: '/config' }, 
+                type: 'config' 
+            });
+        }
 
         // Sort matches by shortcut length (shorter first)
         this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
@@ -211,14 +220,20 @@ class SearchComponent {
 
         this.searchMatches.forEach((match, index) => {
             const matchElement = document.createElement('div');
-            matchElement.className = `search-match ${index === this.selectedMatchIndex ? 'selected' : ''}`;
+            const baseClass = `search-match ${index === this.selectedMatchIndex ? 'selected' : ''}`;
+            const configClass = match.type === 'config' ? ' config-entry' : '';
+            matchElement.className = baseClass + configClass;
             matchElement.innerHTML = `
                 <span class="search-match-shortcut">${match.shortcut.toUpperCase()}</span>
                 <span class="search-match-name">${match.bookmark.name}</span>
             `;
             
             matchElement.addEventListener('click', () => {
-                this.openBookmark(match.bookmark);
+                if (match.type === 'config') {
+                    this.openConfig();
+                } else {
+                    this.openBookmark(match.bookmark);
+                }
             });
             
             matchesContainer.appendChild(matchElement);
@@ -242,7 +257,11 @@ class SearchComponent {
     selectCurrentMatch() {
         if (this.searchMatches.length > 0 && this.selectedMatchIndex >= 0) {
             const selectedMatch = this.searchMatches[this.selectedMatchIndex];
-            this.openBookmark(selectedMatch.bookmark);
+            if (selectedMatch.type === 'config') {
+                this.openConfig();
+            } else {
+                this.openBookmark(selectedMatch.bookmark);
+            }
         }
         // If no matches, do nothing (keep search open)
     }
@@ -260,6 +279,18 @@ class SearchComponent {
             } else {
                 window.location.href = bookmark.url;
             }
+        }, 100);
+    }
+
+    openConfig() {
+        // Close search first if it's active
+        if (this.searchActive) {
+            this.closeSearch();
+        }
+        
+        // Navigate to config page
+        setTimeout(() => {
+            window.location.href = '/config';
         }, 100);
     }
 

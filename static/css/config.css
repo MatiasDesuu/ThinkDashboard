@@ -173,6 +173,35 @@ body.light .form-group select:focus {
     border-radius: 2px;
 }
 
+/* Device Settings Specific */
+.device-settings-group {
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+body.dark .device-settings-group {
+    border-color: #374151;
+    background: rgba(31, 41, 55, 0.3);
+}
+
+body.light .device-settings-group {
+    border-color: #D1D5DB;
+    background: rgba(249, 250, 251, 0.5);
+}
+
+.device-settings-info {
+    margin-top: 0.5rem;
+    margin-left: 1.625rem; /* Align with checkbox text */
+}
+
+.device-settings-info small {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    line-height: 1.4;
+}
+
 /* Lists */
 .categories-list,
 .bookmarks-list {

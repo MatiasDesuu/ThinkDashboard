@@ -9,16 +9,20 @@ class Dashboard {
             columnsPerRow: 3,
             showTitle: true,
             showDate: true,
-            showConfigButton: true
+            showConfigButton: true,
+            showStatus: false,
+            showPing: false
         };
-        this.shortcuts = new Map();
+        this.searchComponent = null;
+        this.statusMonitor = null;
         this.init();
     }
 
     async init() {
         await this.loadData();
         this.setupDOM();
-        this.setupKeyboardShortcuts();
+        this.initializeSearchComponent();
+        this.initializeStatusMonitor();
         this.renderDashboard();
     }
 
@@ -32,22 +36,23 @@ class Dashboard {
 
             this.bookmarks = await bookmarksRes.json();
             this.categories = await categoriesRes.json();
-            this.settings = await settingsRes.json();
+            
+            // Load settings from localStorage or server based on device-specific flag
+            const deviceSpecific = localStorage.getItem('deviceSpecificSettings') === 'true';
+            if (deviceSpecific) {
+                const deviceSettings = localStorage.getItem('dashboardSettings');
+                this.settings = deviceSettings ? JSON.parse(deviceSettings) : await settingsRes.json();
+            } else {
+                this.settings = await settingsRes.json();
+            }
         } catch (error) {
             console.error('Error loading data:', error);
         }
     }
 
     setupDOM() {
-        // Set up date if visible
-        const dateElement = document.getElementById('date-element');
-        if (dateElement && this.settings.showDate) {
-            const today = new Date();
-            const month = today.toLocaleString('default', { month: 'short' });
-            const day = String(today.getDate()).padStart(2, '0');
-            const year = today.getFullYear();
-            dateElement.textContent = `${day}/${month}/${year}`;
-        }
+        // Control date visibility and set up if visible
+        this.updateDateVisibility();
 
         // Apply theme
         document.body.className = this.settings.theme;
@@ -55,6 +60,12 @@ class Dashboard {
         document.body.setAttribute('data-show-title', this.settings.showTitle);
         document.body.setAttribute('data-show-date', this.settings.showDate);
         document.body.setAttribute('data-show-config-button', this.settings.showConfigButton);
+
+        // Control title visibility dynamically
+        this.updateTitleVisibility();
+        
+        // Control config button visibility dynamically  
+        this.updateConfigButtonVisibility();
 
         // Apply columns setting
         const grid = document.getElementById('dashboard-layout');
@@ -85,243 +96,38 @@ class Dashboard {
         }
     }
 
-    setupKeyboardShortcuts() {
-        // Clear existing shortcuts
-        this.shortcuts.clear();
-        this.currentQuery = '';
-        this.searchActive = false;
-        this.searchMatches = [];
-        this.selectedMatchIndex = 0;
-
-        // Build shortcuts map
-        this.bookmarks.forEach(bookmark => {
-            if (bookmark.shortcut && bookmark.shortcut.trim()) {
-                this.shortcuts.set(bookmark.shortcut.toLowerCase(), bookmark);
-            }
-        });
-
-        // Add keyboard event listener
-        document.addEventListener('keydown', (e) => {
-            // Don't trigger shortcuts if user is typing in an input
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                return;
-            }
-
-            this.handleKeyPress(e);
-        });
-
-        // Close search on escape
-        document.addEventListener('keyup', (e) => {
-            if (e.key === 'Escape') {
-                this.closeSearch();
-            }
-        });
-        
-        // Close search when clicking outside
-        document.addEventListener('click', (e) => {
-            const searchElement = document.getElementById('shortcut-search');
-            const searchContainer = document.querySelector('.search-container');
-            
-            if (this.searchActive && searchElement && searchContainer) {
-                // If clicked on the backdrop (not on the search container)
-                if (e.target === searchElement) {
-                    this.closeSearch();
-                }
-            }
-        });
-    }
-
-    handleKeyPress(e) {
-        const key = e.key.toUpperCase();
-        
-        // Handle special keys
-        if (key === 'ESCAPE') {
-            this.closeSearch();
-            return;
-        }
-        
-        if (key === 'ENTER' && this.searchActive) {
-            e.preventDefault();
-            this.selectCurrentMatch();
-            return;
-        }
-        
-        if (key === 'ARROWUP' && this.searchActive) {
-            e.preventDefault();
-            this.navigateMatches(-1);
-            return;
-        }
-        
-        if (key === 'ARROWDOWN' && this.searchActive) {
-            e.preventDefault();
-            this.navigateMatches(1);
-            return;
-        }
-        
-        if (key === 'BACKSPACE' && this.searchActive) {
-            e.preventDefault();
-            this.removeLastChar();
-            return;
-        }
-
-        // Only handle alphanumeric keys
-        if (!/^[A-Z0-9]$/.test(key)) {
-            return;
-        }
-
-        e.preventDefault();
-        this.addToQuery(key);
-    }
-
-    addToQuery(key) {
-        this.currentQuery += key;
-        
-        // Check for exact match first
-        const exactMatch = this.shortcuts.get(this.currentQuery.toLowerCase());
-        if (exactMatch) {
-            // If it's a single character or no other shortcuts start with this query
-            const hasLongerMatches = Array.from(this.shortcuts.keys()).some(shortcut => 
-                shortcut !== this.currentQuery.toLowerCase() && 
-                shortcut.startsWith(this.currentQuery.toLowerCase())
-            );
-            
-            if (!hasLongerMatches) {
-                // Open immediately if no longer matches exist
-                this.openBookmark(exactMatch);
-                this.resetQuery();
-                return;
-            }
-        }
-        
-        // Show search interface and find matches
-        this.updateSearch();
-    }
-
-    removeLastChar() {
-        if (this.currentQuery.length > 0) {
-            this.currentQuery = this.currentQuery.slice(0, -1);
-            if (this.currentQuery.length === 0) {
-                this.closeSearch();
-            } else {
-                this.updateSearch();
-            }
+    initializeSearchComponent() {
+        // Initialize search component with current data
+        if (window.SearchComponent) {
+            this.searchComponent = new window.SearchComponent(this.bookmarks, this.settings);
+        } else {
+            console.warn('SearchComponent not found. Make sure search.js is loaded.');
         }
     }
 
-    updateSearch() {
-        // Find matching shortcuts
-        this.searchMatches = [];
-        this.shortcuts.forEach((bookmark, shortcut) => {
-            if (shortcut.startsWith(this.currentQuery.toLowerCase())) {
-                this.searchMatches.push({ shortcut, bookmark });
-            }
-        });
-
-        // Sort matches by shortcut length (shorter first)
-        this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
-
-        // Always show search interface, even with no matches
-        this.showSearch();
-        this.selectedMatchIndex = 0;
-        this.renderSearchMatches();
-    }
-
-    showSearch() {
-        this.searchActive = true;
-        const searchElement = document.getElementById('shortcut-search');
-        const queryElement = document.getElementById('search-query');
-        
-        if (searchElement && queryElement) {
-            queryElement.textContent = this.currentQuery;
-            searchElement.classList.add('show');
+    // Method to update search component when data changes
+    updateSearchComponent() {
+        if (this.searchComponent) {
+            this.searchComponent.updateData(this.bookmarks, this.settings);
         }
     }
 
-    closeSearch() {
-        this.searchActive = false;
-        this.resetQuery();
-        const searchElement = document.getElementById('shortcut-search');
-        if (searchElement) {
-            searchElement.classList.remove('show');
+    initializeStatusMonitor() {
+        // Initialize status monitor with current settings
+        if (window.StatusMonitor) {
+            this.statusMonitor = new window.StatusMonitor(this.settings);
+            // Make dashboard instance available globally for status monitor
+            window.dashboardInstance = this;
+        } else {
+            console.warn('StatusMonitor not found. Make sure status.js is loaded.');
         }
     }
 
-    resetQuery() {
-        this.currentQuery = '';
-        this.searchMatches = [];
-        this.selectedMatchIndex = 0;
-    }
-
-    renderSearchMatches() {
-        const matchesContainer = document.getElementById('search-matches');
-        if (!matchesContainer) return;
-
-        matchesContainer.innerHTML = '';
-
-        if (this.searchMatches.length === 0) {
-            // Show "no matches" message
-            const noMatchElement = document.createElement('div');
-            noMatchElement.className = 'search-match';
-            noMatchElement.innerHTML = `
-                <span class="search-match-shortcut">—</span>
-                <span class="search-match-name">No matches found</span>
-            `;
-            matchesContainer.appendChild(noMatchElement);
-            return;
+    // Method to update status monitor when settings change
+    updateStatusMonitor() {
+        if (this.statusMonitor) {
+            this.statusMonitor.updateSettings(this.settings);
         }
-
-        this.searchMatches.forEach((match, index) => {
-            const matchElement = document.createElement('div');
-            matchElement.className = `search-match ${index === this.selectedMatchIndex ? 'selected' : ''}`;
-            matchElement.innerHTML = `
-                <span class="search-match-shortcut">${match.shortcut.toUpperCase()}</span>
-                <span class="search-match-name">${match.bookmark.name}</span>
-            `;
-            
-            matchElement.addEventListener('click', () => {
-                this.openBookmark(match.bookmark);
-            });
-            
-            matchesContainer.appendChild(matchElement);
-        });
-    }
-
-    navigateMatches(direction) {
-        if (this.searchMatches.length === 0) return;
-        
-        this.selectedMatchIndex += direction;
-        
-        if (this.selectedMatchIndex < 0) {
-            this.selectedMatchIndex = this.searchMatches.length - 1;
-        } else if (this.selectedMatchIndex >= this.searchMatches.length) {
-            this.selectedMatchIndex = 0;
-        }
-        
-        this.renderSearchMatches();
-    }
-
-    selectCurrentMatch() {
-        if (this.searchMatches.length > 0 && this.selectedMatchIndex >= 0) {
-            const selectedMatch = this.searchMatches[this.selectedMatchIndex];
-            this.openBookmark(selectedMatch.bookmark);
-        }
-        // If no matches, do nothing (keep search open)
-    }
-
-    openBookmark(bookmark) {
-        // Close search first if it's active
-        if (this.searchActive) {
-            this.closeSearch();
-        }
-        
-        // Small delay to ensure search is closed before opening bookmark
-        setTimeout(() => {
-            if (this.settings.openInNewTab) {
-                window.open(bookmark.url, '_blank', 'noopener,noreferrer');
-            } else {
-                window.location.href = bookmark.url;
-            }
-        }, 100);
     }
 
 
@@ -351,6 +157,14 @@ class Dashboard {
             const uncategorizedCategory = { id: '', name: 'Other' };
             const categoryElement = this.createCategoryElement(uncategorizedCategory, uncategorizedBookmarks);
             container.appendChild(categoryElement);
+        }
+
+        // Update search component with current data
+        this.updateSearchComponent();
+        
+        // Initialize status monitoring after rendering
+        if (this.statusMonitor) {
+            this.statusMonitor.init(this.bookmarks);
         }
     }
 
@@ -401,6 +215,7 @@ class Dashboard {
         link.href = bookmark.url;
         link.className = 'bookmark-link';
         link.textContent = bookmark.name;
+        link.setAttribute('data-bookmark-id', bookmark.id);
         
         if (this.settings.openInNewTab) {
             link.target = '_blank';
@@ -416,6 +231,84 @@ class Dashboard {
         }
 
         return link;
+    }
+
+    updateTitleVisibility() {
+        let titleWrapper = document.querySelector('.title-wrapper');
+        
+        if (this.settings.showTitle) {
+            // Show title - create if it doesn't exist
+            if (!titleWrapper) {
+                titleWrapper = document.createElement('div');
+                titleWrapper.className = 'title-wrapper';
+                titleWrapper.innerHTML = '<h1 class="title">dashboard</h1>';
+                
+                // Insert after date element if it exists, otherwise at the beginning of header
+                const header = document.querySelector('.header');
+                const dateElement = document.getElementById('date-element');
+                if (dateElement) {
+                    header.insertBefore(titleWrapper, dateElement.nextSibling);
+                } else {
+                    header.insertBefore(titleWrapper, header.firstChild);
+                }
+            }
+        } else {
+            // Hide title - remove if it exists
+            if (titleWrapper) {
+                titleWrapper.remove();
+            }
+        }
+    }
+
+    updateConfigButtonVisibility() {
+        let configLink = document.querySelector('.config-link');
+        
+        if (this.settings.showConfigButton) {
+            // Show config button - create if it doesn't exist
+            if (!configLink) {
+                configLink = document.createElement('div');
+                configLink.className = 'config-link';
+                configLink.innerHTML = '<a href="/config">config</a>';
+                
+                // Add to header at the end
+                const header = document.querySelector('.header');
+                header.appendChild(configLink);
+            }
+        } else {
+            // Hide config button - remove if it exists
+            if (configLink) {
+                configLink.remove();
+            }
+        }
+    }
+
+    updateDateVisibility() {
+        let dateElement = document.getElementById('date-element');
+        
+        if (this.settings.showDate) {
+            // Show date - create if it doesn't exist
+            if (!dateElement) {
+                dateElement = document.createElement('div');
+                dateElement.id = 'date-element';
+                dateElement.className = 'date';
+                
+                // Insert at the beginning of header
+                const header = document.querySelector('.header');
+                header.insertBefore(dateElement, header.firstChild);
+            }
+            
+            // Set date content
+            const today = new Date();
+            const month = today.toLocaleString('default', { month: 'short' });
+            const day = String(today.getDate()).padStart(2, '0');
+            const year = today.getFullYear();
+            dateElement.textContent = `${day}/${month}/${year}`;
+        } else {
+            // Hide date - remove if it exists
+            if (dateElement) {
+                dateElement.remove();
+            }
+        }
     }
 }
 
