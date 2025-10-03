@@ -32,12 +32,17 @@ func main() {
 	// Routes
 	r.HandleFunc("/", handlers.Dashboard).Methods("GET")
 	r.HandleFunc("/config", handlers.Config).Methods("GET")
+	r.HandleFunc("/colors", handlers.Colors).Methods("GET")
 	r.HandleFunc("/api/bookmarks", handlers.GetBookmarks).Methods("GET")
 	r.HandleFunc("/api/bookmarks", handlers.SaveBookmarks).Methods("POST")
 	r.HandleFunc("/api/categories", handlers.GetCategories).Methods("GET")
 	r.HandleFunc("/api/categories", handlers.SaveCategories).Methods("POST")
 	r.HandleFunc("/api/settings", handlers.GetSettings).Methods("GET")
 	r.HandleFunc("/api/settings", handlers.SaveSettings).Methods("POST")
+	r.HandleFunc("/api/colors", handlers.GetColors).Methods("GET")
+	r.HandleFunc("/api/colors", handlers.SaveColors).Methods("POST")
+	r.HandleFunc("/api/colors/reset", handlers.ResetColors).Methods("POST")
+	r.HandleFunc("/api/theme.css", handlers.CustomThemeCSS).Methods("GET")
 
 	// Static files with proper MIME type handling
 	staticFS, _ := fs.Sub(embeddedFiles, "static")

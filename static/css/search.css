@@ -16,7 +16,7 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease;
-    background: var(--background-overlay);
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .shortcut-search.show {
@@ -28,7 +28,7 @@
     padding: 1.5rem 2rem;
     max-width: 400px;
     width: 90%;
-    border: 1px solid var(--border-modal);
+    border: 1px solid var(--border-primary);
     background: var(--background-modal);
 }
 
@@ -43,7 +43,7 @@
 
 .search-prefix {
     margin-right: 0.5rem;
-    color: var(--accent-green);
+    color: var(--accent-success);
 }
 
 .search-query {
@@ -77,12 +77,12 @@
     text-align: left;
     display: flex;
     align-items: center;
-    color: var(--text-secondary);
+    color: var(--text-primary);
 }
 
 .search-match:hover,
 .search-match.selected {
-    color: var(--text-light);
+    color: var(--text-primary);
     transform: translateX(4px);
 }
 
@@ -91,7 +91,7 @@
     margin-right: 1rem;
     min-width: 3ch;
     font-size: 0.875rem;
-    color: var(--accent-green);
+    color: var(--accent-success);
 }
 
 .search-match-name {
@@ -101,9 +101,9 @@
 
 /* Special styling for config entry */
 .search-match.config-entry .search-match-shortcut {
-    color: var(--config-entry-accent);
+    color: var(--accent-warning);
 }
 
 .search-match.config-entry .search-match-name {
-    color: var(--config-entry-text);
+    color: var(--accent-warning);
 }

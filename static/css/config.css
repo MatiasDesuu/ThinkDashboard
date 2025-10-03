@@ -36,7 +36,7 @@ body {
     font-size: 0.875rem;
     font-weight: 600;
     transition: color 0.3s ease;
-    color: var(--text-tertiary);
+    color: var(--text-secondary);
 }
 
 .back-link:hover {
@@ -60,7 +60,7 @@ body {
     font-weight: 700;
     letter-spacing: 0.05em;
     margin-bottom: 1.5rem;
-    color: var(--text-muted);
+    color: var(--text-tertiary);
 }
 
 .config-section h2::before {
@@ -85,8 +85,8 @@ body {
 .form-group select {
     padding: 0.375rem 0.5rem;
     border: none;
-    border-bottom: 1px solid var(--border-input);
-    background: var(--background-select);
+    border-bottom: 1px solid var(--border-primary);
+    background: var(--background-primary);
     color: var(--text-primary);
     font-family: inherit;
     font-size: 0.875rem;
@@ -95,14 +95,14 @@ body {
 }
 
 .form-group select option {
-    background-color: var(--background-hover);
+    background-color: var(--background-secondary);
     color: var(--text-primary);
 }
 
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: var(--border-input-focus);
+    border-color: var(--text-secondary);
 }
 
 /* Checkbox Tree Structure (TUI/TTY Style) */
@@ -131,7 +131,7 @@ body {
     user-select: none;
     white-space: pre;
     font-family: 'Source Code Pro', monospace;
-    color: var(--tree-symbol);
+    color: var(--text-tertiary);
 }
 
 .checkbox-label {
@@ -151,13 +151,13 @@ body {
     width: 14px !important;
     height: 14px !important;
     max-width: none !important;
-    border: 1px solid var(--checkbox-border) !important;
+    border: 1px solid var(--border-primary) !important;
     border-radius: 0;
     cursor: pointer;
     position: relative;
     margin: 0;
     flex-shrink: 0;
-    background-color: var(--checkbox-bg);
+    background-color: var(--background-primary);
 }
 
 .checkbox-label input[type="checkbox"]:checked::before {
@@ -169,11 +169,11 @@ body {
     font-size: 10px;
     font-weight: 900;
     line-height: 1;
-    color: var(--checkbox-checked);
+    color: var(--accent-success);
 }
 
 .checkbox-label input[type="checkbox"]:checked {
-    border-color: var(--checkbox-checked-border) !important;
+    border-color: var(--accent-success) !important;
 }
 
 .checkbox-label input[type="checkbox"]:hover {
@@ -228,8 +228,8 @@ body {
     min-width: 120px;
     padding: 0.375rem 0.5rem;
     border: none;
-    border-bottom: 1px solid var(--border-input);
-    background: var(--background-select);
+    border-bottom: 1px solid var(--border-primary);
+    background: var(--background-primary);
     color: var(--text-primary);
     font-family: inherit;
     font-size: 0.875rem;
@@ -237,7 +237,7 @@ body {
 }
 
 .bookmark-item select option {
-    background-color: var(--background-hover);
+    background-color: var(--background-secondary);
     color: var(--text-primary);
 }
 
@@ -245,7 +245,7 @@ body {
 .bookmark-item input:focus,
 .bookmark-item select:focus {
     outline: none;
-    border-color: var(--border-input-focus);
+    border-color: var(--text-secondary);
 }
 
 .bookmark-item input[name="shortcut"] {
@@ -269,37 +269,37 @@ body {
 
 .btn-primary,
 .btn-success {
-    border: 1px solid var(--button-border);
-    color: var(--button-text);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
 }
 
 .btn-primary:hover,
 .btn-success:hover {
-    background-color: var(--button-hover-bg);
+    background-color: var(--background-secondary);
     transform: translateX(2px);
 }
 
 .btn-secondary {
     background-color: transparent;
-    border: 1px solid var(--button-border);
-    color: var(--button-secondary-text);
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
 }
 
 .btn-secondary:hover {
-    color: var(--button-text);
-    background-color: var(--button-hover-bg);
+    color: var(--text-primary);
+    background-color: var(--background-secondary);
 }
 
 .btn-danger {
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
-    border: 1px solid var(--button-danger-border);
-    color: var(--button-danger);
+    border: 1px solid var(--accent-error);
+    color: var(--accent-error);
 }
 
 .btn-danger:hover {
-    background-color: var(--button-danger);
-    color: var(--button-danger-hover-text);
+    background-color: var(--accent-error);
+    color: var(--background-primary);
 }
 
 /* Config Actions Top */
@@ -339,14 +339,14 @@ body {
 }
 
 .notification.success {
-    background-color: var(--notification-success-bg);
-    color: var(--notification-success-text);
-    border-color: var(--notification-success-border);
+    background-color: var(--background-secondary);
+    color: var(--accent-success);
+    border-color: var(--accent-success);
 }
 
 .notification.error {
-    background-color: var(--notification-error-bg);
-    color: var(--notification-error-text);
-    border-color: var(--notification-error-border);
+    background-color: var(--background-secondary);
+    color: var(--accent-error);
+    border-color: var(--accent-error);
 }
 

@@ -1,0 +1,167 @@
+/* Colors Page Styles - Minimalist Terminal Style */
+
+/* Main sections container */
+.config-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+.colors-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin-top: 1rem;
+}
+
+.color-group {
+    border: none;
+    padding: 0;
+}
+
+.color-group h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    text-transform: lowercase;
+    border: none;
+    padding: 0;
+}
+
+.color-group h3::before {
+    content: '// ';
+}
+
+.color-item {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.color-item:last-child {
+    margin-bottom: 0;
+}
+
+.color-item label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    min-width: 160px;
+    margin: 0;
+}
+
+.color-input-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex: 1;
+}
+
+.color-input-wrapper input[type="color"] {
+    width: 40px;
+    height: 28px;
+    border: none;
+    border-bottom: 1px solid var(--border-primary);
+    border-radius: 0;
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    transition: border-color 0.2s ease;
+}
+
+.color-input-wrapper input[type="color"]:hover {
+    border-bottom-color: var(--text-secondary);
+}
+
+.color-input-wrapper input[type="color"]:focus {
+    outline: none;
+    border-bottom-color: var(--text-primary);
+}
+
+.color-text-input {
+    flex: 1;
+    max-width: 200px;
+    padding: 0.375rem 0.5rem;
+    border: none;
+    border-bottom: 1px solid var(--border-primary);
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-primary);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+}
+
+.color-text-input-full {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.375rem 0.5rem;
+    border: none;
+    border-bottom: 1px solid var(--border-primary);
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-primary);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+}
+
+.color-text-input:focus,
+.color-text-input-full:focus {
+    outline: none;
+    border-bottom-color: var(--text-primary);
+}
+
+.color-text-input:hover,
+.color-text-input-full:hover {
+    border-bottom-color: var(--text-secondary);
+}
+
+/* Navigation links for colors page */
+.nav-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.nav-links .back-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.nav-links .back-link:hover {
+    color: var(--text-primary);
+}
+
+/* Responsive adjustments for colors page */
+@media (max-width: 768px) {
+    .color-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .color-item label {
+        min-width: auto;
+    }
+
+    .color-input-wrapper {
+        width: 100%;
+    }
+
+    .color-text-input {
+        max-width: 100%;
+    }
+
+    .color-input-wrapper input[type="color"] {
+        width: 36px;
+        height: 24px;
+    }
+}
+

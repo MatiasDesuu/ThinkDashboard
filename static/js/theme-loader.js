@@ -73,31 +73,21 @@
             existingStyle.remove();
         }
         
-        // Create and inject critical CSS
+        // Create and inject critical CSS using CSS variables
         const style = document.createElement('style');
         style.setAttribute('data-fouc-prevention', 'true');
         
         const backgroundImage = showBackgroundDots 
-            ? 'background-image: radial-gradient({{color}} 1px, transparent 1px) !important; background-size: 15px 15px !important;'
+            ? 'background-image: radial-gradient(var(--background-dots) 1px, transparent 1px) !important; background-size: 15px 15px !important;'
             : 'background-image: none !important;';
         
-        if (theme === 'light') {
-            style.textContent = `
-                body { 
-                    background-color: #F9FAFB !important;
-                    color: #1F2937 !important;
-                    ${backgroundImage.replace('{{color}}', '#E5E7EB')}
-                }
-            `;
-        } else {
-            style.textContent = `
-                body { 
-                    background-color: #000 !important;
-                    color: #E5E7EB !important;
-                    ${backgroundImage.replace('{{color}}', '#1F2937')}
-                }
-            `;
-        }
+        style.textContent = `
+            body { 
+                background-color: var(--background-primary) !important;
+                color: var(--text-primary) !important;
+                ${backgroundImage}
+            }
+        `;
         
         document.head.appendChild(style);
         

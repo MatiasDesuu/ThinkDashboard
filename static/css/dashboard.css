@@ -33,7 +33,7 @@ body {
     font-weight: 900;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--text-tertiary);
 }
 
 .title-wrapper {
@@ -61,7 +61,7 @@ body {
     font-size: 1rem;
     font-weight: 600;
     transition: color 0.3s ease;
-    color: var(--text-tertiary);
+    color: var(--text-secondary);
 }
 
 .config-link a:hover {
@@ -110,7 +110,7 @@ body {
     font-size: 1.125rem;
     font-weight: 700;
     letter-spacing: 0.05em;
-    color: var(--text-muted);
+    color: var(--text-tertiary);
 }
 
 .category-title::before {
@@ -132,11 +132,11 @@ body {
     transition: all 0.3s ease;
     position: relative;
     padding: 0.5rem 0;
-    color: var(--text-secondary);
+    color: var(--text-primary);
 }
 
 .bookmark-link:hover {
-    color: var(--text-light);
+    color: var(--text-primary);
     transform: translateX(4px);
 }
 

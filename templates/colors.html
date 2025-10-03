@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Customization</title>
+    <script src="/static/js/theme-loader.js"></script>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="stylesheet" href="/api/theme.css">
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <link rel="stylesheet" href="/static/css/config.css">
+    <link rel="stylesheet" href="/static/css/colors.css">
+    <link rel="stylesheet" href="/static/css/modal.css">
+    <link rel="stylesheet" href="/static/css/status.css">
+    <link rel="stylesheet" href="/static/css/font-size.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
+</head>
+<body class="{{.Theme}}" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
+    <div class="container">
+        <header class="header">
+            <h1 class="title">color customization</h1>
+            <div class="nav-links">
+                <a href="/config" class="back-link">← back to config</a>
+                <a href="/" class="back-link">← back to dashboard</a>
+            </div>
+        </header>
+
+        <div class="config-actions-top">
+            <button id="save-colors-btn" class="btn btn-success">Save Colors</button>
+            <button id="reset-colors-btn" class="btn btn-secondary">Reset to Defaults</button>
+            <button id="preview-theme-btn" class="btn btn-success">Toggle Preview (Light/Dark)</button>
+        </div>
+
+        <main class="config-main">
+            <div class="config-section">
+                <h2>Dark Theme Colors</h2>
+                <div class="colors-grid">
+                    <div class="color-group">
+                        <h3>text colors</h3>
+                        <div class="color-item">
+                            <label for="dark-text-primary">primary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-text-primary" data-theme="dark" data-prop="textPrimary">
+                                <input type="text" class="color-text-input" id="dark-text-primary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="dark-text-secondary">secondary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-text-secondary" data-theme="dark" data-prop="textSecondary">
+                                <input type="text" class="color-text-input" id="dark-text-secondary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="dark-text-tertiary">tertiary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-text-tertiary" data-theme="dark" data-prop="textTertiary">
+                                <input type="text" class="color-text-input" id="dark-text-tertiary-text" maxlength="25">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="color-group">
+                        <h3>background colors</h3>
+                        <div class="color-item">
+                            <label for="dark-background-primary">primary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-background-primary" data-theme="dark" data-prop="backgroundPrimary">
+                                <input type="text" class="color-text-input" id="dark-background-primary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="dark-background-secondary">secondary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-background-secondary" data-theme="dark" data-prop="backgroundSecondary">
+                                <input type="text" class="color-text-input" id="dark-background-secondary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="dark-background-dots">dots:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-background-dots" data-theme="dark" data-prop="backgroundDots">
+                                <input type="text" class="color-text-input" id="dark-background-dots-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="dark-background-modal">modal:</label>
+                            <div class="color-input-wrapper">
+                                <input type="text" class="color-text-input-full" id="dark-background-modal" data-theme="dark" data-prop="backgroundModal" maxlength="30" placeholder="rgba(0, 0, 0, 0.8)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="color-group">
+                        <h3>border colors</h3>
+                        <div class="color-item">
+                            <label for="dark-border-primary">primary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-border-primary" data-theme="dark" data-prop="borderPrimary">
+                                <input type="text" class="color-text-input" id="dark-border-primary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="dark-border-secondary">secondary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-border-secondary" data-theme="dark" data-prop="borderSecondary">
+                                <input type="text" class="color-text-input" id="dark-border-secondary-text" maxlength="25">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="color-group">
+                        <h3>accent colors</h3>
+                        <div class="color-item">
+                            <label for="dark-accent-success">success:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-accent-success" data-theme="dark" data-prop="accentSuccess">
+                                <input type="text" class="color-text-input" id="dark-accent-success-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="dark-accent-warning">warning:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-accent-warning" data-theme="dark" data-prop="accentWarning">
+                                <input type="text" class="color-text-input" id="dark-accent-warning-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="dark-accent-error">error:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="dark-accent-error" data-theme="dark" data-prop="accentError">
+                                <input type="text" class="color-text-input" id="dark-accent-error-text" maxlength="25">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <h2>Light Theme Colors</h2>
+                <div class="colors-grid">
+                    <div class="color-group">
+                        <h3>text colors</h3>
+                        <div class="color-item">
+                            <label for="light-text-primary">primary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-text-primary" data-theme="light" data-prop="textPrimary">
+                                <input type="text" class="color-text-input" id="light-text-primary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="light-text-secondary">secondary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-text-secondary" data-theme="light" data-prop="textSecondary">
+                                <input type="text" class="color-text-input" id="light-text-secondary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="light-text-tertiary">tertiary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-text-tertiary" data-theme="light" data-prop="textTertiary">
+                                <input type="text" class="color-text-input" id="light-text-tertiary-text" maxlength="25">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="color-group">
+                        <h3>background colors</h3>
+                        <div class="color-item">
+                            <label for="light-background-primary">primary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-background-primary" data-theme="light" data-prop="backgroundPrimary">
+                                <input type="text" class="color-text-input" id="light-background-primary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="light-background-secondary">secondary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-background-secondary" data-theme="light" data-prop="backgroundSecondary">
+                                <input type="text" class="color-text-input" id="light-background-secondary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="light-background-dots">dots:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-background-dots" data-theme="light" data-prop="backgroundDots">
+                                <input type="text" class="color-text-input" id="light-background-dots-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="light-background-modal">modal:</label>
+                            <div class="color-input-wrapper">
+                                <input type="text" class="color-text-input-full" id="light-background-modal" data-theme="light" data-prop="backgroundModal" maxlength="30" placeholder="rgba(255, 255, 255, 0.9)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="color-group">
+                        <h3>border colors</h3>
+                        <div class="color-item">
+                            <label for="light-border-primary">primary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-border-primary" data-theme="light" data-prop="borderPrimary">
+                                <input type="text" class="color-text-input" id="light-border-primary-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="light-border-secondary">secondary:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-border-secondary" data-theme="light" data-prop="borderSecondary">
+                                <input type="text" class="color-text-input" id="light-border-secondary-text" maxlength="25">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="color-group">
+                        <h3>accent colors</h3>
+                        <div class="color-item">
+                            <label for="light-accent-success">success:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-accent-success" data-theme="light" data-prop="accentSuccess">
+                                <input type="text" class="color-text-input" id="light-accent-success-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="light-accent-warning">warning:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-accent-warning" data-theme="light" data-prop="accentWarning">
+                                <input type="text" class="color-text-input" id="light-accent-warning-text" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="color-item">
+                            <label for="light-accent-error">error:</label>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="light-accent-error" data-theme="light" data-prop="accentError">
+                                <input type="text" class="color-text-input" id="light-accent-error-text" maxlength="25">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="notification" class="notification">
+        <span id="notification-message"></span>
+    </div>
+
+    <script src="/static/js/modal.js"></script>
+    <script src="/static/js/colors.js"></script>
+</body>
+</html>

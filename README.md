@@ -8,6 +8,7 @@ A lightweight, self-hosted bookmark dashboard built with Go and vanilla JavaScri
 - **Keyboard Shortcuts**: Assign single-key shortcuts to quickly open bookmarks
 - **Customizable Categories**: Organize bookmarks into categories
 - **Theme Support**: Dark and light themes
+- **Color Customization**: Fully customizable color scheme for both light and dark themes
 - **Responsive Design**: Works on desktop and mobile devices
 - **Self-hosted**: Runs as a single binary with embedded assets
 - **Docker Support**: Easy deployment with Docker
@@ -19,6 +20,9 @@ The main dashboard displays your bookmarks organized by categories with a clean,
 
 ### Configuration
 Access the configuration page at `/config` to manage your bookmarks, categories, and settings.
+
+### Color Customization
+Access the color customization page at `/colors` to personalize all colors in the application. Changes are saved in `data/colors.json` and can be reset to defaults at any time.
 
 ## Quick Start
 

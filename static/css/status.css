@@ -15,28 +15,16 @@
 }
 
 /* Status colors for different themes */
-body.dark .bookmark-link.status-online {
-    color: #10B981; /* green-500 */
+.bookmark-link.status-online {
+    color: var(--accent-success);
 }
 
-body.light .bookmark-link.status-online {
-    color: #059669; /* green-600 */
+.bookmark-link.status-offline {
+    color: var(--accent-error);
 }
 
-body.dark .bookmark-link.status-offline {
-    color: #EF4444; /* red-500 */
-}
-
-body.light .bookmark-link.status-offline {
-    color: #DC2626; /* red-600 */
-}
-
-body.dark .bookmark-link.status-checking {
-    color: #F59E0B; /* yellow-500 */
-}
-
-body.light .bookmark-link.status-checking {
-    color: #D97706; /* yellow-600 */
+.bookmark-link.status-checking {
+    color: var(--accent-warning);
 }
 
 /* Status text (ping time) */
@@ -48,41 +36,22 @@ body.light .bookmark-link.status-checking {
     opacity: 0.8;
     transition: opacity 0.3s ease;
     display: inline;
-}
-
-body.dark .status-text {
-    color: #9CA3AF; /* gray-400 */
-}
-
-body.light .status-text {
-    color: #6B7280; /* gray-500 */
+    color: var(--text-secondary);
 }
 
 /* Online status ping time */
-body.dark .bookmark-link.status-online .status-text {
-    color: #34D399; /* green-400 */
-}
-
-body.light .bookmark-link.status-online .status-text {
-    color: #10B981; /* green-500 */
+.bookmark-link.status-online .status-text {
+    color: var(--accent-success);
 }
 
 /* Offline status text */
-body.dark .bookmark-link.status-offline .status-text {
-    color: #F87171; /* red-400 */
-}
-
-body.light .bookmark-link.status-offline .status-text {
-    color: #EF4444; /* red-500 */
+.bookmark-link.status-offline .status-text {
+    color: var(--accent-error);
 }
 
 /* Checking status text */
-body.dark .bookmark-link.status-checking .status-text {
-    color: #FCD34D; /* yellow-300 */
-}
-
-body.light .bookmark-link.status-checking .status-text {
-    color: #F59E0B; /* yellow-500 */
+.bookmark-link.status-checking .status-text {
+    color: var(--accent-warning);
 }
 
 /* Status indicator dots - HIDDEN */
@@ -120,32 +89,16 @@ body.light .bookmark-link.status-checking .status-text {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-}
-
-body.dark .bookmark-status-toggle label {
-    color: #9CA3AF;
-}
-
-body.light .bookmark-status-toggle label {
-    color: #6B7280;
+    color: var(--text-secondary);
 }
 
 /* Status monitoring settings group */
 .status-settings-group {
-    border: 1px solid;
+    border: 1px solid var(--border-primary);
     border-radius: 8px;
     padding: 1rem;
     margin-top: 1rem;
-}
-
-body.dark .status-settings-group {
-    border-color: #374151;
-    background: rgba(31, 41, 55, 0.3);
-}
-
-body.light .status-settings-group {
-    border-color: #D1D5DB;
-    background: rgba(249, 250, 251, 0.5);
+    background: var(--background-secondary);
 }
 
 .status-settings-info {
@@ -164,15 +117,7 @@ body.light .status-settings-group {
     margin-left: 1.625rem;
     margin-top: 0.75rem;
     padding-left: 1rem;
-    border-left: 2px solid;
-}
-
-body.dark .status-settings-nested {
-    border-left-color: #374151;
-}
-
-body.light .status-settings-nested {
-    border-left-color: #D1D5DB;
+    border-left: 2px solid var(--border-primary);
 }
 
 /* Animation for status changes */
@@ -189,32 +134,16 @@ body.light .status-settings-nested {
     margin-left: 0.5rem;
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
-    border: 1px solid;
+    border: 1px solid var(--border-primary);
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
+    background: var(--background-secondary);
+    color: var(--text-secondary);
 }
 
-body.dark .status-refresh-btn {
-    background: rgba(31, 41, 55, 0.8);
-    border-color: #4B5563;
-    color: #9CA3AF;
-}
-
-body.light .status-refresh-btn {
-    background: rgba(249, 250, 251, 0.8);
-    border-color: #D1D5DB;
-    color: #6B7280;
-}
-
-body.dark .status-refresh-btn:hover {
-    background: rgba(75, 85, 99, 0.8);
-    border-color: #6B7280;
-    color: #E5E7EB;
-}
-
-body.light .status-refresh-btn:hover {
-    background: rgba(229, 231, 235, 0.8);
-    border-color: #9CA3AF;
-    color: #374151;
+.status-refresh-btn:hover {
+    background: var(--background-secondary);
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
 }

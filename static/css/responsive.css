@@ -56,6 +56,12 @@
     .section {
         margin-bottom: 2rem;
     }
+    
+    /* Colors page - stack vertically on tablet */
+    .config-main {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
 }
 
 /* Mobile Large (576px - 767px) */
@@ -162,6 +168,16 @@
     
     .modal-button-prefix {
         min-width: 2.5ch;
+    }
+    
+    /* Colors page - stack vertically on mobile */
+    .config-main {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .colors-grid {
+        gap: 2rem;
     }
 }
 
