@@ -108,7 +108,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
 }
 
 .title {
@@ -252,6 +251,7 @@ body {
     border-bottom: 1px solid var(--border-primary);
 }
 
+
 .form-group select option {
     background-color: var(--background-secondary);
     color: var(--text-primary);
@@ -362,6 +362,7 @@ body {
 }
 
 /* Lists */
+.pages-list,
 .categories-list,
 .bookmarks-list {
     display: flex;
@@ -370,6 +371,42 @@ body {
     margin-bottom: 1.5rem;
 }
 
+.page-selector-wrapper {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-selector-wrapper label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.page-selector {
+    flex: 1;
+    max-width: 300px;
+    padding: 0.5rem;
+    border: 1px solid var(--border-primary);
+    background: var(--background-primary);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.page-selector:focus {
+    outline: none;
+    border-color: var(--text-secondary);
+}
+
+.page-item,
 .category-item,
 .bookmark-item {
     display: flex;
@@ -377,6 +414,7 @@ body {
     align-items: center;
 }
 
+.page-item input,
 .category-item input,
 .bookmark-item input,
 .bookmark-item select {
@@ -397,6 +435,7 @@ body {
     color: var(--text-primary);
 }
 
+.page-item input:focus,
 .category-item input:focus,
 .bookmark-item input:focus,
 .bookmark-item select:focus {

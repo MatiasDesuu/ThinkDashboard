@@ -3,7 +3,10 @@ class Dashboard {
     constructor() {
         this.bookmarks = [];
         this.categories = [];
+        this.pages = [];
+        this.currentPageId = 'default';
         this.settings = {
+            currentPage: 'default',
             theme: 'dark',
             openInNewTab: true,
             columnsPerRow: 3,
@@ -25,19 +28,26 @@ class Dashboard {
         this.setupDOM();
         this.initializeSearchComponent();
         this.initializeStatusMonitor();
+        this.renderPageNavigation();
         this.renderDashboard();
+        
+        // Set initial page title
+        const firstPage = this.pages.length > 0 ? this.pages[0] : null;
+        if (firstPage) {
+            this.updatePageTitle(firstPage.name);
+        }
     }
 
     async loadData() {
         try {
-            const [bookmarksRes, categoriesRes, settingsRes] = await Promise.all([
-                fetch('/api/bookmarks'),
+            const [categoriesRes, pagesRes, settingsRes] = await Promise.all([
                 fetch('/api/categories'),
+                fetch('/api/pages'),
                 fetch('/api/settings')
             ]);
 
-            this.bookmarks = await bookmarksRes.json();
             this.categories = await categoriesRes.json();
+            this.pages = await pagesRes.json();
             
             // Load settings from localStorage or server based on device-specific flag
             const deviceSpecific = localStorage.getItem('deviceSpecificSettings') === 'true';
@@ -47,9 +57,75 @@ class Dashboard {
             } else {
                 this.settings = await settingsRes.json();
             }
+
+            // Always load the first page on dashboard load (not from settings)
+            this.currentPageId = this.pages.length > 0 ? this.pages[0].id : 'default';
+            
+            // Load bookmarks for first page
+            await this.loadPageBookmarks(this.currentPageId);
         } catch (error) {
             console.error('Error loading data:', error);
         }
+    }
+
+    async loadPageBookmarks(pageId) {
+        try {
+            const bookmarksRes = await fetch(`/api/bookmarks?page=${pageId}`);
+            this.bookmarks = await bookmarksRes.json();
+            this.currentPageId = pageId;
+            
+            // Update page title
+            const page = this.pages.find(p => p.id === pageId);
+            if (page) {
+                this.updatePageTitle(page.name);
+            }
+            
+            // Update search component and render
+            if (this.searchComponent) {
+                this.updateSearchComponent();
+            }
+            this.renderDashboard();
+        } catch (error) {
+            console.error('Error loading page bookmarks:', error);
+        }
+    }
+
+    updatePageTitle(pageName) {
+        const titleElement = document.querySelector('.title');
+        if (titleElement) {
+            titleElement.textContent = pageName || 'dashboard';
+        }
+    }
+
+    renderPageNavigation() {
+        const container = document.getElementById('page-navigation');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        this.pages.forEach((page, index) => {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = 'page-nav-btn';
+            if (page.id === this.currentPageId) {
+                pageBtn.classList.add('active');
+            }
+            // Show page number instead of name
+            pageBtn.textContent = (index + 1).toString();
+            pageBtn.setAttribute('title', page.name); // Show name in tooltip
+            pageBtn.addEventListener('click', () => {
+                // Update all buttons
+                container.querySelectorAll('.page-nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                pageBtn.classList.add('active');
+                
+                // Load bookmarks for selected page
+                this.loadPageBookmarks(page.id);
+                // Update title
+                this.updatePageTitle(page.name);
+            });
+            container.appendChild(pageBtn);
+        });
     }
 
     setupDOM() {
@@ -224,7 +300,7 @@ class Dashboard {
         link.href = bookmark.url;
         link.className = 'bookmark-link';
         link.textContent = bookmark.name;
-        link.setAttribute('data-bookmark-id', bookmark.id);
+        link.setAttribute('data-bookmark-url', bookmark.url);
         
         if (this.settings.openInNewTab) {
             link.target = '_blank';

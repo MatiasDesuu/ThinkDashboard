@@ -26,9 +26,14 @@
             {{if .ShowTitle}}<div class="title-wrapper">
                 <h1 class="title">dashboard</h1>
             </div>{{end}}
-            {{if .ShowConfigButton}}<div class="config-link">
-                <a href="/config">config</a>
-            </div>{{end}}
+            <div class="header-actions">
+                <div id="page-navigation" class="page-navigation">
+                    <!-- Pages will be loaded here -->
+                </div>
+                {{if .ShowConfigButton}}<div class="config-link">
+                    <a href="/config">config</a>
+                </div>{{end}}
+            </div>
         </header>
 
         <main id="dashboard-layout" class="dashboard-grid">

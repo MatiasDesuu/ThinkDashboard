@@ -1,0 +1,45 @@
+/* Drag and Drop Reorder Styles */
+
+/* Drag Handle */
+.drag-handle {
+    cursor: grab;
+    user-select: none;
+    color: var(--text-tertiary);
+    font-size: 1.25rem;
+    line-height: 1;
+    padding: 0.25rem;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.drag-handle:hover {
+    color: var(--text-secondary);
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Item States */
+.reorder-item.is-idle {
+    transition: transform 0.2s ease;
+}
+
+.reorder-item.is-draggable {
+    opacity: 0.8;
+    z-index: 1000;
+    cursor: grabbing;
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    padding: 0.5rem;
+    margin: -0.5rem;
+}
+
+.reorder-item.is-draggable .drag-handle {
+    cursor: grabbing;
+}
+
+/* Optional: Add visual feedback for drop zones */
+.reorder-container {
+    position: relative;
+}

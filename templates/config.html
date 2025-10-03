@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/api/theme.css">
     <link rel="stylesheet" href="/static/css/theme.css">
     <link rel="stylesheet" href="/static/css/config.css">
+    <link rel="stylesheet" href="/static/css/reorder.css">
     <link rel="stylesheet" href="/static/css/modal.css">
     <link rel="stylesheet" href="/static/css/search.css">
     <link rel="stylesheet" href="/static/css/status.css">
@@ -36,6 +37,7 @@
 
         <div class="tabs">
             <button class="tab-button active" data-tab="general">general</button>
+            <button class="tab-button" data-tab="pages">pages</button>
             <button class="tab-button" data-tab="categories">categories</button>
             <button class="tab-button" data-tab="bookmarks">bookmarks</button>
         </div>
@@ -123,9 +125,18 @@
             </div>
             </div>
 
+            <div class="tab-content" data-tab-content="pages">
+            <div class="config-section">
+                <div id="pages-list" class="pages-list js-list">
+                    <!-- Pages will be loaded here -->
+                </div>
+                <button id="add-page-btn" class="btn btn-primary">Add Page</button>
+            </div>
+            </div>
+
             <div class="tab-content" data-tab-content="categories">
             <div class="config-section">
-                <div id="categories-list" class="categories-list">
+                <div id="categories-list" class="categories-list js-list">
                     <!-- Categories will be loaded here -->
                 </div>
                 <button id="add-category-btn" class="btn btn-primary">Add Category</button>
@@ -134,7 +145,13 @@
 
             <div class="tab-content" data-tab-content="bookmarks">
             <div class="config-section">
-                <div id="bookmarks-list" class="bookmarks-list">
+                <div class="page-selector-wrapper">
+                    <label for="page-selector">Bookmarks page:</label>
+                    <select id="page-selector" class="page-selector">
+                        <!-- Pages will be loaded here -->
+                    </select>
+                </div>
+                <div id="bookmarks-list" class="bookmarks-list js-list">
                     <!-- Bookmarks will be loaded here -->
                 </div>
                 <button id="add-bookmark-btn" class="btn btn-primary">Add Bookmark</button>
@@ -151,6 +168,16 @@
     <script src="/static/js/modal.js"></script>
     <script src="/static/js/status.js"></script>
     <script src="/static/js/select.js"></script>
+    <script src="/static/js/reorder.js"></script>
+    <!-- Config modules (must be loaded before main config.js) -->
+    <script src="/static/js/config/config-ui.js"></script>
+    <script src="/static/js/config/config-storage.js"></script>
+    <script src="/static/js/config/config-data.js"></script>
+    <script src="/static/js/config/config-pages.js"></script>
+    <script src="/static/js/config/config-categories.js"></script>
+    <script src="/static/js/config/config-bookmarks.js"></script>
+    <script src="/static/js/config/config-settings.js"></script>
+    <!-- Main config orchestrator -->
     <script src="/static/js/config.js"></script>
 </body>
 </html>

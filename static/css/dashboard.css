@@ -50,6 +50,66 @@ body {
     color: var(--text-primary);
 }
 
+.header-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-navigation {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.page-nav-btn {
+    padding: 0.4rem 0.8rem;
+    min-width: 2.5rem;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    position: relative;
+}
+
+.page-nav-btn::before {
+    content: '[';
+    margin-right: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.page-nav-btn::after {
+    content: ']';
+    margin-left: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.page-nav-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.page-nav-btn.active {
+    background: transparent;
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.page-nav-btn.active::before,
+.page-nav-btn.active::after {
+    opacity: 1;
+}
+
 .config-link {
     position: absolute;
     top: 0;

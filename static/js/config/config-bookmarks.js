@@ -1,0 +1,167 @@
+/**
+ * Bookmarks Module
+ * Handles bookmark management (create, render, remove, reorder)
+ */
+
+class ConfigBookmarks {
+    constructor(onUpdate) {
+        this.onUpdate = onUpdate; // Callback when bookmarks are updated
+        this.bookmarkReorder = null;
+    }
+
+    /**
+     * Render bookmarks list
+     * @param {Array} bookmarks
+     * @param {Array} categories
+     */
+    render(bookmarks, categories) {
+        const container = document.getElementById('bookmarks-list');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        bookmarks.forEach((bookmark, index) => {
+            const bookmarkElement = this.createBookmarkElement(bookmark, index, bookmarks, categories);
+            container.appendChild(bookmarkElement);
+        });
+    }
+
+    /**
+     * Create a bookmark DOM element
+     * @param {Object} bookmark
+     * @param {number} index
+     * @param {Array} bookmarks - Reference to bookmarks array
+     * @param {Array} categories
+     * @returns {HTMLElement}
+     */
+    createBookmarkElement(bookmark, index, bookmarks, categories) {
+        const div = document.createElement('div');
+        div.className = 'bookmark-item js-item is-idle';
+        div.setAttribute('data-bookmark-index', index);
+
+        // Create category options
+        const categoryOptions = categories.map(cat => 
+            `<option value="${cat.id}" ${cat.id === bookmark.category ? 'selected' : ''}>${cat.name}</option>`
+        ).join('');
+
+        div.innerHTML = `
+            <span class="drag-handle js-drag-handle" title="Drag to reorder">⠿</span>
+            <input type="text" id="bookmark-name-${index}" name="bookmark-name-${index}" value="${bookmark.name}" placeholder="Bookmark name" data-bookmark-index="${index}" data-field="name">
+            <input type="url" id="bookmark-url-${index}" name="bookmark-url-${index}" value="${bookmark.url}" placeholder="https://example.com" data-bookmark-index="${index}" data-field="url">
+            <input type="text" id="bookmark-shortcut-${index}" name="bookmark-shortcut-${index}" value="${bookmark.shortcut || ''}" placeholder="Keys (Y, YS, YC)" maxlength="5" data-bookmark-index="${index}" data-field="shortcut">
+            <select id="bookmark-category-${index}" name="bookmark-category-${index}" data-bookmark-index="${index}" data-field="category">
+                <option value="">No category</option>
+                ${categoryOptions}
+            </select>
+            <div class="bookmark-status-toggle">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="bookmark-checkStatus-${index}" name="bookmark-checkStatus-${index}" ${bookmark.checkStatus ? 'checked' : ''} data-bookmark-index="${index}" data-field="checkStatus">
+                    <span class="checkbox-text">status</span>
+                </label>
+            </div>
+            <button type="button" class="btn btn-danger" onclick="configManager.removeBookmark(${index})">Remove</button>
+        `;
+
+        // Add event listeners for field changes
+        const inputs = div.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            const eventType = input.type === 'text' || input.type === 'url' ? 'input' : 'change';
+            input.addEventListener(eventType, (e) => {
+                const field = e.target.getAttribute('data-field');
+                
+                if (field === 'checkStatus') {
+                    bookmarks[index][field] = e.target.checked;
+                } else {
+                    bookmarks[index][field] = e.target.value;
+                }
+                
+                // Convert shortcut to uppercase and allow multiple characters
+                if (field === 'shortcut') {
+                    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                    bookmarks[index][field] = e.target.value;
+                }
+            });
+        });
+
+        // Initialize custom select for the category dropdown
+        const selectElement = div.querySelector('select');
+        if (selectElement && typeof CustomSelect !== 'undefined') {
+            // Mark as initialized to prevent double initialization
+            selectElement.dataset.customSelectInit = 'true';
+            new CustomSelect(selectElement);
+        }
+
+        return div;
+    }
+
+    /**
+     * Initialize bookmark reordering
+     * @param {Array} bookmarks
+     * @param {Function} onReorder - Callback when reorder happens
+     */
+    initReorder(bookmarks, onReorder) {
+        // Destroy previous instance if it exists
+        if (this.bookmarkReorder) {
+            this.bookmarkReorder.destroy();
+        }
+        
+        // Initialize drag-and-drop reordering
+        this.bookmarkReorder = new DragReorder({
+            container: '#bookmarks-list',
+            itemSelector: '.bookmark-item',
+            handleSelector: '.js-drag-handle',
+            onReorder: (newOrder) => {
+                // Update bookmarks array based on new order
+                const newBookmarks = [];
+                newOrder.forEach((item) => {
+                    const bookmarkIndex = parseInt(item.element.getAttribute('data-bookmark-index'));
+                    newBookmarks.push(bookmarks[bookmarkIndex]);
+                });
+                
+                onReorder(newBookmarks);
+            }
+        });
+    }
+
+    /**
+     * Add a new bookmark
+     * @param {Array} bookmarks
+     * @returns {Object} - The new bookmark
+     */
+    add(bookmarks) {
+        const newBookmark = {
+            name: `New Bookmark ${bookmarks.length + 1}`,
+            url: 'https://example.com',
+            shortcut: '',
+            category: '',
+            checkStatus: false
+        };
+        bookmarks.push(newBookmark);
+        return newBookmark;
+    }
+
+    /**
+     * Remove a bookmark (with confirmation)
+     * @param {Array} bookmarks
+     * @param {number} index
+     * @returns {Promise<boolean>} - Whether the bookmark was removed
+     */
+    async remove(bookmarks, index) {
+        const confirmed = await window.AppModal.danger({
+            title: 'Remove Bookmark',
+            message: 'Are you sure you want to remove this bookmark? This action cannot be undone.',
+            confirmText: 'Remove',
+            cancelText: 'Cancel'
+        });
+        
+        if (!confirmed) {
+            return false;
+        }
+        
+        bookmarks.splice(index, 1);
+        return true;
+    }
+}
+
+// Export for use in other modules
+window.ConfigBookmarks = ConfigBookmarks;

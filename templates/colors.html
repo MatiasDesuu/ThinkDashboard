@@ -34,9 +34,14 @@
             <button id="preview-theme-btn" class="btn btn-success">Toggle Preview (Light/Dark)</button>
         </div>
 
+        <div class="tabs">
+            <button class="tab-button active" data-tab="dark">dark theme</button>
+            <button class="tab-button" data-tab="light">light theme</button>
+        </div>
+
         <main class="config-main">
+            <div class="tab-content active" data-tab-content="dark">
             <div class="config-section">
-                <h2>Dark Theme Colors</h2>
                 <div class="colors-grid">
                     <div class="color-group">
                         <h3>text colors</h3>
@@ -138,9 +143,10 @@
                     </div>
                 </div>
             </div>
+            </div>
 
+            <div class="tab-content" data-tab-content="light">
             <div class="config-section">
-                <h2>Light Theme Colors</h2>
                 <div class="colors-grid">
                     <div class="color-group">
                         <h3>text colors</h3>
@@ -241,6 +247,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </main>
     </div>

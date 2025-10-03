@@ -62,16 +62,27 @@
         grid-template-columns: 1fr;
         gap: 2rem;
     }
+    
+    /* Tabs responsive - tablet */
+    .tabs {
+        flex-wrap: wrap;
+    }
+    
+    .tab-button {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.813rem;
+    }
+    
+    .config-actions-top {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
 }
 
 /* Mobile Large (576px - 767px) */
 @media (max-width: 767px) {
     .container {
         padding: 1rem 0.75rem;
-    }
-    
-    .header {
-        padding: 1rem 0;
     }
     
     .dashboard-grid {
@@ -158,10 +169,6 @@
         padding: 1rem 1.25rem;
     }
     
-    .modal-header {
-        margin-bottom: 1rem;
-    }
-    
     .modal-body {
         margin-bottom: 1.25rem;
     }
@@ -182,6 +189,31 @@
     
     .colors-grid {
         gap: 2rem;
+    }
+    
+    /* Tabs responsive - mobile large */
+    .tabs {
+        flex-wrap: wrap;
+        gap: 0;
+        top: 65px;
+    }
+    
+    .tab-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+        flex: 1 1 auto;
+        min-width: 120px;
+    }
+    
+    .config-actions-top {
+        flex-wrap: wrap;
+        gap: 0.625rem;
+        top: 0;
+    }
+    
+    .config-actions-top .btn {
+        flex: 1 1 auto;
+        min-width: 140px;
     }
 }
 
@@ -224,6 +256,29 @@
     
     .btn {
         padding: 0.625rem 1rem;
+    }
+    
+    /* Tabs responsive - mobile small */
+    .tabs {
+        top: auto;
+        position: relative;
+    }
+    
+    .tab-button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.688rem;
+        flex: 1 1 auto;
+        min-width: 100px;
+    }
+    
+    .config-actions-top {
+        position: relative;
+        top: auto;
+        flex-direction: column;
+    }
+    
+    .config-actions-top .btn {
+        width: 100%;
     }
 }
 
@@ -337,10 +392,6 @@
         padding: 0.875rem 1rem;
     }
     
-    .modal-header {
-        margin-bottom: 0.875rem;
-    }
-    
     .modal-body {
         margin-bottom: 1rem;
     }
@@ -356,5 +407,29 @@
     .modal-button-prefix {
         min-width: 2ch;
         margin-right: 0.75rem;
+    }
+    
+    /* Tabs responsive - mobile extra small */
+    .tabs {
+        position: relative;
+        top: auto;
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        padding: 0.5rem;
+        font-size: 0.625rem;
+        text-align: center;
+        width: 100%;
+        border-bottom: 1px solid var(--border-primary);
+    }
+    
+    .tab-button:last-child {
+        border-bottom: none;
+    }
+    
+    .config-actions-top {
+        position: relative;
+        top: auto;
     }
 }

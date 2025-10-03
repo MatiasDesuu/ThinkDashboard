@@ -78,19 +78,33 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) GetBookmarks(w http.ResponseWriter, r *http.Request) {
-	bookmarks := h.store.GetBookmarks()
+	pageID := r.URL.Query().Get("page")
+	var bookmarks []Bookmark
+
+	if pageID != "" {
+		bookmarks = h.store.GetBookmarksByPage(pageID)
+	} else {
+		bookmarks = h.store.GetBookmarks()
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(bookmarks)
 }
 
 func (h *Handlers) SaveBookmarks(w http.ResponseWriter, r *http.Request) {
+	pageID := r.URL.Query().Get("page")
 	var bookmarks []Bookmark
 	if err := json.NewDecoder(r.Body).Decode(&bookmarks); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
 
-	h.store.SaveBookmarks(bookmarks)
+	if pageID != "" {
+		h.store.SaveBookmarksByPage(pageID, bookmarks)
+	} else {
+		h.store.SaveBookmarks(bookmarks)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
@@ -109,6 +123,24 @@ func (h *Handlers) SaveCategories(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.store.SaveCategories(categories)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+}
+
+func (h *Handlers) GetPages(w http.ResponseWriter, r *http.Request) {
+	pages := h.store.GetPages()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(pages)
+}
+
+func (h *Handlers) SavePages(w http.ResponseWriter, r *http.Request) {
+	var pages []Page
+	if err := json.NewDecoder(r.Body).Decode(&pages); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	h.store.SavePages(pages)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }

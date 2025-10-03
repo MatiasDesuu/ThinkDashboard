@@ -22,7 +22,7 @@ class StatusMonitor {
             return null;
         }
 
-        const bookmarkElement = document.querySelector(`[data-bookmark-id="${bookmark.id}"]`);
+        const bookmarkElement = document.querySelector(`[data-bookmark-url="${bookmark.url}"]`);
         if (!bookmarkElement) {
             return null;
         }
@@ -49,7 +49,7 @@ class StatusMonitor {
             const responseTime = Math.round(endTime - startTime);
 
             // Cache the result
-            this.statusCache.set(bookmark.id, {
+            this.statusCache.set(bookmark.url, {
                 status: 'online',
                 ping: responseTime,
                 timestamp: Date.now()
@@ -81,7 +81,7 @@ class StatusMonitor {
                 const responseTime2 = Math.round(endTime2 - startTime);
 
                 // Cache the result
-                this.statusCache.set(bookmark.id, {
+                this.statusCache.set(bookmark.url, {
                     status: 'online',
                     ping: responseTime2,
                     timestamp: Date.now()
@@ -94,7 +94,7 @@ class StatusMonitor {
 
             } catch (finalError) {
                 // Cache the result
-                this.statusCache.set(bookmark.id, {
+                this.statusCache.set(bookmark.url, {
                     status: 'offline',
                     ping: null,
                     timestamp: Date.now()
@@ -252,7 +252,7 @@ class StatusMonitor {
             stats.total++;
             if (bookmark.checkStatus) {
                 stats.checked++;
-                const cached = this.statusCache.get(bookmark.id);
+                const cached = this.statusCache.get(bookmark.url);
                 if (cached) {
                     if (cached.status === 'online') {
                         stats.online++;
