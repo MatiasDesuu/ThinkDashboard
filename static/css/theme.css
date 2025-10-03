@@ -1,0 +1,185 @@
+/* Theme Variables - Light and Dark Mode */
+
+/* Light Theme Variables */
+body.light {
+    /* Background Colors */
+    --background-primary: #F9FAFB;
+    --background-secondary: rgba(249, 250, 251, 0.5);
+    --background-overlay: rgba(249, 250, 251, 0.3);
+    --background-modal: rgba(255, 255, 255, 0.9);
+    --background-select: #F9FAFB;
+    --background-hover: #F3F4F6;
+    --background-dot: #E5E7EB;
+    
+    /* Text Colors */
+    --text-primary: #1F2937;
+    --text-secondary: #374151;
+    --text-tertiary: #6B7280;
+    --text-muted: #9CA3AF;
+    --text-light: #111827;
+    
+    /* Border Colors */
+    --border-primary: #D1D5DB;
+    --border-secondary: #E5E7EB;
+    --border-input: #D1D5DB;
+    --border-input-focus: #6B7280;
+    --border-modal: #D1D5DB;
+    --border-select: #4B5563;
+    
+    /* Accent Colors */
+    --accent-green: #059669;
+    --accent-green-light: #10B981;
+    --accent-red: #DC2626;
+    --accent-red-light: #EF4444;
+    --accent-yellow: #D97706;
+    --accent-yellow-light: #F59E0B;
+    
+    /* Status Colors */
+    --status-online: #059669;
+    --status-online-text: #10B981;
+    --status-offline: #DC2626;
+    --status-offline-text: #EF4444;
+    --status-checking: #D97706;
+    --status-checking-text: #F59E0B;
+    
+    /* Button Colors */
+    --button-text: #1F2937;
+    --button-border: #D1D5DB;
+    --button-hover-bg: #F3F4F6;
+    --button-secondary-text: #6B7280;
+    --button-danger: #DC2626;
+    --button-danger-border: #FCA5A5;
+    --button-danger-hover-text: #FFFFFF;
+    
+    /* Notification Colors */
+    --notification-success-bg: #F0FDF4;
+    --notification-success-text: #059669;
+    --notification-success-border: #10B981;
+    --notification-error-bg: #FEF2F2;
+    --notification-error-text: #DC2626;
+    --notification-error-border: #F87171;
+    
+    /* Shadow Colors */
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-color-strong: rgba(0, 0, 0, 0.5);
+    
+    /* Scrollbar Colors */
+    --scrollbar-track: #F9FAFB;
+    --scrollbar-thumb: #D1D5DB;
+    --scrollbar-thumb-hover: #9CA3AF;
+    
+    /* Checkbox Colors */
+    --checkbox-border: #9CA3AF;
+    --checkbox-bg: #F9FAFB;
+    --checkbox-checked: #059669;
+    --checkbox-checked-border: #059669;
+    
+    /* Tree Symbol Colors */
+    --tree-symbol: #9CA3AF;
+    
+    /* Config Entry Colors */
+    --config-entry-accent: #D97706;
+    --config-entry-text: #92400E;
+}
+
+/* Dark Theme Variables */
+body.dark {
+    /* Background Colors */
+    --background-primary: #000;
+    --background-secondary: rgba(31, 41, 55, 0.3);
+    --background-overlay: rgba(0, 0, 0, 0.3);
+    --background-modal: rgba(0, 0, 0, 0.8);
+    --background-select: #000;
+    --background-hover: #1F2937;
+    --background-dot: #1F2937;
+    
+    /* Text Colors */
+    --text-primary: #E5E7EB;
+    --text-secondary: #D1D5DB;
+    --text-tertiary: #9CA3AF;
+    --text-muted: #6B7280;
+    --text-light: #F9FAFB;
+    
+    /* Border Colors */
+    --border-primary: #4B5563;
+    --border-secondary: #2D3748;
+    --border-input: #4B5563;
+    --border-input-focus: #9CA3AF;
+    --border-modal: #374151;
+    --border-select: #4B5563;
+    
+    /* Accent Colors */
+    --accent-green: #10B981;
+    --accent-green-light: #34D399;
+    --accent-red: #EF4444;
+    --accent-red-light: #F87171;
+    --accent-yellow: #F59E0B;
+    --accent-yellow-light: #FCD34D;
+    
+    /* Status Colors */
+    --status-online: #10B981;
+    --status-online-text: #34D399;
+    --status-offline: #EF4444;
+    --status-offline-text: #F87171;
+    --status-checking: #F59E0B;
+    --status-checking-text: #FCD34D;
+    
+    /* Button Colors */
+    --button-text: #E5E7EB;
+    --button-border: #4B5563;
+    --button-hover-bg: #1F2937;
+    --button-secondary-text: #9CA3AF;
+    --button-danger: #F87171;
+    --button-danger-border: #7F1D1D;
+    --button-danger-hover-text: #FFFFFF;
+    
+    /* Notification Colors */
+    --notification-success-bg: #1F2937;
+    --notification-success-text: #10B981;
+    --notification-success-border: #059669;
+    --notification-error-bg: #1F2937;
+    --notification-error-text: #F87171;
+    --notification-error-border: #DC2626;
+    
+    /* Shadow Colors */
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --shadow-color-strong: rgba(0, 0, 0, 0.8);
+    
+    /* Scrollbar Colors */
+    --scrollbar-track: #000;
+    --scrollbar-thumb: #4B5563;
+    --scrollbar-thumb-hover: #6B7280;
+    
+    /* Checkbox Colors */
+    --checkbox-border: #4B5563;
+    --checkbox-bg: #000;
+    --checkbox-checked: #10B981;
+    --checkbox-checked-border: #10B981;
+    
+    /* Tree Symbol Colors */
+    --tree-symbol: #4B5563;
+    
+    /* Config Entry Colors */
+    --config-entry-accent: #F59E0B;
+    --config-entry-text: #FCD34D;
+}
+
+/* Background Patterns */
+body.light {
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    background-image: radial-gradient(var(--background-dot) 1px, transparent 1px);
+    background-size: 15px 15px;
+}
+
+body.dark {
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    background-image: radial-gradient(var(--background-dot) 1px, transparent 1px);
+    background-size: 15px 15px;
+}
+
+/* No Background Dots Option */
+body.no-background-dots {
+    background-image: none !important;
+}

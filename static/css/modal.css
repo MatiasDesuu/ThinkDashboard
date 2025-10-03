@@ -14,14 +14,7 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease;
-}
-
-body.dark .modal-overlay {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-body.light .modal-overlay {
-    background: rgba(249, 250, 251, 0.3);
+    background: var(--background-overlay);
 }
 
 .modal-overlay.show {
@@ -33,19 +26,8 @@ body.light .modal-overlay {
     padding: 1.5rem 2rem;
     max-width: 400px;
     width: 90%;
-    border: 1px solid;
-}
-
-
-
-body.dark .modal {
-    background: rgba(0, 0, 0, 0.8);
-    border-color: #374151;
-}
-
-body.light .modal {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: #D1D5DB;
+    border: 1px solid var(--border-modal);
+    background: var(--background-modal);
 }
 
 .modal-header {
@@ -59,14 +41,7 @@ body.light .modal {
 
 .modal-title {
     margin-right: 0.5rem;
-}
-
-body.dark .modal-title {
-    color: #10B981;
-}
-
-body.light .modal-title {
-    color: #059669;
+    color: var(--accent-green);
 }
 
 .modal-body {
@@ -75,14 +50,7 @@ body.light .modal-title {
 
 .modal-text {
     min-width: 2ch;
-}
-
-body.dark .modal-text {
-    color: #E5E7EB;
-}
-
-body.light .modal-text {
-    color: #1F2937;
+    color: var(--text-primary);
 }
 
 .modal-actions {
@@ -105,25 +73,12 @@ body.light .modal-text {
     justify-content: center;
     flex: 1;
     min-width: 0;
+    color: var(--text-secondary);
 }
 
-body.dark .modal-button {
-    color: #D1D5DB;
-}
-
-body.dark .modal-button:hover,
-body.dark .modal-button.selected {
-    color: #F9FAFB;
-    transform: translateX(4px);
-}
-
-body.light .modal-button {
-    color: #374151;
-}
-
-body.light .modal-button:hover,
-body.light .modal-button.selected {
-    color: #111827;
+.modal-button:hover,
+.modal-button.selected {
+    color: var(--text-light);
     transform: translateX(4px);
 }
 
@@ -132,14 +87,7 @@ body.light .modal-button.selected {
     margin-right: 1rem;
     min-width: 3ch;
     font-size: 0.875rem;
-}
-
-body.dark .modal-button-prefix {
-    color: #10B981;
-}
-
-body.light .modal-button-prefix {
-    color: #059669;
+    color: var(--accent-green);
 }
 
 .modal-button-name {
@@ -150,32 +98,15 @@ body.light .modal-button-prefix {
 /* Danger button styles (red) */
 .modal-button.danger {
     font-weight: 700;
+    color: var(--accent-red);
 }
 
-body.dark .modal-button.danger {
-    color: #EF4444;
-}
-
-body.dark .modal-button.danger:hover,
-body.dark .modal-button.danger.selected {
-    color: #F87171;
+.modal-button.danger:hover,
+.modal-button.danger.selected {
+    color: var(--accent-red-light);
     transform: translateX(4px);
 }
 
-body.light .modal-button.danger {
-    color: #DC2626;
-}
-
-body.light .modal-button.danger:hover,
-body.light .modal-button.danger.selected {
-    color: #EF4444;
-    transform: translateX(4px);
-}
-
-body.dark .modal-button.danger .modal-button-prefix {
-    color: #EF4444;
-}
-
-body.light .modal-button.danger .modal-button-prefix {
-    color: #DC2626;
+.modal-button.danger .modal-button-prefix {
+    color: var(--accent-red);
 }

@@ -11,26 +11,6 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Theme Variables */
-body.dark {
-    background-color: #000;
-    color: #E5E7EB;
-    background-image: radial-gradient(#1F2937 1px, transparent 1px);
-    background-size: 15px 15px;
-}
-
-body.light {
-    background-color: #F9FAFB;
-    color: #1F2937;
-    background-image: radial-gradient(#E5E7EB 1px, transparent 1px);
-    background-size: 15px 15px;
-}
-
-/* No Background Dots Option */
-body.no-background-dots {
-    background-image: none !important;
-}
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -56,22 +36,11 @@ body.no-background-dots {
     font-size: 0.875rem;
     font-weight: 600;
     transition: color 0.3s ease;
+    color: var(--text-tertiary);
 }
 
-body.dark .back-link {
-    color: #9CA3AF;
-}
-
-body.dark .back-link:hover {
-    color: #E5E7EB;
-}
-
-body.light .back-link {
-    color: #6B7280;
-}
-
-body.light .back-link:hover {
-    color: #1F2937;
+.back-link:hover {
+    color: var(--text-primary);
 }
 
 /* Config Main */
@@ -91,14 +60,7 @@ body.light .back-link:hover {
     font-weight: 700;
     letter-spacing: 0.05em;
     margin-bottom: 1.5rem;
-}
-
-body.dark .config-section h2 {
-    color: #6B7280;
-}
-
-body.light .config-section h2 {
-    color: #9CA3AF;
+    color: var(--text-muted);
 }
 
 .config-section h2::before {
@@ -123,42 +85,24 @@ body.light .config-section h2 {
 .form-group select {
     padding: 0.375rem 0.5rem;
     border: none;
-    border-bottom: 1px solid;
-    background: transparent;
+    border-bottom: 1px solid var(--border-input);
+    background: var(--background-select);
+    color: var(--text-primary);
     font-family: inherit;
     font-size: 0.875rem;
     transition: border-color 0.3s ease;
     max-width: 200px;
 }
 
-body.dark .form-group input,
-body.dark .form-group select {
-    border-color: #4B5563;
-    color: #E5E7EB;
-    background-color: #000;
+.form-group select option {
+    background-color: var(--background-hover);
+    color: var(--text-primary);
 }
 
-body.dark .form-group select option {
-    background-color: #1F2937;
-    color: #E5E7EB;
-}
-
-body.dark .form-group input:focus,
-body.dark .form-group select:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
-    border-color: #9CA3AF;
-}
-
-body.light .form-group input,
-body.light .form-group select {
-    border-color: #D1D5DB;
-    color: #1F2937;
-}
-
-body.light .form-group input:focus,
-body.light .form-group select:focus {
-    outline: none;
-    border-color: #6B7280;
+    border-color: var(--border-input-focus);
 }
 
 /* Checkbox Tree Structure (TUI/TTY Style) */
@@ -187,14 +131,7 @@ body.light .form-group select:focus {
     user-select: none;
     white-space: pre;
     font-family: 'Source Code Pro', monospace;
-}
-
-body.dark .tree-symbol {
-    color: #4B5563;
-}
-
-body.light .tree-symbol {
-    color: #9CA3AF;
+    color: var(--tree-symbol);
 }
 
 .checkbox-label {
@@ -214,22 +151,13 @@ body.light .tree-symbol {
     width: 14px !important;
     height: 14px !important;
     max-width: none !important;
-    border: 1px solid !important;
+    border: 1px solid var(--checkbox-border) !important;
     border-radius: 0;
     cursor: pointer;
     position: relative;
     margin: 0;
     flex-shrink: 0;
-}
-
-body.dark .checkbox-label input[type="checkbox"] {
-    border-color: #4B5563 !important;
-    background-color: #000;
-}
-
-body.light .checkbox-label input[type="checkbox"] {
-    border-color: #9CA3AF !important;
-    background-color: #F9FAFB;
+    background-color: var(--checkbox-bg);
 }
 
 .checkbox-label input[type="checkbox"]:checked::before {
@@ -241,22 +169,11 @@ body.light .checkbox-label input[type="checkbox"] {
     font-size: 10px;
     font-weight: 900;
     line-height: 1;
+    color: var(--checkbox-checked);
 }
 
-body.dark .checkbox-label input[type="checkbox"]:checked::before {
-    color: #10B981;
-}
-
-body.light .checkbox-label input[type="checkbox"]:checked::before {
-    color: #059669;
-}
-
-body.dark .checkbox-label input[type="checkbox"]:checked {
-    border-color: #10B981 !important;
-}
-
-body.light .checkbox-label input[type="checkbox"]:checked {
-    border-color: #059669 !important;
+.checkbox-label input[type="checkbox"]:checked {
+    border-color: var(--checkbox-checked-border) !important;
 }
 
 .checkbox-label input[type="checkbox"]:hover {
@@ -301,17 +218,7 @@ body.light .checkbox-label input[type="checkbox"]:checked {
     gap: 1rem;
     align-items: center;
     padding: 1rem 0;
-    border-bottom: 1px solid;
-}
-
-body.dark .category-item,
-body.dark .bookmark-item {
-    border-color: #2D3748;
-}
-
-body.light .category-item,
-body.light .bookmark-item {
-    border-color: #E5E7EB;
+    border-bottom: 1px solid var(--border-secondary);
 }
 
 .category-item input,
@@ -321,45 +228,24 @@ body.light .bookmark-item {
     min-width: 120px;
     padding: 0.375rem 0.5rem;
     border: none;
-    border-bottom: 1px solid;
-    background: transparent;
+    border-bottom: 1px solid var(--border-input);
+    background: var(--background-select);
+    color: var(--text-primary);
     font-family: inherit;
     font-size: 0.875rem;
     transition: border-color 0.3s ease;
 }
 
-body.dark .category-item input,
-body.dark .bookmark-item input,
-body.dark .bookmark-item select {
-    border-color: #4B5563;
-    color: #E5E7EB;
-    background-color: #000;
+.bookmark-item select option {
+    background-color: var(--background-hover);
+    color: var(--text-primary);
 }
 
-body.dark .bookmark-item select option {
-    background-color: #1F2937;
-    color: #E5E7EB;
-}
-
-body.dark .category-item input:focus,
-body.dark .bookmark-item input:focus,
-body.dark .bookmark-item select:focus {
+.category-item input:focus,
+.bookmark-item input:focus,
+.bookmark-item select:focus {
     outline: none;
-    border-color: #9CA3AF;
-}
-
-body.light .category-item input,
-body.light .bookmark-item input,
-body.light .bookmark-item select {
-    border-color: #D1D5DB;
-    color: #1F2937;
-}
-
-body.light .category-item input:focus,
-body.light .bookmark-item input:focus,
-body.light .bookmark-item select:focus {
-    outline: none;
-    border-color: #6B7280;
+    border-color: var(--border-input-focus);
 }
 
 .bookmark-item input[name="shortcut"] {
@@ -383,82 +269,37 @@ body.light .bookmark-item select:focus {
 
 .btn-primary,
 .btn-success {
-    border: 1px solid;
+    border: 1px solid var(--button-border);
+    color: var(--button-text);
 }
 
-body.dark .btn-primary,
-body.dark .btn-success {
-    color: #E5E7EB;
-    border-color: #4B5563;
-}
-
-body.dark .btn-primary:hover,
-body.dark .btn-success:hover {
-    background-color: #1F2937;
-    transform: translateX(2px);
-}
-
-body.light .btn-primary,
-body.light .btn-success {
-    color: #1F2937;
-    border-color: #D1D5DB;
-}
-
-body.light .btn-primary:hover,
-body.light .btn-success:hover {
-    background-color: #F3F4F6;
+.btn-primary:hover,
+.btn-success:hover {
+    background-color: var(--button-hover-bg);
     transform: translateX(2px);
 }
 
 .btn-secondary {
     background-color: transparent;
-    border: 1px solid;
+    border: 1px solid var(--button-border);
+    color: var(--button-secondary-text);
 }
 
-body.dark .btn-secondary {
-    color: #9CA3AF;
-    border-color: #4B5563;
-}
-
-body.dark .btn-secondary:hover {
-    color: #E5E7EB;
-    background-color: #1F2937;
-}
-
-body.light .btn-secondary {
-    color: #6B7280;
-    border-color: #D1D5DB;
-}
-
-body.light .btn-secondary:hover {
-    color: #1F2937;
-    background-color: #F3F4F6;
+.btn-secondary:hover {
+    color: var(--button-text);
+    background-color: var(--button-hover-bg);
 }
 
 .btn-danger {
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
-    border: 1px solid;
+    border: 1px solid var(--button-danger-border);
+    color: var(--button-danger);
 }
 
-body.dark .btn-danger {
-    color: #F87171;
-    border-color: #7F1D1D;
-}
-
-body.dark .btn-danger:hover {
-    background-color: #7F1D1D;
-    color: #FFFFFF;
-}
-
-body.light .btn-danger {
-    color: #DC2626;
-    border-color: #FCA5A5;
-}
-
-body.light .btn-danger:hover {
-    background-color: #DC2626;
-    color: #FFFFFF;
+.btn-danger:hover {
+    background-color: var(--button-danger);
+    color: var(--button-danger-hover-text);
 }
 
 /* Config Actions Top */
@@ -468,20 +309,11 @@ body.light .btn-danger:hover {
     justify-content: flex-start;
     padding: 1rem 0;
     margin-bottom: 2rem;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid var(--border-secondary);
     position: sticky;
     top: 0;
     z-index: 100;
-}
-
-body.dark .config-actions-top {
-    border-color: #2D3748;
-    background-color: #000;
-}
-
-body.light .config-actions-top {
-    border-color: #E5E7EB;
-    background-color: #F9FAFB;
+    background-color: var(--background-primary);
 }
 
 /* Notification */
@@ -506,27 +338,15 @@ body.light .config-actions-top {
     pointer-events: auto;
 }
 
-body.dark .notification.success {
-    background-color: #1F2937;
-    color: #10B981;
-    border-color: #059669;
+.notification.success {
+    background-color: var(--notification-success-bg);
+    color: var(--notification-success-text);
+    border-color: var(--notification-success-border);
 }
 
-body.dark .notification.error {
-    background-color: #1F2937;
-    color: #F87171;
-    border-color: #DC2626;
-}
-
-body.light .notification.success {
-    background-color: #F0FDF4;
-    color: #059669;
-    border-color: #10B981;
-}
-
-body.light .notification.error {
-    background-color: #FEF2F2;
-    color: #DC2626;
-    border-color: #F87171;
+.notification.error {
+    background-color: var(--notification-error-bg);
+    color: var(--notification-error-text);
+    border-color: var(--notification-error-border);
 }
 

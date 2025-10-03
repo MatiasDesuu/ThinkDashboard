@@ -11,26 +11,6 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Theme Variables */
-body.dark {
-    background-color: #000;
-    color: #E5E7EB;
-    background-image: radial-gradient(#1F2937 1px, transparent 1px);
-    background-size: 15px 15px;
-}
-
-body.light {
-    background-color: #F9FAFB;
-    color: #1F2937;
-    background-image: radial-gradient(#E5E7EB 1px, transparent 1px);
-    background-size: 15px 15px;
-}
-
-/* No Background Dots Option */
-body.no-background-dots {
-    background-image: none !important;
-}
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -53,14 +33,7 @@ body.no-background-dots {
     font-weight: 900;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-}
-
-body.dark .date {
-    color: #6B7280;
-}
-
-body.light .date {
-    color: #9CA3AF;
+    color: var(--text-muted);
 }
 
 .title-wrapper {
@@ -74,14 +47,7 @@ body.light .date {
     font-weight: 900;
     opacity: 0.8;
     user-select: none;
-}
-
-body.dark .title {
-    color: #E5E7EB;
-}
-
-body.light .title {
-    color: #374151;
+    color: var(--text-primary);
 }
 
 .config-link {
@@ -95,22 +61,11 @@ body.light .title {
     font-size: 1rem;
     font-weight: 600;
     transition: color 0.3s ease;
+    color: var(--text-tertiary);
 }
 
-body.dark .config-link a {
-    color: #9CA3AF;
-}
-
-body.dark .config-link a:hover {
-    color: #E5E7EB;
-}
-
-body.light .config-link a {
-    color: #6B7280;
-}
-
-body.light .config-link a:hover {
-    color: #1F2937;
+.config-link a:hover {
+    color: var(--text-primary);
 }
 
 /* Dashboard Grid */
@@ -155,14 +110,7 @@ body.light .config-link a:hover {
     font-size: 1.125rem;
     font-weight: 700;
     letter-spacing: 0.05em;
-}
-
-body.dark .category-title {
-    color: #6B7280;
-}
-
-body.light .category-title {
-    color: #9CA3AF;
+    color: var(--text-muted);
 }
 
 .category-title::before {
@@ -184,23 +132,11 @@ body.light .category-title {
     transition: all 0.3s ease;
     position: relative;
     padding: 0.5rem 0;
+    color: var(--text-secondary);
 }
 
-body.dark .bookmark-link {
-    color: #D1D5DB;
-}
-
-body.dark .bookmark-link:hover {
-    color: #F9FAFB;
-    transform: translateX(4px);
-}
-
-body.light .bookmark-link {
-    color: #374151;
-}
-
-body.light .bookmark-link:hover {
-    color: #111827;
+.bookmark-link:hover {
+    color: var(--text-light);
     transform: translateX(4px);
 }
 
