@@ -79,16 +79,16 @@ func NewStore() Store {
 		settingsFile:   "data/settings.json",
 		colorsFile:     "data/colors.json",
 	}
-	
+
 	// Initialize default files if they don't exist
 	store.initializeDefaultFiles()
-	
+
 	return store
 }
 
 func (fs *FileStore) initializeDefaultFiles() {
 	fs.ensureDataDir()
-	
+
 	// Initialize bookmarks if file doesn't exist
 	if _, err := os.Stat(fs.bookmarksFile); os.IsNotExist(err) {
 		defaultBookmarks := []Bookmark{
@@ -104,7 +104,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 		data, _ := json.MarshalIndent(defaultBookmarks, "", "  ")
 		os.WriteFile(fs.bookmarksFile, data, 0644)
 	}
-	
+
 	// Initialize categories if file doesn't exist
 	if _, err := os.Stat(fs.categoriesFile); os.IsNotExist(err) {
 		defaultCategories := []Category{
@@ -117,7 +117,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 		data, _ := json.MarshalIndent(defaultCategories, "", "  ")
 		os.WriteFile(fs.categoriesFile, data, 0644)
 	}
-	
+
 	// Initialize settings if file doesn't exist
 	if _, err := os.Stat(fs.settingsFile); os.IsNotExist(err) {
 		defaultSettings := Settings{
@@ -135,7 +135,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 		data, _ := json.MarshalIndent(defaultSettings, "", "  ")
 		os.WriteFile(fs.settingsFile, data, 0644)
 	}
-	
+
 	// Initialize colors if file doesn't exist
 	if _, err := os.Stat(fs.colorsFile); os.IsNotExist(err) {
 		defaultColors := getDefaultColors()
