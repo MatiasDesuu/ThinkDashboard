@@ -17,7 +17,7 @@
     justify-content: space-between;
     padding: 0.375rem 0.5rem;
     border: none;
-    border-bottom: 1px solid var(--border-primary);
+    border: 1px solid var(--border-primary);
     background: var(--background-primary);
     color: var(--text-primary);
     font-family: 'Source Code Pro', monospace;

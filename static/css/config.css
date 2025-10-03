@@ -13,8 +13,94 @@ body {
 
 .container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+    margin: 0 auto;/* Config Actions Top */
+}
+.config-actions-top {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    padding: 1rem 0;
+    margin-bottom: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--background-primary);
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-primary);
+    position: sticky;
+    top: 70px;
+    z-index: 99;
+    background-color: var(--background-primary);
+}
+
+.tab-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+}
+
+.tab-button::before {
+    content: '[';
+    margin-right: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.tab-button::after {
+    content: ']';
+    margin-left: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.tab-button:hover {
+    color: var(--text-secondary);
+}
+
+.tab-button.active {
+    color: var(--text-primary);
+}
+
+.tab-button.active::before,
+.tab-button.active::after {
+    opacity: 1;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Header */
@@ -92,6 +178,78 @@ body {
     font-size: 0.875rem;
     transition: border-color 0.3s ease;
     max-width: 200px;
+}
+
+/* Number input wrapper with custom controls */
+.number-input-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    max-width: 200px;
+}
+
+.number-input-wrapper input[type="number"] {
+    border: 1px solid var(--border-primary);
+    text-align: center;
+    flex: 1;
+    padding-right: 28px;
+    appearance: textfield;
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+}
+
+/* Remove default spinners */
+.number-input-wrapper input[type="number"]::-webkit-outer-spin-button,
+.number-input-wrapper input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.number-input-wrapper input[type="number"]::-moz-number-spin-box {
+    appearance: none;
+}
+
+.number-input-wrapper input[type="number"]:hover {
+    border-color: var(--text-secondary);
+}
+
+/* Custom spinner controls */
+.number-input-controls {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    width: 24px;
+    border: 1px solid var(--border-primary);
+}
+
+.number-input-btn {
+    flex: 1;
+    border: none;
+    background: var(--background-primary);
+    color: var(--text-primary);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.625rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.number-input-btn:hover {
+    background: var(--background-primary);
+    color: var(--text-secondary);
+}
+
+
+
+.number-input-up {
+    border-bottom: 1px solid var(--border-primary);
 }
 
 .form-group select option {
@@ -217,8 +375,6 @@ body {
     display: flex;
     gap: 1rem;
     align-items: center;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--border-secondary);
 }
 
 .category-item input,
@@ -228,7 +384,7 @@ body {
     min-width: 120px;
     padding: 0.375rem 0.5rem;
     border: none;
-    border-bottom: 1px solid var(--border-primary);
+    border: 1px solid var(--border-primary);
     background: var(--background-primary);
     color: var(--text-primary);
     font-family: inherit;
@@ -291,8 +447,8 @@ body {
 }
 
 .btn-danger {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
     border: 1px solid var(--accent-error);
     color: var(--accent-error);
 }
@@ -300,20 +456,6 @@ body {
 .btn-danger:hover {
     background-color: var(--accent-error);
     color: var(--background-primary);
-}
-
-/* Config Actions Top */
-.config-actions-top {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-start;
-    padding: 1rem 0;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border-secondary);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background-color: var(--background-primary);
 }
 
 /* Notification */
@@ -349,4 +491,3 @@ body {
     color: var(--accent-error);
     border-color: var(--accent-error);
 }
-

@@ -34,9 +34,15 @@
             <button id="reset-btn" class="btn btn-secondary">Reset to Defaults</button>
         </div>
 
+        <div class="tabs">
+            <button class="tab-button active" data-tab="general">general</button>
+            <button class="tab-button" data-tab="categories">categories</button>
+            <button class="tab-button" data-tab="bookmarks">bookmarks</button>
+        </div>
+
         <main class="config-main">
+            <div class="tab-content active" data-tab-content="general">
             <div class="config-section">
-                <h2>General Settings</h2>
                 <div class="form-group">
                     <label for="theme-select">Theme:</label>
                     <select id="theme-select">
@@ -46,7 +52,13 @@
                 </div>
                 <div class="form-group">
                     <label for="columns-input">Columns per row:</label>
-                    <input type="number" id="columns-input" min="1" max="6" value="3">
+                    <div class="number-input-wrapper">
+                        <input type="number" id="columns-input" min="1" max="6" value="3">
+                        <div class="number-input-controls">
+                            <button type="button" class="number-input-btn number-input-up" data-input="columns-input">▲</button>
+                            <button type="button" class="number-input-btn number-input-down" data-input="columns-input">▼</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="font-size-select">Font size:</label>
@@ -109,23 +121,25 @@
                     </div>
                 </div>
             </div>
+            </div>
 
+            <div class="tab-content" data-tab-content="categories">
             <div class="config-section">
-                <h2>Categories</h2>
                 <div id="categories-list" class="categories-list">
                     <!-- Categories will be loaded here -->
                 </div>
                 <button id="add-category-btn" class="btn btn-primary">Add Category</button>
             </div>
+            </div>
 
+            <div class="tab-content" data-tab-content="bookmarks">
             <div class="config-section">
-                <h2>Bookmarks</h2>
                 <div id="bookmarks-list" class="bookmarks-list">
                     <!-- Bookmarks will be loaded here -->
                 </div>
                 <button id="add-bookmark-btn" class="btn btn-primary">Add Bookmark</button>
             </div>
-
+            </div>
 
         </main>
     </div>

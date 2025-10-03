@@ -1,4 +1,78 @@
 // Configuration JavaScript
+
+// Tab Management
+function initTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetTab = button.getAttribute('data-tab');
+            
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding content
+            button.classList.add('active');
+            const targetContent = document.querySelector(`[data-tab-content="${targetTab}"]`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+}
+
+// Initialize tabs when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTabs);
+} else {
+    initTabs();
+}
+
+// Number input controls
+function initNumberInputControls() {
+    const upButtons = document.querySelectorAll('.number-input-up');
+    const downButtons = document.querySelectorAll('.number-input-down');
+
+    upButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const inputId = button.getAttribute('data-input');
+            const input = document.getElementById(inputId);
+            if (input) {
+                const currentValue = parseInt(input.value) || 0;
+                const max = parseInt(input.max) || Infinity;
+                if (currentValue < max) {
+                    input.value = currentValue + 1;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            }
+        });
+    });
+
+    downButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const inputId = button.getAttribute('data-input');
+            const input = document.getElementById(inputId);
+            if (input) {
+                const currentValue = parseInt(input.value) || 0;
+                const min = parseInt(input.min) || -Infinity;
+                if (currentValue > min) {
+                    input.value = currentValue - 1;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            }
+        });
+    });
+}
+
+// Initialize number controls when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNumberInputControls);
+} else {
+    initNumberInputControls();
+}
+
 class ConfigManager {
     constructor() {
         this.bookmarks = [];
