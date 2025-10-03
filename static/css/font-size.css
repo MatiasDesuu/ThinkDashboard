@@ -1,0 +1,183 @@
+/* Font Size System */
+
+/* Small Font Size */
+body.font-size-small {
+    font-size: 14px;
+}
+
+body.font-size-small .title {
+    font-size: 1.5rem;
+}
+
+body.font-size-small .category h3 {
+    font-size: 0.875rem;
+}
+
+body.font-size-small .bookmark-link {
+    font-size: 0.75rem;
+}
+
+body.font-size-small .config-button {
+    font-size: 0.75rem;
+}
+
+body.font-size-small .shortcut-hint {
+    font-size: 0.625rem;
+}
+
+body.font-size-small .search-container {
+    font-size: 0.75rem;
+}
+
+body.font-size-small .search-prompt {
+    font-size: 0.875rem;
+}
+
+body.font-size-small .search-match {
+    font-size: 0.75rem;
+}
+
+body.font-size-small .config-section h2 {
+    font-size: 0.875rem;
+}
+
+body.font-size-small .form-group label,
+body.font-size-small .form-group input,
+body.font-size-small .form-group select {
+    font-size: 0.75rem;
+}
+
+body.font-size-small .btn {
+    font-size: 0.75rem;
+}
+
+body.font-size-small .notification {
+    font-size: 0.75rem;
+}
+
+body.font-size-small .modal {
+    font-size: 0.75rem;
+}
+
+body.font-size-small .modal-header {
+    font-size: 0.875rem;
+}
+
+body.font-size-small .date-display {
+    font-size: 0.75rem;
+}
+
+body.font-size-small .status-indicator {
+    font-size: 0.625rem;
+}
+
+/* Medium Font Size - Default */
+body.font-size-medium {
+    font-size: 16px;
+}
+
+/* No specific overrides needed as this is the default size */
+
+/* Large Font Size */
+body.font-size-large {
+    font-size: 18px;
+}
+
+body.font-size-large .date {
+    font-size: 1.375rem;
+}
+
+body.font-size-large .config-link a {
+    font-size: 1.25rem;
+}
+
+body.font-size-large .category-title {
+    font-size: 1.375rem;
+}
+
+body.font-size-large .bookmark-link {
+    font-size: 1.5rem;
+}
+
+body.font-size-large .bookmark-shortcut {
+    font-size: 1.125rem;
+}
+
+body.font-size-large .config-button {
+    font-size: 1.125rem;
+}
+
+body.font-size-large .shortcut-hint {
+    font-size: 0.875rem;
+}
+
+body.font-size-large .search-container {
+    font-size: 1rem;
+}
+
+body.font-size-large .search-prompt {
+    font-size: 1.125rem;
+}
+
+body.font-size-large .search-match {
+    font-size: 1rem;
+}
+
+body.font-size-large .config-section h2 {
+    font-size: 1.25rem;
+}
+
+body.font-size-large .form-group label,
+body.font-size-large .form-group input,
+body.font-size-large .form-group select {
+    font-size: 1rem;
+}
+
+body.font-size-large .btn {
+    font-size: 1rem;
+}
+
+body.font-size-large .notification {
+    font-size: 1rem;
+}
+
+body.font-size-large .modal {
+    font-size: 1rem;
+}
+
+body.font-size-large .modal-header {
+    font-size: 1.125rem;
+}
+
+body.font-size-large .date-display {
+    font-size: 1rem;
+}
+
+body.font-size-large .status-indicator {
+    font-size: 0.875rem;
+}
+
+/* Responsive adjustments for font sizes */
+@media (max-width: 767px) {
+    body.font-size-large {
+        font-size: 17px;
+    }
+    
+    body.font-size-large .title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 479px) {
+    body.font-size-large {
+        font-size: 16px;
+    }
+    
+    body.font-size-large .title {
+        font-size: 1.75rem;
+    }
+    
+    body.font-size-small {
+        font-size: 13px;
+    }
+}

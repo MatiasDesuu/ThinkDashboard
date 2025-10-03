@@ -21,14 +21,16 @@ type Category struct {
 }
 
 type Settings struct {
-	Theme            string `json:"theme"` // "light" or "dark"
-	OpenInNewTab     bool   `json:"openInNewTab"`
-	ColumnsPerRow    int    `json:"columnsPerRow"`
-	ShowTitle        bool   `json:"showTitle"`
-	ShowDate         bool   `json:"showDate"`
-	ShowConfigButton bool   `json:"showConfigButton"`
-	ShowStatus       bool   `json:"showStatus"`
-	ShowPing         bool   `json:"showPing"`
+	Theme              string `json:"theme"` // "light" or "dark"
+	OpenInNewTab       bool   `json:"openInNewTab"`
+	ColumnsPerRow      int    `json:"columnsPerRow"`
+	FontSize           string `json:"fontSize"` // "small", "medium", or "large"
+	ShowBackgroundDots bool   `json:"showBackgroundDots"`
+	ShowTitle          bool   `json:"showTitle"`
+	ShowDate           bool   `json:"showDate"`
+	ShowConfigButton   bool   `json:"showConfigButton"`
+	ShowStatus         bool   `json:"showStatus"`
+	ShowPing           bool   `json:"showPing"`
 }
 
 type Store interface {
@@ -138,14 +140,16 @@ func (fs *FileStore) GetSettings() Settings {
 	if err != nil {
 		// Return default settings if file doesn't exist
 		return Settings{
-			Theme:            "dark",
-			OpenInNewTab:     true,
-			ColumnsPerRow:    3,
-			ShowTitle:        true,
-			ShowDate:         true,
-			ShowConfigButton: true,
-			ShowStatus:       false,
-			ShowPing:         false,
+			Theme:              "dark",
+			OpenInNewTab:       true,
+			ColumnsPerRow:      3,
+			FontSize:           "medium",
+			ShowBackgroundDots: true,
+			ShowTitle:          true,
+			ShowDate:           true,
+			ShowConfigButton:   true,
+			ShowStatus:         false,
+			ShowPing:           false,
 		}
 	}
 

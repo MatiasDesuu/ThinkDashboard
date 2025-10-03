@@ -26,6 +26,11 @@ body.light {
     background-size: 15px 15px;
 }
 
+/* No Background Dots Option */
+body.no-background-dots {
+    background-image: none !important;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;

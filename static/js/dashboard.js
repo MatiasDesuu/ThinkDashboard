@@ -7,6 +7,8 @@ class Dashboard {
             theme: 'dark',
             openInNewTab: true,
             columnsPerRow: 3,
+            fontSize: 'medium',
+            showBackgroundDots: true,
             showTitle: true,
             showDate: true,
             showConfigButton: true,
@@ -54,12 +56,19 @@ class Dashboard {
         // Control date visibility and set up if visible
         this.updateDateVisibility();
 
-        // Apply theme
-        document.body.className = this.settings.theme;
+        // Apply theme - use classList to preserve other classes
+        document.body.classList.remove('dark', 'light');
+        document.body.classList.add(this.settings.theme);
         document.body.setAttribute('data-theme', this.settings.theme);
         document.body.setAttribute('data-show-title', this.settings.showTitle);
         document.body.setAttribute('data-show-date', this.settings.showDate);
         document.body.setAttribute('data-show-config-button', this.settings.showConfigButton);
+
+        // Apply font size
+        this.applyFontSize();
+
+        // Apply background dots
+        this.applyBackgroundDots();
 
         // Control title visibility dynamically
         this.updateTitleVisibility();
@@ -257,6 +266,23 @@ class Dashboard {
             if (titleWrapper) {
                 titleWrapper.remove();
             }
+        }
+    }
+
+    applyFontSize() {
+        // Remove existing font size classes
+        document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+        // Add current font size class
+        const fontSize = this.settings.fontSize || 'medium';
+        document.body.classList.add(`font-size-${fontSize}`);
+    }
+
+    applyBackgroundDots() {
+        // Toggle background dots class
+        if (this.settings.showBackgroundDots !== false) {
+            document.body.classList.remove('no-background-dots');
+        } else {
+            document.body.classList.add('no-background-dots');
         }
     }
 

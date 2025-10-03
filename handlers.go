@@ -29,15 +29,17 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 	settings := h.store.GetSettings()
 
 	data := struct {
-		Theme            string
-		ShowTitle        bool
-		ShowDate         bool
-		ShowConfigButton bool
+		Theme              string
+		ShowBackgroundDots bool
+		ShowTitle          bool
+		ShowDate           bool
+		ShowConfigButton   bool
 	}{
-		Theme:            settings.Theme,
-		ShowTitle:        settings.ShowTitle,
-		ShowDate:         settings.ShowDate,
-		ShowConfigButton: settings.ShowConfigButton,
+		Theme:              settings.Theme,
+		ShowBackgroundDots: settings.ShowBackgroundDots,
+		ShowTitle:          settings.ShowTitle,
+		ShowDate:           settings.ShowDate,
+		ShowConfigButton:   settings.ShowConfigButton,
 	}
 
 	if err := tmpl.Execute(w, data); err != nil {
@@ -56,15 +58,17 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 	settings := h.store.GetSettings()
 
 	data := struct {
-		Theme            string
-		ShowTitle        bool
-		ShowDate         bool
-		ShowConfigButton bool
+		Theme              string
+		ShowBackgroundDots bool
+		ShowTitle          bool
+		ShowDate           bool
+		ShowConfigButton   bool
 	}{
-		Theme:            settings.Theme,
-		ShowTitle:        settings.ShowTitle,
-		ShowDate:         settings.ShowDate,
-		ShowConfigButton: settings.ShowConfigButton,
+		Theme:              settings.Theme,
+		ShowBackgroundDots: settings.ShowBackgroundDots,
+		ShowTitle:          settings.ShowTitle,
+		ShowDate:           settings.ShowDate,
+		ShowConfigButton:   settings.ShowConfigButton,
 	}
 
 	if err := tmpl.Execute(w, data); err != nil {

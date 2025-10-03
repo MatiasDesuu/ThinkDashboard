@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +11,13 @@
     <link rel="stylesheet" href="/static/css/search.css">
     <link rel="stylesheet" href="/static/css/status.css">
     <link rel="stylesheet" href="/static/css/select.css">
+    <link rel="stylesheet" href="/static/css/font-size.css">
     <link rel="stylesheet" href="/static/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
 </head>
-<body class="{{.Theme}}" data-theme="{{.Theme}}">
+<body class="{{.Theme}}" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
     <div class="container">
         <header class="header">
             <h1 class="title">configuration</h1>
@@ -44,12 +45,26 @@
                     <label for="columns-input">Columns per row:</label>
                     <input type="number" id="columns-input" min="1" max="6" value="3">
                 </div>
+                <div class="form-group">
+                    <label for="font-size-select">Font size:</label>
+                    <select id="font-size-select">
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                    </select>
+                </div>
                 
                 <div class="checkbox-tree">
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="new-tab-checkbox">
                             <span class="checkbox-text">Open links in new tab</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-background-dots-checkbox">
+                            <span class="checkbox-text">Show background dots</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +11,13 @@
     <link rel="stylesheet" href="/static/css/search.css">
     <link rel="stylesheet" href="/static/css/status.css">
     <link rel="stylesheet" href="/static/css/select.css">
+    <link rel="stylesheet" href="/static/css/font-size.css">
     <link rel="stylesheet" href="/static/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
 </head>
-<body class="{{.Theme}}" data-theme="{{.Theme}}">
+<body class="{{.Theme}}" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
     <div class="container">
         <header class="header">
             {{if .ShowDate}}<div id="date-element" class="date"></div>{{end}}

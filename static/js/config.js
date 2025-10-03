@@ -7,6 +7,8 @@ class ConfigManager {
             theme: 'dark',
             openInNewTab: true,
             columnsPerRow: 3,
+            fontSize: 'medium',
+            showBackgroundDots: true,
             showTitle: true,
             showDate: true,
             showStatus: false,
@@ -58,13 +60,37 @@ class ConfigManager {
     }
 
     setupDOM() {
-        // Apply theme
-        document.body.className = this.settings.theme;
+        // Apply theme - use classList to preserve other classes
+        document.body.classList.remove('dark', 'light');
+        document.body.classList.add(this.settings.theme);
         document.body.setAttribute('data-theme', this.settings.theme);
         
         // Use ThemeLoader to apply theme styles and prevent FOUC
         if (window.ThemeLoader) {
-            window.ThemeLoader.applyTheme(this.settings.theme);
+            window.ThemeLoader.applyTheme(this.settings.theme, this.settings.showBackgroundDots);
+        }
+        
+        // Apply font size
+        this.applyFontSize();
+        
+        // Apply background dots
+        this.applyBackgroundDots();
+    }
+
+    applyFontSize() {
+        // Remove existing font size classes
+        document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+        // Add current font size class
+        const fontSize = this.settings.fontSize || 'medium';
+        document.body.classList.add(`font-size-${fontSize}`);
+    }
+
+    applyBackgroundDots() {
+        // Toggle background dots class
+        if (this.settings.showBackgroundDots !== false) {
+            document.body.classList.remove('no-background-dots');
+        } else {
+            document.body.classList.add('no-background-dots');
         }
     }
 
@@ -88,12 +114,32 @@ class ConfigManager {
             });
         }
 
+        // Font size change
+        const fontSizeSelect = document.getElementById('font-size-select');
+        if (fontSizeSelect) {
+            fontSizeSelect.value = this.settings.fontSize || 'medium';
+            fontSizeSelect.addEventListener('change', (e) => {
+                this.settings.fontSize = e.target.value;
+                this.applyFontSize();
+            });
+        }
+
         // New tab checkbox
         const newTabCheckbox = document.getElementById('new-tab-checkbox');
         if (newTabCheckbox) {
             newTabCheckbox.checked = this.settings.openInNewTab;
             newTabCheckbox.addEventListener('change', (e) => {
                 this.settings.openInNewTab = e.target.checked;
+            });
+        }
+
+        // Show background dots checkbox
+        const showBackgroundDotsCheckbox = document.getElementById('show-background-dots-checkbox');
+        if (showBackgroundDotsCheckbox) {
+            showBackgroundDotsCheckbox.checked = this.settings.showBackgroundDots !== false;
+            showBackgroundDotsCheckbox.addEventListener('change', (e) => {
+                this.settings.showBackgroundDots = e.target.checked;
+                this.applyBackgroundDots();
             });
         }
 
@@ -213,7 +259,7 @@ class ConfigManager {
         const div = document.createElement('div');
         div.className = 'category-item';
         div.innerHTML = `
-            <input type="text" value="${category.name}" placeholder="Category name" data-category-index="${index}" data-field="name">
+            <input type="text" id="category-name-${index}" name="category-name-${index}" value="${category.name}" placeholder="Category name" data-category-index="${index}" data-field="name">
             <button type="button" class="btn btn-danger" onclick="configManager.removeCategory(${index})">Remove</button>
         `;
 
@@ -249,16 +295,16 @@ class ConfigManager {
         ).join('');
 
         div.innerHTML = `
-            <input type="text" value="${bookmark.name}" placeholder="Bookmark name" data-bookmark-index="${index}" data-field="name">
-            <input type="url" value="${bookmark.url}" placeholder="https://example.com" data-bookmark-index="${index}" data-field="url">
-            <input type="text" value="${bookmark.shortcut || ''}" placeholder="Keys (Y, YS, YC)" maxlength="5" data-bookmark-index="${index}" data-field="shortcut" name="shortcut">
-            <select data-bookmark-index="${index}" data-field="category">
+            <input type="text" id="bookmark-name-${index}" name="bookmark-name-${index}" value="${bookmark.name}" placeholder="Bookmark name" data-bookmark-index="${index}" data-field="name">
+            <input type="url" id="bookmark-url-${index}" name="bookmark-url-${index}" value="${bookmark.url}" placeholder="https://example.com" data-bookmark-index="${index}" data-field="url">
+            <input type="text" id="bookmark-shortcut-${index}" name="bookmark-shortcut-${index}" value="${bookmark.shortcut || ''}" placeholder="Keys (Y, YS, YC)" maxlength="5" data-bookmark-index="${index}" data-field="shortcut">
+            <select id="bookmark-category-${index}" name="bookmark-category-${index}" data-bookmark-index="${index}" data-field="category">
                 <option value="">No category</option>
                 ${categoryOptions}
             </select>
             <div class="bookmark-status-toggle">
                 <label class="checkbox-label">
-                    <input type="checkbox" ${bookmark.checkStatus ? 'checked' : ''} data-bookmark-index="${index}" data-field="checkStatus">
+                    <input type="checkbox" id="bookmark-checkStatus-${index}" name="bookmark-checkStatus-${index}" ${bookmark.checkStatus ? 'checked' : ''} data-bookmark-index="${index}" data-field="checkStatus">
                     <span class="checkbox-text">status</span>
                 </label>
             </div>

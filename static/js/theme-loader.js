@@ -22,10 +22,10 @@
                 }
             }
         } else {
-            // Use server-side theme from data attribute
-            const bodyTheme = document.body?.getAttribute('data-theme');
-            if (bodyTheme) {
-                theme = bodyTheme;
+            // Use server-side theme from html element data attribute
+            const htmlTheme = document.documentElement.getAttribute('data-theme');
+            if (htmlTheme) {
+                theme = htmlTheme;
             }
         }
         
@@ -33,10 +33,40 @@
     }
     
     /**
+     * Gets the showBackgroundDots setting
+     * @returns {boolean} Whether to show background dots
+     */
+    function getShowBackgroundDots() {
+        const deviceSpecific = localStorage.getItem('deviceSpecificSettings') === 'true';
+        let showBackgroundDots = true; // default
+        
+        if (deviceSpecific) {
+            const settings = localStorage.getItem('dashboardSettings');
+            if (settings) {
+                try {
+                    const parsed = JSON.parse(settings);
+                    showBackgroundDots = parsed.showBackgroundDots !== false;
+                } catch (e) {
+                    console.error('Error parsing dashboard settings:', e);
+                }
+            }
+        } else {
+            // Use server-side setting from html element data attribute
+            const htmlAttr = document.documentElement.getAttribute('data-show-background-dots');
+            if (htmlAttr !== null) {
+                showBackgroundDots = htmlAttr === 'true';
+            }
+        }
+        
+        return showBackgroundDots;
+    }
+    
+    /**
      * Applies critical theme styles to prevent FOUC
      * @param {string} theme - The theme to apply ('dark' or 'light')
+     * @param {boolean} showBackgroundDots - Whether to show background dots
      */
-    function applyTheme(theme) {
+    function applyTheme(theme, showBackgroundDots = true) {
         // Remove existing FOUC prevention style if present
         const existingStyle = document.head.querySelector('style[data-fouc-prevention]');
         if (existingStyle) {
@@ -47,13 +77,16 @@
         const style = document.createElement('style');
         style.setAttribute('data-fouc-prevention', 'true');
         
+        const backgroundImage = showBackgroundDots 
+            ? 'background-image: radial-gradient({{color}} 1px, transparent 1px) !important; background-size: 15px 15px !important;'
+            : 'background-image: none !important;';
+        
         if (theme === 'light') {
             style.textContent = `
                 body { 
                     background-color: #F9FAFB !important;
                     color: #1F2937 !important;
-                    background-image: radial-gradient(#E5E7EB 1px, transparent 1px) !important;
-                    background-size: 15px 15px !important;
+                    ${backgroundImage.replace('{{color}}', '#E5E7EB')}
                 }
             `;
         } else {
@@ -61,8 +94,7 @@
                 body { 
                     background-color: #000 !important;
                     color: #E5E7EB !important;
-                    background-image: radial-gradient(#1F2937 1px, transparent 1px) !important;
-                    background-size: 15px 15px !important;
+                    ${backgroundImage.replace('{{color}}', '#1F2937')}
                 }
             `;
         }
@@ -71,18 +103,29 @@
         
         // Also set body class if body exists (for config page theme switching)
         if (document.body) {
-            document.body.className = theme;
+            // Use classList to preserve other classes like font-size
+            document.body.classList.remove('dark', 'light');
+            document.body.classList.add(theme);
             document.body.setAttribute('data-theme', theme);
+            
+            // Apply background dots class
+            if (!showBackgroundDots) {
+                document.body.classList.add('no-background-dots');
+            } else {
+                document.body.classList.remove('no-background-dots');
+            }
         }
     }
     
     // Apply theme immediately
     const theme = getTheme();
-    applyTheme(theme);
+    const showBackgroundDots = getShowBackgroundDots();
+    applyTheme(theme, showBackgroundDots);
     
     // Export functions for use by other scripts (e.g., config.js)
     window.ThemeLoader = {
         getTheme: getTheme,
+        getShowBackgroundDots: getShowBackgroundDots,
         applyTheme: applyTheme
     };
 })();
