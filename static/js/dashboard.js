@@ -23,6 +23,7 @@ class Dashboard {
         this.searchComponent = null;
         this.statusMonitor = null;
         this.keyboardNavigation = null;
+        this.swipeNavigation = null;
         this.init();
     }
 
@@ -32,6 +33,7 @@ class Dashboard {
         this.initializeSearchComponent();
         this.initializeStatusMonitor();
         this.initializeKeyboardNavigation();
+        this.initializeSwipeNavigation();
         this.renderPageNavigation();
         this.renderDashboard();
         this.setupPageShortcuts();
@@ -225,6 +227,15 @@ class Dashboard {
             this.keyboardNavigation = new window.KeyboardNavigation(this);
         } else {
             console.warn('KeyboardNavigation not found. Make sure keyboard-navigation.js is loaded.');
+        }
+    }
+
+    initializeSwipeNavigation() {
+        // Initialize swipe navigation component for touch gestures
+        if (window.SwipeNavigation) {
+            this.swipeNavigation = new window.SwipeNavigation(this);
+        } else {
+            console.warn('SwipeNavigation not found. Make sure swipe-navigation.js is loaded.');
         }
     }
 
