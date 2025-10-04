@@ -109,8 +109,8 @@ class SearchComponent {
             return;
         }
 
-        // Only handle alphanumeric keys
-        if (!/^[A-Z0-9]$/.test(key)) {
+        // Only handle letter keys (A-Z), not numbers
+        if (!/^[A-Z]$/.test(key)) {
             return;
         }
 

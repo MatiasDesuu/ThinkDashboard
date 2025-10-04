@@ -29,7 +29,8 @@ class ConfigManager {
             showTitle: true,
             showDate: true,
             showStatus: false,
-            showPing: false
+            showPing: false,
+            globalShortcuts: false
         };
         this.deviceSpecific = false;
 

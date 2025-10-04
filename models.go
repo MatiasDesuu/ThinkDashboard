@@ -36,6 +36,7 @@ type Settings struct {
 	ShowConfigButton   bool   `json:"showConfigButton"`
 	ShowStatus         bool   `json:"showStatus"`
 	ShowPing           bool   `json:"showPing"`
+	GlobalShortcuts    bool   `json:"globalShortcuts"` // Use shortcuts from all pages
 }
 
 type ColorTheme struct {
@@ -62,6 +63,7 @@ type Store interface {
 	GetBookmarks() []Bookmark
 	SaveBookmarks(bookmarks []Bookmark)
 	GetBookmarksByPage(pageID string) []Bookmark
+	GetAllBookmarks() []Bookmark
 	SaveBookmarksByPage(pageID string, bookmarks []Bookmark)
 	GetCategories() []Category
 	SaveCategories(categories []Category)
@@ -143,6 +145,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			ShowConfigButton:   true,
 			ShowStatus:         false,
 			ShowPing:           false,
+			GlobalShortcuts:    false,
 		}
 		data, _ := json.MarshalIndent(defaultSettings, "", "  ")
 		os.WriteFile(fs.settingsFile, data, 0644)
@@ -244,6 +247,26 @@ func (fs *FileStore) SaveBookmarksByPage(pageID string, bookmarks []Bookmark) {
 	os.WriteFile(filename, data, 0644)
 }
 
+func (fs *FileStore) GetAllBookmarks() []Bookmark {
+	fs.mutex.RLock()
+	defer fs.mutex.RUnlock()
+
+	fs.ensureDataDir()
+
+	// Get all pages
+	pages := fs.GetPages()
+
+	var allBookmarks []Bookmark
+
+	// Collect bookmarks from all pages
+	for _, page := range pages {
+		pageBookmarks := fs.GetBookmarksByPage(page.ID)
+		allBookmarks = append(allBookmarks, pageBookmarks...)
+	}
+
+	return allBookmarks
+}
+
 func (fs *FileStore) GetCategories() []Category {
 	fs.mutex.RLock()
 	defer fs.mutex.RUnlock()
@@ -327,6 +350,7 @@ func (fs *FileStore) GetSettings() Settings {
 			ShowConfigButton:   true,
 			ShowStatus:         false,
 			ShowPing:           false,
+			GlobalShortcuts:    false,
 		}
 	}
 

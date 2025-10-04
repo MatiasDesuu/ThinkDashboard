@@ -2,6 +2,7 @@
 class Dashboard {
     constructor() {
         this.bookmarks = [];
+        this.allBookmarks = []; // For global shortcuts
         this.categories = [];
         this.pages = [];
         this.currentPageId = 'default';
@@ -16,10 +17,12 @@ class Dashboard {
             showDate: true,
             showConfigButton: true,
             showStatus: false,
-            showPing: false
+            showPing: false,
+            globalShortcuts: false
         };
         this.searchComponent = null;
         this.statusMonitor = null;
+        this.keyboardNavigation = null;
         this.init();
     }
 
@@ -28,8 +31,10 @@ class Dashboard {
         this.setupDOM();
         this.initializeSearchComponent();
         this.initializeStatusMonitor();
+        this.initializeKeyboardNavigation();
         this.renderPageNavigation();
         this.renderDashboard();
+        this.setupPageShortcuts();
         
         // Set initial page title
         const firstPage = this.pages.length > 0 ? this.pages[0] : null;
@@ -63,6 +68,11 @@ class Dashboard {
             
             // Load bookmarks for first page
             await this.loadPageBookmarks(this.currentPageId);
+            
+            // If global shortcuts is enabled, load all bookmarks for search
+            if (this.settings.globalShortcuts) {
+                await this.loadAllBookmarks();
+            }
         } catch (error) {
             console.error('Error loading data:', error);
         }
@@ -85,8 +95,27 @@ class Dashboard {
                 this.updateSearchComponent();
             }
             this.renderDashboard();
+            
+            // Reset keyboard navigation to first element when changing pages
+            if (this.keyboardNavigation) {
+                this.keyboardNavigation.resetToFirst();
+            }
         } catch (error) {
             console.error('Error loading page bookmarks:', error);
+        }
+    }
+
+    async loadAllBookmarks() {
+        try {
+            const allBookmarksRes = await fetch('/api/bookmarks?all=true');
+            this.allBookmarks = await allBookmarksRes.json();
+            
+            // Update search component with all bookmarks
+            if (this.searchComponent) {
+                this.updateSearchComponent();
+            }
+        } catch (error) {
+            console.error('Error loading all bookmarks:', error);
         }
     }
 
@@ -111,7 +140,6 @@ class Dashboard {
             }
             // Show page number instead of name
             pageBtn.textContent = (index + 1).toString();
-            pageBtn.setAttribute('title', page.name); // Show name in tooltip
             pageBtn.addEventListener('click', () => {
                 // Update all buttons
                 container.querySelectorAll('.page-nav-btn').forEach(btn => {
@@ -157,34 +185,15 @@ class Dashboard {
         if (grid) {
             grid.className = `dashboard-grid columns-${this.settings.columnsPerRow}`;
         }
-        
-        // Adjust header margin based on title and date visibility
-        const header = document.querySelector('.header');
-        if (header) {
-            if (!this.settings.showTitle && !this.settings.showDate) {
-                // Neither title nor date
-                header.style.marginBottom = '1rem';
-                header.style.minHeight = '40px';
-            } else if (this.settings.showTitle && !this.settings.showDate) {
-                // Only title, no date - needs proper spacing
-                header.style.marginBottom = '2.5rem';
-                header.style.minHeight = '80px';
-            } else if (!this.settings.showTitle && this.settings.showDate) {
-                // Only date, no title - reduce excessive spacing
-                header.style.marginBottom = '1.5rem';
-                header.style.minHeight = '50px';
-            } else {
-                // Both title and date - default spacing
-                header.style.marginBottom = '3rem';
-                header.style.minHeight = '80px';
-            }
-        }
     }
 
     initializeSearchComponent() {
         // Initialize search component with current data
+        // Use all bookmarks if global shortcuts is enabled, otherwise just current page
+        const bookmarksForSearch = this.settings.globalShortcuts ? this.allBookmarks : this.bookmarks;
+        
         if (window.SearchComponent) {
-            this.searchComponent = new window.SearchComponent(this.bookmarks, this.settings);
+            this.searchComponent = new window.SearchComponent(bookmarksForSearch, this.settings);
         } else {
             console.warn('SearchComponent not found. Make sure search.js is loaded.');
         }
@@ -193,7 +202,9 @@ class Dashboard {
     // Method to update search component when data changes
     updateSearchComponent() {
         if (this.searchComponent) {
-            this.searchComponent.updateData(this.bookmarks, this.settings);
+            // Use all bookmarks if global shortcuts is enabled, otherwise just current page
+            const bookmarksForSearch = this.settings.globalShortcuts ? this.allBookmarks : this.bookmarks;
+            this.searchComponent.updateData(bookmarksForSearch, this.settings);
         }
     }
 
@@ -208,11 +219,67 @@ class Dashboard {
         }
     }
 
+    initializeKeyboardNavigation() {
+        // Initialize keyboard navigation component
+        if (window.KeyboardNavigation) {
+            this.keyboardNavigation = new window.KeyboardNavigation(this);
+        } else {
+            console.warn('KeyboardNavigation not found. Make sure keyboard-navigation.js is loaded.');
+        }
+    }
+
     // Method to update status monitor when settings change
     updateStatusMonitor() {
         if (this.statusMonitor) {
             this.statusMonitor.updateSettings(this.settings);
         }
+    }
+
+    setupPageShortcuts() {
+        // Listen for number key presses to switch pages
+        document.addEventListener('keydown', (e) => {
+            // Only handle number keys 1-9
+            // Ignore if user is typing in an input field or if search is active
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                return;
+            }
+            
+            // Check if shortcut search is active
+            const searchElement = document.getElementById('shortcut-search');
+            if (searchElement && searchElement.classList.contains('show')) {
+                return;
+            }
+            
+            // Don't trigger if modifier keys are pressed
+            if (e.ctrlKey || e.altKey || e.metaKey) {
+                return;
+            }
+            
+            // Check if a number key (1-9) was pressed
+            const key = e.key;
+            if (key >= '1' && key <= '9') {
+                const pageIndex = parseInt(key) - 1;
+                
+                // Check if this page exists
+                if (pageIndex < this.pages.length) {
+                    e.preventDefault(); // Prevent default browser behavior
+                    e.stopPropagation(); // Stop the event from reaching other listeners
+                    
+                    const page = this.pages[pageIndex];
+                    
+                    // Update navigation buttons
+                    const navButtons = document.querySelectorAll('.page-nav-btn');
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    if (navButtons[pageIndex]) {
+                        navButtons[pageIndex].classList.add('active');
+                    }
+                    
+                    // Load the page
+                    this.loadPageBookmarks(page.id);
+                    this.updatePageTitle(page.name);
+                }
+            }
+        });
     }
 
 

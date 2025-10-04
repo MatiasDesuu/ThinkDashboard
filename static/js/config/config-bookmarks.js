@@ -1,6 +1,14 @@
 /**
  * Bookmarks Module
- * Handles bookmark management (create, render, remove, reorder)
+ * Handles bookmark ma        div.innerHTML = `
+            <span class="drag-handle js-drag-handle" title="Drag to reorder">⠿</span>
+            <input type="text" id="bookmark-name-${index}" name="bookmark-name-${index}" value="${bookmark.name}" placeholder="Bookmark name" data-bookmark-index="${index}" data-field="name">
+            <input type="url" id="bookmark-url-${index}" name="bookmark-url-${index}" value="${bookmark.url}" placeholder="https://example.com" data-bookmark-index="${index}" data-field="url">
+            <input type="text" id="bookmark-shortcut-${index}" name="bookmark-shortcut-${index}" value="${bookmark.shortcut || ''}" placeholder="Letters only (Y, GH, YT)" maxlength="5" data-bookmark-index="${index}" data-field="shortcut">
+            <select id="bookmark-category-${index}" name="bookmark-category-${index}" data-bookmark-index="${index}" data-field="category">
+                <option value="">No category</option>
+                ${categoryOptions}
+            </select>`(create, render, remove, reorder)
  */
 
 class ConfigBookmarks {
@@ -75,9 +83,9 @@ class ConfigBookmarks {
                     bookmarks[index][field] = e.target.value;
                 }
                 
-                // Convert shortcut to uppercase and allow multiple characters
+                // Convert shortcut to uppercase and allow only letters (no numbers)
                 if (field === 'shortcut') {
-                    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
                     bookmarks[index][field] = e.target.value;
                 }
             });

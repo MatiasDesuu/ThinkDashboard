@@ -20,24 +20,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
 </head>
 <body class="{{.Theme}}" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
-    <div class="container">
-        <header class="header">
-            {{if .ShowDate}}<div id="date-element" class="date"></div>{{end}}
-            {{if .ShowTitle}}<div class="title-wrapper">
-                <h1 class="title">dashboard</h1>
-            </div>{{end}}
-            <div class="header-actions">
-                <div id="page-navigation" class="page-navigation">
-                    <!-- Pages will be loaded here -->
+    <!-- Container 1: Date, tabs, config button -->
+    <div class="dashboard-section section-controls">
+        <div class="container">
+            <div class="header-top">
+                {{if .ShowDate}}<div id="date-element" class="date"></div>{{end}}
+                <div class="header-actions">
+                    <div id="page-navigation" class="page-navigation">
+                        <!-- Pages will be loaded here -->
+                    </div>
+                    {{if .ShowConfigButton}}<div class="config-link">
+                        <a href="/config">config</a>
+                    </div>{{end}}
                 </div>
-                {{if .ShowConfigButton}}<div class="config-link">
-                    <a href="/config">config</a>
-                </div>{{end}}
             </div>
-        </header>
+        </div>
+    </div>
 
-        <main id="dashboard-layout" class="dashboard-grid">
-        </main>
+    <!-- Container 2: Title -->
+    {{if .ShowTitle}}<div class="dashboard-section section-title">
+        <div class="container">
+            <div class="title-wrapper">
+                <h1 class="title"></h1>
+            </div>
+        </div>
+    </div>{{end}}
+
+    <!-- Container 3: Bookmarks -->
+    <div class="dashboard-section section-content">
+        <div class="container">
+            <main id="dashboard-layout" class="dashboard-grid">
+            </main>
+        </div>
     </div>
 
     <div id="shortcut-search" class="shortcut-search">
@@ -54,6 +68,7 @@
     <script src="/static/js/modal.js"></script>
     <script src="/static/js/search.js"></script>
     <script src="/static/js/status.js"></script>
+    <script src="/static/js/keyboard-navigation.js"></script>
     <script src="/static/js/dashboard.js"></script>
 </body>
 </html>

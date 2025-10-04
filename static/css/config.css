@@ -11,20 +11,43 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Config Sections - Same system as dashboard */
+.config-section {
+    padding: 0;
+}
+
+.config-section.section-header {
+    padding-top: 2rem;
+    padding-bottom: 0;
+}
+
+.config-section.section-controls {
+    padding-top: 0;
+    padding-bottom: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--background-primary);
+}
+
+.config-section.section-content {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
 .container {
     max-width: 1200px;
-    margin: 0 auto;/* Config Actions Top */
+    margin: 0 auto;
+    padding: 0 2rem;
 }
+
+/* Config Actions Top */
 .config-actions-top {
     display: flex;
     gap: 1rem;
     justify-content: flex-start;
     padding: 1rem 0;
     margin-bottom: 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background-color: var(--background-primary);
 }
 
 /* Tabs */
@@ -32,12 +55,8 @@ body {
     display: flex;
     gap: 0;
     padding: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     border: 1px solid var(--border-primary);
-    position: sticky;
-    top: 70px;
-    z-index: 99;
-    background-color: var(--background-primary);
 }
 
 .tab-button {
@@ -111,7 +130,7 @@ body {
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: 900;
     opacity: 0.8;
 }
@@ -191,7 +210,7 @@ body {
     border: 1px solid var(--border-primary);
     text-align: center;
     flex: 1;
-    padding-right: 28px;
+    padding-right: 32px;
     appearance: textfield;
     -moz-appearance: textfield;
     -webkit-appearance: none;
@@ -374,7 +393,6 @@ body {
 .page-selector-wrapper {
     margin-bottom: 1.5rem;
     padding: 1rem;
-    background: var(--background-primary);
     border: 1px solid var(--border-primary);
     display: flex;
     align-items: center;

@@ -4,9 +4,23 @@
 
 /* Desktop (992px - 1199px) */
 @media (max-width: 1199px) {
+    .dashboard-section.section-controls,
+    .config-section.section-header {
+        padding-top: 1.75rem;
+    }
+    
+    .dashboard-section.section-content {
+        padding-bottom: 1.75rem;
+    }
+    
+    .config-section.section-content {
+        padding-top: 0.875rem;
+        padding-bottom: 1.75rem;
+    }
+    
     .container {
         max-width: 960px;
-        padding: 2rem 1.5rem;
+        padding: 0 1.5rem;
     }
     
     .dashboard-grid {
@@ -20,14 +34,45 @@
 
 /* Tablet (768px - 991px) */
 @media (max-width: 991px) {
+    .dashboard-section.section-controls,
+    .config-section.section-header {
+        padding-top: 1.5rem;
+    }
+    
+    .dashboard-section.section-content {
+        padding-bottom: 1.5rem;
+    }
+    
+    .config-section.section-content {
+        padding-top: 0.75rem;
+        padding-bottom: 1.5rem;
+    }
+    
     .container {
         max-width: 720px;
-        padding: 1.5rem 1rem;
+        padding: 0 1rem;
     }
     
     .dashboard-grid {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 1.5rem;
+    }
+    
+    .title {
+        font-size: 3rem;
+    }
+    
+    .header-actions {
+        gap: 1rem;
+    }
+    
+    .page-nav-btn {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.813rem;
+    }
+    
+    .config-link a {
+        font-size: 0.938rem;
     }
     
     .bookmark-link {
@@ -124,6 +169,72 @@
         padding: 0.4rem 0;
     }
     
+    /* Header responsive - mobile large */
+    .dashboard-section,
+    .config-section {
+        padding: 0;
+    }
+    
+    .dashboard-section.section-controls,
+    .config-section.section-header {
+        padding-top: 1.5rem;
+        padding-bottom: 0;
+    }
+    
+    .dashboard-section.section-title,
+    .config-section.section-controls {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    
+    .dashboard-section.section-content {
+        padding-top: 0;
+        padding-bottom: 1.5rem;
+    }
+    
+    .config-section.section-content {
+        padding-top: 0.75rem;
+        padding-bottom: 1.5rem;
+    }
+    
+    .container {
+        padding: 0 1.5rem;
+    }
+    
+    .header-top {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .date {
+        font-size: 0.938rem;
+    }
+    
+    .title {
+        font-size: 2.5rem;
+    }
+    
+    .header-actions {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .page-navigation {
+        gap: 0.125rem;
+    }
+    
+    .page-nav-btn {
+        padding: 0.3rem 0.45rem;
+        font-size: 0.75rem;
+    }
+    
+    .config-link a {
+        font-size: 0.875rem;
+    }
+    
     /* Config page mobile large styles */
     .section {
         margin-bottom: 1.5rem;
@@ -208,7 +319,6 @@
     .config-actions-top {
         flex-wrap: wrap;
         gap: 0.625rem;
-        top: 0;
     }
     
     .config-actions-top .btn {
@@ -245,6 +355,71 @@
         margin-bottom: 1rem;
     }
     
+    /* Header responsive - mobile small */
+    .dashboard-section,
+    .config-section {
+        padding: 0;
+    }
+    
+    .dashboard-section.section-controls,
+    .config-section.section-header {
+        padding-top: 1.25rem;
+        padding-bottom: 0;
+    }
+    
+    .dashboard-section.section-title,
+    .config-section.section-controls {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    
+    .dashboard-section.section-content {
+        padding-top: 0;
+        padding-bottom: 1.25rem;
+    }
+    
+    .config-section.section-content {
+        padding-top: 0.625rem;
+        padding-bottom: 1.25rem;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .header-top {
+        flex-direction: column;
+        gap: 0.625rem;
+    }
+    
+    .date {
+        font-size: 0.875rem;
+        letter-spacing: 0.05em;
+    }
+    
+    .title {
+        font-size: 2rem;
+    }
+    
+    .header-actions {
+        width: 100%;
+        gap: 0.625rem;
+    }
+    
+    .page-nav-btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.688rem;
+    }
+    
+    .page-nav-btn::before,
+    .page-nav-btn::after {
+        margin: 0 0.125rem;
+    }
+    
+    .config-link a {
+        font-size: 0.813rem;
+    }
+    
     /* Config page mobile small styles */
     .section {
         margin-bottom: 1.25rem;
@@ -272,8 +447,6 @@
     }
     
     .config-actions-top {
-        position: relative;
-        top: auto;
         flex-direction: column;
     }
     
@@ -337,6 +510,81 @@
     
     .search-match-shortcut {
         min-width: 2.5ch;
+    }
+    
+    /* Header responsive - mobile extra small */
+    .dashboard-section,
+    .config-section {
+        padding: 0;
+    }
+    
+    .dashboard-section.section-controls,
+    .config-section.section-header {
+        padding-top: 1rem;
+        padding-bottom: 0;
+    }
+    
+    .dashboard-section.section-title,
+    .config-section.section-controls {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    
+    .dashboard-section.section-content {
+        padding-top: 0;
+        padding-bottom: 1rem;
+    }
+    
+    .config-section.section-content {
+        padding-top: 0.5rem;
+        padding-bottom: 1rem;
+    }
+    
+    .container {
+        padding: 0 0.75rem;
+    }
+    
+    .header-top {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .date {
+        font-size: 0.75rem;
+        letter-spacing: 0.025em;
+    }
+    
+    .title {
+        font-size: 1.75rem;
+    }
+    
+    .header-actions {
+        width: 100%;
+        gap: 0.5rem;
+    }
+    
+    .page-navigation {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 0.125rem;
+        scrollbar-width: thin;
+        max-width: 70%;
+    }
+    
+    .page-nav-btn {
+        padding: 0.25rem 0.35rem;
+        font-size: 0.625rem;
+        white-space: nowrap;
+    }
+    
+    .page-nav-btn::before,
+    .page-nav-btn::after {
+        margin: 0 0.1rem;
+    }
+    
+    .config-link a {
+        font-size: 0.75rem;
+        white-space: nowrap;
     }
     
     /* Config page mobile extra small styles */
@@ -426,10 +674,5 @@
     
     .tab-button:last-child {
         border-bottom: none;
-    }
-    
-    .config-actions-top {
-        position: relative;
-        top: auto;
     }
 }

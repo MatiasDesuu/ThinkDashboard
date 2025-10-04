@@ -21,28 +21,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
 </head>
 <body class="{{.Theme}}" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
-    <div class="container">
-        <header class="header">
-            <h1 class="title">configuration</h1>
-            <div class="nav-links">
-                <a href="/colors" class="back-link">customize colors</a>
-                <a href="/" class="back-link">← back to dashboard</a>
+    <!-- Contenedor 1: Title y nav links -->
+    <div class="config-section section-header">
+        <div class="container">
+            <header class="header">
+                <h1 class="title">configuration</h1>
+                <div class="nav-links">
+                    <a href="/colors" class="back-link">customize colors</a>
+                    <a href="/" class="back-link">← back to dashboard</a>
+                </div>
+            </header>
+        </div>
+    </div>
+
+    <!-- Contenedor 2: Save/Reset buttons y tabs -->
+    <div class="config-section section-controls">
+        <div class="container">
+            <div class="config-controls-wrapper">
+                <div class="config-actions-top">
+                    <button id="save-btn" class="btn btn-success">Save Changes</button>
+                    <button id="reset-btn" class="btn btn-secondary">Reset to Defaults</button>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="general">general</button>
+                    <button class="tab-button" data-tab="pages">pages</button>
+                    <button class="tab-button" data-tab="categories">categories</button>
+                    <button class="tab-button" data-tab="bookmarks">bookmarks</button>
+                </div>
             </div>
-        </header>
-
-        <div class="config-actions-top">
-            <button id="save-btn" class="btn btn-success">Save Changes</button>
-            <button id="reset-btn" class="btn btn-secondary">Reset to Defaults</button>
         </div>
+    </div>
 
-        <div class="tabs">
-            <button class="tab-button active" data-tab="general">general</button>
-            <button class="tab-button" data-tab="pages">pages</button>
-            <button class="tab-button" data-tab="categories">categories</button>
-            <button class="tab-button" data-tab="bookmarks">bookmarks</button>
-        </div>
-
-        <main class="config-main">
+    <!-- Contenedor 3: Contenido de la página -->
+    <div class="config-section section-content">
+        <div class="container">
+            <main class="config-main">
             <div class="tab-content active" data-tab-content="general">
             <div class="config-section">
                 <div class="form-group">
@@ -110,6 +124,12 @@
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
+                            <input type="checkbox" id="global-shortcuts-checkbox">
+                            <span class="checkbox-text">Use shortcuts from all pages</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
                             <input type="checkbox" id="show-status-checkbox">
                             <span class="checkbox-text">Show bookmark status (online/offline)</span>
                         </label>
@@ -158,7 +178,8 @@
             </div>
             </div>
 
-        </main>
+            </main>
+        </div>
     </div>
 
     <div id="notification" class="notification">

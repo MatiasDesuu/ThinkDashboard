@@ -79,9 +79,13 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handlers) GetBookmarks(w http.ResponseWriter, r *http.Request) {
 	pageID := r.URL.Query().Get("page")
+	all := r.URL.Query().Get("all")
 	var bookmarks []Bookmark
 
-	if pageID != "" {
+	if all == "true" {
+		// Get bookmarks from all pages
+		bookmarks = h.store.GetAllBookmarks()
+	} else if pageID != "" {
 		bookmarks = h.store.GetBookmarksByPage(pageID)
 	} else {
 		bookmarks = h.store.GetBookmarks()

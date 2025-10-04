@@ -19,27 +19,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
 </head>
 <body class="{{.Theme}}" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
-    <div class="container">
-        <header class="header">
-            <h1 class="title">color customization</h1>
-            <div class="nav-links">
-                <a href="/config" class="back-link">← back to config</a>
-                <a href="/" class="back-link">← back to dashboard</a>
+    <!-- Contenedor 1: Title y nav links -->
+    <div class="config-section section-header">
+        <div class="container">
+            <header class="header">
+                <h1 class="title">color customization</h1>
+                <div class="nav-links">
+                    <a href="/config" class="back-link">← back to config</a>
+                    <a href="/" class="back-link">← back to dashboard</a>
+                </div>
+            </header>
+        </div>
+    </div>
+
+    <!-- Contenedor 2: Save/Reset buttons y tabs -->
+    <div class="config-section section-controls">
+        <div class="container">
+            <div class="config-controls-wrapper">
+                <div class="config-actions-top">
+                    <button id="save-colors-btn" class="btn btn-success">Save Colors</button>
+                    <button id="reset-colors-btn" class="btn btn-secondary">Reset to Defaults</button>
+                    <button id="preview-theme-btn" class="btn btn-success">Toggle Preview (Light/Dark)</button>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="dark">dark theme</button>
+                    <button class="tab-button" data-tab="light">light theme</button>
+                </div>
             </div>
-        </header>
-
-        <div class="config-actions-top">
-            <button id="save-colors-btn" class="btn btn-success">Save Colors</button>
-            <button id="reset-colors-btn" class="btn btn-secondary">Reset to Defaults</button>
-            <button id="preview-theme-btn" class="btn btn-success">Toggle Preview (Light/Dark)</button>
         </div>
+    </div>
 
-        <div class="tabs">
-            <button class="tab-button active" data-tab="dark">dark theme</button>
-            <button class="tab-button" data-tab="light">light theme</button>
-        </div>
-
-        <main class="config-main">
+    <!-- Contenedor 3: Contenido de la página -->
+    <div class="config-section section-content">
+        <div class="container">
+            <main class="config-main">
             <div class="tab-content active" data-tab-content="dark">
             <div class="config-section">
                 <div class="colors-grid">
@@ -249,7 +263,9 @@
                 </div>
             </div>
             </div>
-        </main>
+
+            </main>
+        </div>
     </div>
 
     <div id="notification" class="notification">

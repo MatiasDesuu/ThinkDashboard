@@ -105,6 +105,15 @@ class ConfigSettings {
                 settings.showPing = e.target.checked;
             });
         }
+
+        // Global shortcuts checkbox
+        const globalShortcutsCheckbox = document.getElementById('global-shortcuts-checkbox');
+        if (globalShortcutsCheckbox) {
+            globalShortcutsCheckbox.checked = settings.globalShortcuts || false;
+            globalShortcutsCheckbox.addEventListener('change', (e) => {
+                settings.globalShortcuts = e.target.checked;
+            });
+        }
     }
 
     /**
@@ -120,6 +129,7 @@ class ConfigSettings {
         const showConfigButtonCheckbox = document.getElementById('show-config-button-checkbox');
         const showStatusCheckbox = document.getElementById('show-status-checkbox');
         const showPingCheckbox = document.getElementById('show-ping-checkbox');
+        const globalShortcutsCheckbox = document.getElementById('global-shortcuts-checkbox');
 
         if (themeSelect) settings.theme = themeSelect.value;
         if (columnsInput) settings.columnsPerRow = parseInt(columnsInput.value);
@@ -129,6 +139,7 @@ class ConfigSettings {
         if (showConfigButtonCheckbox) settings.showConfigButton = showConfigButtonCheckbox.checked;
         if (showStatusCheckbox) settings.showStatus = showStatusCheckbox.checked;
         if (showPingCheckbox) settings.showPing = showPingCheckbox.checked;
+        if (globalShortcutsCheckbox) settings.globalShortcuts = globalShortcutsCheckbox.checked;
     }
 
     /**
@@ -160,6 +171,13 @@ class ConfigSettings {
      * @param {boolean} showBackgroundDots
      */
     applyBackgroundDots(showBackgroundDots) {
+        // Use ThemeLoader to apply background dots consistently
+        if (window.ThemeLoader) {
+            const theme = document.body.getAttribute('data-theme') || 'dark';
+            window.ThemeLoader.applyTheme(theme, showBackgroundDots);
+        }
+        
+        // Also set the data attribute for consistency
         if (showBackgroundDots !== false) {
             document.body.setAttribute('data-show-background-dots', 'true');
         } else {
@@ -203,7 +221,8 @@ class ConfigSettings {
             showDate: true,
             showConfigButton: true,
             showStatus: false,
-            showPing: false
+            showPing: false,
+            globalShortcuts: false
         };
     }
 }

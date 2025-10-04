@@ -11,35 +11,45 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Dashboard Sections */
+.dashboard-section {
+    padding: 0;
+}
+
+.dashboard-section.section-controls {
+    padding-top: 2rem;
+    padding-bottom: 0;
+}
+
+.dashboard-section.section-title {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.dashboard-section.section-content {
+    padding-top: 0;
+    padding-bottom: 2rem;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
-    position: relative;
+    padding: 0 2rem;
 }
 
-/* Header */
-.header {
-    position: relative;
-    margin-bottom: 3rem;
-    min-height: 80px;
+/* Header Top - Contains date, tabs, and config button */
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .date {
-    position: absolute;
-    top: 0;
-    left: 0;
     font-size: 1.125rem;
     font-weight: 900;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-tertiary);
-}
-
-.title-wrapper {
-    position: absolute;
-    top: 1rem;
-    left: 0.5rem;
 }
 
 .title {
@@ -51,23 +61,19 @@ body {
 }
 
 .header-actions {
-    position: absolute;
-    top: 0;
-    right: 0;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .page-navigation {
     display: flex;
-    gap: 0.5rem;
     flex-wrap: wrap;
+    gap: 0.25rem;
 }
 
 .page-nav-btn {
-    padding: 0.4rem 0.8rem;
-    min-width: 2.5rem;
+    padding: 0.4rem 0.6rem;
     font-family: 'Source Code Pro', monospace;
     font-size: 0.875rem;
     font-weight: 600;
@@ -108,12 +114,6 @@ body {
 .page-nav-btn.active::before,
 .page-nav-btn.active::after {
     opacity: 1;
-}
-
-.config-link {
-    position: absolute;
-    top: 0;
-    right: 0;
 }
 
 .config-link a {
@@ -200,6 +200,21 @@ body {
     transform: translateX(4px);
 }
 
+/* Keyboard navigation highlight */
+.bookmark-link.keyboard-selected {
+    color: var(--text-primary);
+    transform: translateX(8px);
+    position: relative;
+}
+
+.bookmark-link.keyboard-selected::before {
+    content: '>';
+    position: absolute;
+    left: -1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
 .bookmark-shortcut {
     position: absolute;
     right: 0;
@@ -231,18 +246,7 @@ body[data-show-date="false"] .date {
     display: none;
 }
 
-/* Adjust title position when date is hidden */
-body[data-show-date="false"] .title-wrapper {
-    top: 0.5rem;
-}
-
-/* Adjust date position when title is hidden */
-body[data-show-title="false"] .date {
-    top: 0.5rem;
-}
-
 /* Hide config button when showConfigButton is false */
 body[data-show-config-button="false"] .config-button {
     display: none;
 }
-
