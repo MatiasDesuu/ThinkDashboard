@@ -64,6 +64,7 @@
     
     .header-actions {
         gap: 1rem;
+        margin-left: auto;
     }
     
     .page-nav-btn {
@@ -217,9 +218,10 @@
     .header-actions {
         width: 100%;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         gap: 0.75rem;
+        margin-left: 0;
     }
     
     .page-navigation {
@@ -404,6 +406,8 @@
     .header-actions {
         width: 100%;
         gap: 0.625rem;
+        justify-content: flex-end;
+        margin-left: 0;
     }
     
     .page-nav-btn {
@@ -561,6 +565,8 @@
     .header-actions {
         width: 100%;
         gap: 0.5rem;
+        justify-content: flex-end;
+        margin-left: 0;
     }
     
     .page-navigation {
