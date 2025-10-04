@@ -50,6 +50,17 @@ class ConfigSettings {
             });
         }
 
+        // HyprMode checkbox
+        const hyprModeCheckbox = document.getElementById('hypr-mode-checkbox');
+        if (hyprModeCheckbox) {
+            hyprModeCheckbox.checked = settings.hyprMode || false;
+            hyprModeCheckbox.addEventListener('change', (e) => {
+                settings.hyprMode = e.target.checked;
+                // Disable preview if callback is provided
+                if (callbacks.onHyprModeChange) callbacks.onHyprModeChange(settings.hyprMode);
+            });
+        }
+
         // Show background dots checkbox
         const showBackgroundDotsCheckbox = document.getElementById('show-background-dots-checkbox');
         if (showBackgroundDotsCheckbox) {

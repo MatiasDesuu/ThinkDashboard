@@ -18,7 +18,8 @@ class Dashboard {
             showConfigButton: true,
             showStatus: false,
             showPing: false,
-            globalShortcuts: false
+            globalShortcuts: false,
+            hyprMode: false
         };
         this.searchComponent = null;
         this.statusMonitor = null;
@@ -34,6 +35,7 @@ class Dashboard {
         this.initializeStatusMonitor();
         this.initializeKeyboardNavigation();
         this.initializeSwipeNavigation();
+        this.initializeHyprMode();
         this.renderPageNavigation();
         this.renderDashboard();
         this.setupPageShortcuts();
@@ -246,6 +248,15 @@ class Dashboard {
         }
     }
 
+    initializeHyprMode() {
+        // Initialize HyprMode component
+        if (window.hyprMode) {
+            window.hyprMode.init(this.settings.hyprMode || false);
+        } else {
+            console.warn('HyprMode not found. Make sure hypr-mode.js is loaded.');
+        }
+    }
+
     // Method to update status monitor when settings change
     updateStatusMonitor() {
         if (this.statusMonitor) {
@@ -385,6 +396,18 @@ class Dashboard {
         link.textContent = bookmark.name;
         link.setAttribute('data-bookmark-url', bookmark.url);
         
+        // Always add click handler to check HyprMode dynamically
+        link.addEventListener('click', (e) => {
+            // Check if HyprMode is enabled at click time
+            if (window.hyprMode && window.hyprMode.isEnabled()) {
+                e.preventDefault();
+                window.hyprMode.handleBookmarkClick(bookmark.url);
+            }
+            // If HyprMode is not enabled, let the default behavior happen
+            // (which will be controlled by target="_blank" if openInNewTab is true)
+        });
+        
+        // Set target for new tab if openInNewTab is enabled and HyprMode is not
         if (this.settings.openInNewTab) {
             link.target = '_blank';
             link.rel = 'noopener noreferrer';

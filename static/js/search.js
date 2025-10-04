@@ -342,7 +342,10 @@ class SearchComponent {
         
         // Small delay to ensure search is closed before opening bookmark
         setTimeout(() => {
-            if (this.settings.openInNewTab) {
+            // Check if HyprMode is enabled
+            if (window.hyprMode && window.hyprMode.isEnabled()) {
+                window.hyprMode.handleBookmarkClick(bookmark.url);
+            } else if (this.settings.openInNewTab) {
                 window.open(bookmark.url, '_blank', 'noopener,noreferrer');
             } else {
                 window.location.href = bookmark.url;
