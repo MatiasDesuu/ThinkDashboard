@@ -194,6 +194,10 @@ body {
     position: relative;
     padding: 0.5rem 0;
     color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 4rem; /* Space for the shortcut */
 }
 
 .bookmark-link:hover {
@@ -224,6 +228,7 @@ body {
     font-size: 0.875rem;
     font-weight: 400;
     opacity: 0.7;
+    white-space: nowrap; /* Prevent shortcut from wrapping */
 }
 
 

@@ -342,10 +342,8 @@ class Dashboard {
             grouped[categoryId].push(bookmark);
         });
 
-        // Sort bookmarks within each category
-        Object.keys(grouped).forEach(categoryId => {
-            grouped[categoryId].sort((a, b) => a.name.localeCompare(b.name));
-        });
+        // Bookmarks are kept in the order they appear in the JSON file
+        // No sorting applied - respects the order from data/bookmarks-X.json
 
         return grouped;
     }
