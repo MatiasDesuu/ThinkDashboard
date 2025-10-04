@@ -19,8 +19,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        /* Prevent flash of unstyled content */
+        body.loading {
+            opacity: 0;
+            visibility: hidden;
+        }
+    </style>
 </head>
-<body class="{{.Theme}}" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
+<body class="{{.Theme}} loading" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
     <!-- Contenedor 1: Title y nav links -->
     <div class="config-section section-header">
         <div class="container">
@@ -114,6 +121,12 @@
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-config-button-checkbox">
                             <span class="checkbox-text">Show config button</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-search-button-checkbox">
+                            <span class="checkbox-text">Show search button</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">

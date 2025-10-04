@@ -37,12 +37,14 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		ShowTitle          bool
 		ShowDate           bool
 		ShowConfigButton   bool
+		ShowSearchButton   bool
 	}{
 		Theme:              settings.Theme,
 		ShowBackgroundDots: settings.ShowBackgroundDots,
 		ShowTitle:          settings.ShowTitle,
 		ShowDate:           settings.ShowDate,
 		ShowConfigButton:   settings.ShowConfigButton,
+		ShowSearchButton:   settings.ShowSearchButton,
 	}
 
 	if err := tmpl.Execute(w, data); err != nil {

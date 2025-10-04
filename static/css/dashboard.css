@@ -268,3 +268,8 @@ body[data-show-date="false"] .date {
 body[data-show-config-button="false"] .config-button {
     display: none;
 }
+
+/* Hide search button when showSearchButton is false */
+body[data-show-search-button="false"] .search-button {
+    display: none;
+}

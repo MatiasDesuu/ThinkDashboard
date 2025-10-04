@@ -87,6 +87,15 @@ class ConfigSettings {
             });
         }
 
+        // Show search button checkbox
+        const showSearchButtonCheckbox = document.getElementById('show-search-button-checkbox');
+        if (showSearchButtonCheckbox) {
+            showSearchButtonCheckbox.checked = settings.showSearchButton;
+            showSearchButtonCheckbox.addEventListener('change', (e) => {
+                settings.showSearchButton = e.target.checked;
+            });
+        }
+
         // Show status checkbox
         const showStatusCheckbox = document.getElementById('show-status-checkbox');
         if (showStatusCheckbox) {
@@ -127,6 +136,7 @@ class ConfigSettings {
         const showTitleCheckbox = document.getElementById('show-title-checkbox');
         const showDateCheckbox = document.getElementById('show-date-checkbox');
         const showConfigButtonCheckbox = document.getElementById('show-config-button-checkbox');
+        const showSearchButtonCheckbox = document.getElementById('show-search-button-checkbox');
         const showStatusCheckbox = document.getElementById('show-status-checkbox');
         const showPingCheckbox = document.getElementById('show-ping-checkbox');
         const globalShortcutsCheckbox = document.getElementById('global-shortcuts-checkbox');
@@ -137,6 +147,7 @@ class ConfigSettings {
         if (showTitleCheckbox) settings.showTitle = showTitleCheckbox.checked;
         if (showDateCheckbox) settings.showDate = showDateCheckbox.checked;
         if (showConfigButtonCheckbox) settings.showConfigButton = showConfigButtonCheckbox.checked;
+        if (showSearchButtonCheckbox) settings.showSearchButton = showSearchButtonCheckbox.checked;
         if (showStatusCheckbox) settings.showStatus = showStatusCheckbox.checked;
         if (showPingCheckbox) settings.showPing = showPingCheckbox.checked;
         if (globalShortcutsCheckbox) settings.globalShortcuts = globalShortcutsCheckbox.checked;
@@ -220,6 +231,7 @@ class ConfigSettings {
             showTitle: true,
             showDate: true,
             showConfigButton: true,
+            showSearchButton: true,
             showStatus: false,
             showPing: false,
             globalShortcuts: false

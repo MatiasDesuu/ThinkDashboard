@@ -51,6 +51,9 @@ class ConfigManager {
                 initCustomSelects();
             }, 0);
         }
+
+        // Show body after everything is loaded and rendered
+        document.body.classList.remove('loading');
     }
 
     async loadData() {
@@ -362,6 +365,7 @@ class ConfigManager {
         document.getElementById('show-title-checkbox').checked = this.settingsData.showTitle;
         document.getElementById('show-date-checkbox').checked = this.settingsData.showDate;
         document.getElementById('show-config-button-checkbox').checked = this.settingsData.showConfigButton;
+        document.getElementById('show-search-button-checkbox').checked = this.settingsData.showSearchButton;
 
         this.setupDOM();
         this.renderConfig();

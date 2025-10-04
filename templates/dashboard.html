@@ -18,8 +18,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        /* Prevent flash of unstyled content */
+        body.loading {
+            opacity: 0;
+            visibility: hidden;
+        }
+    </style>
 </head>
-<body class="{{.Theme}}" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
+<body class="{{.Theme}} loading" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
     <!-- Container 1: Date, tabs, config button -->
     <div class="dashboard-section section-controls">
         <div class="container">
@@ -66,10 +73,10 @@
     </div>
 
     <!-- Search Button -->
-    <button id="search-button" class="search-button" aria-label="Open search">
+    {{if .ShowSearchButton}}<button id="search-button" class="search-button" aria-label="Open search">
         <span class="search-button-icon">></span>
         <span class="search-button-text">search</span>
-    </button>
+    </button>{{end}}
 
     <script src="/static/js/modal.js"></script>
     <script src="/static/js/search.js"></script>

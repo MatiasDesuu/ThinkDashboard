@@ -45,6 +45,7 @@ type Settings struct {
 	ShowTitle          bool   `json:"showTitle"`
 	ShowDate           bool   `json:"showDate"`
 	ShowConfigButton   bool   `json:"showConfigButton"`
+	ShowSearchButton   bool   `json:"showSearchButton"`
 	ShowStatus         bool   `json:"showStatus"`
 	ShowPing           bool   `json:"showPing"`
 	GlobalShortcuts    bool   `json:"globalShortcuts"` // Use shortcuts from all pages

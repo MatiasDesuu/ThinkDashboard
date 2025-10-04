@@ -227,7 +227,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initTabs();
     
     // Load colors on page load
-    loadColors();
+    loadColors().then(() => {
+        // Show body after everything is loaded and rendered
+        document.body.classList.remove('loading');
+    }).catch(() => {
+        // Show body even if there's an error
+        document.body.classList.remove('loading');
+    });
     
     // Save button
     document.getElementById('save-colors-btn').addEventListener('click', saveColors);
