@@ -18,7 +18,7 @@ class Dashboard {
             showConfigButton: true,
             showStatus: false,
             showPing: false,
-            globalShortcuts: false,
+            globalShortcuts: true,
             hyprMode: false
         };
         this.searchComponent = null;

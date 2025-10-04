@@ -144,6 +144,7 @@ class ConfigSettings {
         const themeSelect = document.getElementById('theme-select');
         const columnsInput = document.getElementById('columns-input'); 
         const newTabCheckbox = document.getElementById('new-tab-checkbox');
+        const hyprModeCheckbox = document.getElementById('hypr-mode-checkbox');
         const showTitleCheckbox = document.getElementById('show-title-checkbox');
         const showDateCheckbox = document.getElementById('show-date-checkbox');
         const showConfigButtonCheckbox = document.getElementById('show-config-button-checkbox');
@@ -155,6 +156,7 @@ class ConfigSettings {
         if (themeSelect) settings.theme = themeSelect.value;
         if (columnsInput) settings.columnsPerRow = parseInt(columnsInput.value);
         if (newTabCheckbox) settings.openInNewTab = newTabCheckbox.checked;
+        if (hyprModeCheckbox) settings.hyprMode = hyprModeCheckbox.checked;
         if (showTitleCheckbox) settings.showTitle = showTitleCheckbox.checked;
         if (showDateCheckbox) settings.showDate = showDateCheckbox.checked;
         if (showConfigButtonCheckbox) settings.showConfigButton = showConfigButtonCheckbox.checked;
@@ -245,7 +247,8 @@ class ConfigSettings {
             showSearchButton: true,
             showStatus: false,
             showPing: false,
-            globalShortcuts: false
+            globalShortcuts: true,
+            hyprMode: false
         };
     }
 }

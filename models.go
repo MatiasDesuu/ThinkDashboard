@@ -170,7 +170,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			ShowConfigButton:   true,
 			ShowStatus:         false,
 			ShowPing:           false,
-			GlobalShortcuts:    false,
+			GlobalShortcuts:    true,
 			HyprMode:           false,
 		}
 		data, _ := json.MarshalIndent(defaultSettings, "", "  ")
@@ -505,7 +505,8 @@ func (fs *FileStore) GetSettings() Settings {
 			ShowConfigButton:   true,
 			ShowStatus:         false,
 			ShowPing:           false,
-			GlobalShortcuts:    false,
+			GlobalShortcuts:    true,
+			HyprMode:           false,
 		}
 	}
 

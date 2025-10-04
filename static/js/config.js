@@ -31,7 +31,8 @@ class ConfigManager {
             showDate: true,
             showStatus: false,
             showPing: false,
-            globalShortcuts: false
+            globalShortcuts: true,
+            hyprMode: false
         };
         this.deviceSpecific = false;
 
