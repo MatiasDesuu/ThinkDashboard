@@ -6,9 +6,12 @@ class SwipeNavigation {
         this.touchEndX = 0;
         this.touchStartY = 0;
         this.touchEndY = 0;
-        this.minSwipeDistance = 50; // Minimum distance for a swipe to be detected
-        this.maxVerticalMovement = 100; // Maximum vertical movement to still be considered a horizontal swipe
-        this.isScrolling = false;
+        this.touchMoveX = 0;
+        this.touchMoveY = 0;
+        this.minSwipeDistance = 40; // Reduced minimum distance for easier detection
+        this.swipeVelocityThreshold = 0.3; // Velocity threshold for quick swipes
+        this.isSwiping = false;
+        this.swipeStartTime = 0;
         
         this.init();
     }
@@ -26,24 +29,39 @@ class SwipeNavigation {
     }
 
     handleTouchStart(e) {
-        this.touchStartX = e.changedTouches[0].screenX;
-        this.touchStartY = e.changedTouches[0].screenY;
-        this.isScrolling = false;
+        this.touchStartX = e.changedTouches[0].clientX;
+        this.touchStartY = e.changedTouches[0].clientY;
+        this.touchMoveX = this.touchStartX;
+        this.touchMoveY = this.touchStartY;
+        this.isSwiping = null; // null = not determined, true = horizontal, false = vertical
+        this.swipeStartTime = Date.now();
     }
 
     handleTouchMove(e) {
-        // Detect if user is scrolling vertically
-        const currentY = e.changedTouches[0].screenY;
-        const diffY = Math.abs(currentY - this.touchStartY);
+        if (this.isSwiping === false) return; // Already determined to be vertical scroll
         
-        if (diffY > 10) {
-            this.isScrolling = true;
+        this.touchMoveX = e.changedTouches[0].clientX;
+        this.touchMoveY = e.changedTouches[0].clientY;
+        
+        const diffX = Math.abs(this.touchMoveX - this.touchStartX);
+        const diffY = Math.abs(this.touchMoveY - this.touchStartY);
+        
+        // Determine swipe direction on first significant movement
+        if (this.isSwiping === null && (diffX > 10 || diffY > 10)) {
+            // If horizontal movement is greater, it's a swipe
+            // If vertical movement is greater, it's a scroll
+            this.isSwiping = diffX > diffY;
         }
     }
 
     handleTouchEnd(e) {
-        this.touchEndX = e.changedTouches[0].screenX;
-        this.touchEndY = e.changedTouches[0].screenY;
+        // Only process if this was determined to be a horizontal swipe
+        if (this.isSwiping !== true) {
+            return;
+        }
+        
+        this.touchEndX = e.changedTouches[0].clientX;
+        this.touchEndY = e.changedTouches[0].clientY;
         this.handleSwipe();
     }
 
@@ -53,20 +71,28 @@ class SwipeNavigation {
             return;
         }
         
-        this.touchStartX = e.screenX;
-        this.touchStartY = e.screenY;
-        this.isScrolling = false;
+        this.touchStartX = e.clientX;
+        this.touchStartY = e.clientY;
+        this.touchMoveX = this.touchStartX;
+        this.touchMoveY = this.touchStartY;
+        this.isSwiping = null;
         this.isMouseDown = true;
+        this.swipeStartTime = Date.now();
     }
 
     handleMouseMove(e) {
         if (!this.isMouseDown) return;
+        if (this.isSwiping === false) return;
         
-        const currentY = e.screenY;
-        const diffY = Math.abs(currentY - this.touchStartY);
+        this.touchMoveX = e.clientX;
+        this.touchMoveY = e.clientY;
         
-        if (diffY > 10) {
-            this.isScrolling = true;
+        const diffX = Math.abs(this.touchMoveX - this.touchStartX);
+        const diffY = Math.abs(this.touchMoveY - this.touchStartY);
+        
+        // Determine swipe direction on first significant movement
+        if (this.isSwiping === null && (diffX > 10 || diffY > 10)) {
+            this.isSwiping = diffX > diffY;
         }
     }
 
@@ -74,27 +100,29 @@ class SwipeNavigation {
         if (!this.isMouseDown) return;
         
         this.isMouseDown = false;
-        this.touchEndX = e.screenX;
-        this.touchEndY = e.screenY;
+        
+        // Only process if this was determined to be a horizontal swipe
+        if (this.isSwiping !== true) {
+            return;
+        }
+        
+        this.touchEndX = e.clientX;
+        this.touchEndY = e.clientY;
         this.handleSwipe();
     }
 
     handleSwipe() {
-        // Don't process if user was scrolling vertically
-        if (this.isScrolling) {
-            return;
-        }
-
         const horizontalDistance = this.touchEndX - this.touchStartX;
-        const verticalDistance = Math.abs(this.touchEndY - this.touchStartY);
+        const swipeTime = Date.now() - this.swipeStartTime;
+        const velocity = Math.abs(horizontalDistance) / swipeTime; // pixels per millisecond
 
-        // Check if the swipe is primarily horizontal
-        if (verticalDistance > this.maxVerticalMovement) {
-            return;
-        }
+        // Accept swipe if:
+        // 1. Distance is greater than minimum, OR
+        // 2. Velocity is high enough (quick swipe)
+        const distanceOk = Math.abs(horizontalDistance) >= this.minSwipeDistance;
+        const velocityOk = velocity >= this.swipeVelocityThreshold;
 
-        // Check if swipe distance is sufficient
-        if (Math.abs(horizontalDistance) < this.minSwipeDistance) {
+        if (!distanceOk && !velocityOk) {
             return;
         }
 
