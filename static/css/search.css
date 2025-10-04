@@ -61,6 +61,18 @@
     51%, 100% { opacity: 0; }
 }
 
+/* Mobile input - invisible but functional */
+.search-input-mobile {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 1px;
+    height: 1px;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
 .search-matches {
     display: flex;
     flex-direction: column;

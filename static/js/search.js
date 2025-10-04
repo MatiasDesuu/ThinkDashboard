@@ -39,6 +39,36 @@ class SearchComponent {
     }
 
     setupEventListeners() {
+        // Setup mobile input listener
+        const mobileInput = document.getElementById('search-input-mobile');
+        if (mobileInput) {
+            mobileInput.addEventListener('input', (e) => {
+                const value = e.target.value.toUpperCase();
+                if (value.length > this.currentQuery.length) {
+                    // Character added
+                    const newChar = value[value.length - 1];
+                    if (/^[A-Z]$/.test(newChar)) {
+                        this.addToQuery(newChar);
+                    }
+                } else if (value.length < this.currentQuery.length) {
+                    // Character removed
+                    this.removeLastChar();
+                }
+                // Keep input synced
+                e.target.value = this.currentQuery;
+            });
+
+            mobileInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.selectCurrentMatch();
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    this.closeSearch();
+                }
+            });
+        }
+
         // Add keyboard event listener
         document.addEventListener('keydown', (e) => {
             // Don't trigger shortcuts if user is typing in an input
@@ -192,10 +222,20 @@ class SearchComponent {
         this.searchActive = true;
         const searchElement = document.getElementById('shortcut-search');
         const queryElement = document.getElementById('search-query');
+        const mobileInput = document.getElementById('search-input-mobile');
         
         if (searchElement && queryElement) {
             queryElement.textContent = this.currentQuery;
             searchElement.classList.add('show');
+            
+            // Focus mobile input to show keyboard
+            if (mobileInput) {
+                mobileInput.value = this.currentQuery;
+                // Use setTimeout to ensure the search is visible before focusing
+                setTimeout(() => {
+                    mobileInput.focus();
+                }, 100);
+            }
         }
     }
 
@@ -203,9 +243,18 @@ class SearchComponent {
         this.searchActive = false;
         this.resetQuery();
         const searchElement = document.getElementById('shortcut-search');
+        const mobileInput = document.getElementById('search-input-mobile');
+        
         if (searchElement) {
             searchElement.classList.remove('show');
         }
+        
+        // Blur mobile input to hide keyboard
+        if (mobileInput) {
+            mobileInput.blur();
+            mobileInput.value = '';
+        }
+        
         // Clear the displayed matches
         this.renderSearchMatches();
     }
