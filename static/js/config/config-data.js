@@ -90,6 +90,20 @@ class ConfigData {
     }
 
     /**
+     * Delete a page from server
+     * @param {number} pageId
+     */
+    async deletePage(pageId) {
+        const response = await fetch(`/api/pages/${pageId}`, {
+            method: 'DELETE'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to delete page ${pageId}`);
+        }
+    }
+
+    /**
      * Save settings to server
      * @param {Object} settings
      */

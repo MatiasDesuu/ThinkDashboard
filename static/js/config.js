@@ -16,11 +16,12 @@ class ConfigManager {
 
         // Data
         this.pagesData = [];
-        this.currentPageId = 'default';
+        this.originalPagesData = []; // Track original pages to detect deletions
+        this.currentPageId = 1; // Default to page 1
         this.bookmarksData = [];
         this.categoriesData = [];
         this.settingsData = {
-            currentPage: 'default',
+            currentPage: 1, // Default to page 1
             theme: 'dark',
             openInNewTab: true,
             columnsPerRow: 3,
@@ -61,8 +62,9 @@ class ConfigManager {
             this.bookmarksData = bookmarks;
             this.categoriesData = categories;
             this.pagesData = pages;
+            this.originalPagesData = JSON.parse(JSON.stringify(pages)); // Deep copy
             this.settingsData = settings;
-            this.currentPageId = settings.currentPage || 'default';
+            this.currentPageId = settings.currentPage || 1; // Default to page 1
             
             // Load bookmarks for current page
             await this.loadPageBookmarks(this.currentPageId);
@@ -182,22 +184,22 @@ class ConfigManager {
         // Initialize page reordering
         this.pages.initReorder(this.pagesData, (newPages) => {
             this.pagesData = newPages;
-            this.renderConfig();
-            this.initReordering();
+            // Don't re-render - we use direct object references
+            // Only update the page selector to reflect new order
+            this.pages.renderPageSelector(this.pagesData, this.currentPageId);
         });
 
         // Initialize category reordering
         this.categories.initReorder(this.categoriesData, (newCategories) => {
             this.categoriesData = newCategories;
-            this.renderConfig();
-            this.initReordering();
+            // Don't re-render - we use direct object references
         });
 
         // Initialize bookmark reordering
         this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
             this.bookmarksData = newBookmarks;
-            this.renderConfig();
-            this.initReordering();
+            // Don't re-render for bookmarks - we use direct object references
+            // Re-rendering causes performance issues due to CustomSelect re-initialization
         });
     }
 
@@ -220,20 +222,65 @@ class ConfigManager {
     }
 
     async removePage(index) {
-        const removed = this.pages.remove(this.pagesData, index);
-        if (removed) {
+        const page = this.pagesData[index];
+        if (!page) return;
+        
+        // Don't allow removing page 1 (main page)
+        if (page.id === 1) {
+            this.ui.showNotification('Cannot remove the main page', 'error');
+            return;
+        }
+        
+        // Show confirmation modal
+        const confirmed = await window.AppModal.danger({
+            title: 'Remove Page',
+            message: `Are you sure you want to remove the page "${page.name}"? All bookmarks in this page will be deleted. This action cannot be undone.`,
+            confirmText: 'Remove',
+            cancelText: 'Cancel'
+        });
+        
+        if (!confirmed) {
+            return;
+        }
+        
+        try {
+            // Delete from server immediately
+            await this.data.deletePage(page.id);
+            
+            // Remove from local array
+            this.pagesData.splice(index, 1);
+            
+            // Update original pages as well
+            const origIndex = this.originalPagesData.findIndex(p => p.id === page.id);
+            if (origIndex !== -1) {
+                this.originalPagesData.splice(origIndex, 1);
+            }
+            
             this.renderConfig();
             this.initReordering();
-        } else {
-            this.ui.showNotification('Cannot remove the default page', 'error');
+            this.ui.showNotification('Page deleted successfully', 'success');
+        } catch (error) {
+            console.error('Error deleting page:', error);
+            this.ui.showNotification('Error deleting page', 'error');
         }
     }
 
     async removeCategory(index) {
+        const category = this.categoriesData[index];
+        if (!category) return;
+        
         const removed = await this.categories.remove(this.categoriesData, index);
         if (removed) {
+            // Remove this category from all bookmarks that use it
+            this.bookmarksData.forEach(bookmark => {
+                if (bookmark.category === category.id) {
+                    bookmark.category = ''; // Set to empty string (no category)
+                }
+            });
+            
             this.renderConfig();
             this.initReordering();
+            this.ui.showNotification('Category removed and cleared from bookmarks', 'success');
         }
     }
 
@@ -250,7 +297,7 @@ class ConfigManager {
             // Update settings from UI
             this.settings.updateFromUI(this.settingsData);
             // Always set currentPage to the first page (don't use the editing page)
-            this.settingsData.currentPage = this.pagesData.length > 0 ? this.pagesData[0].id : 'default';
+            this.settingsData.currentPage = this.pagesData.length > 0 ? this.pagesData[0].id : 1;
 
             // Save all data
             await this.data.saveAll({
@@ -261,6 +308,9 @@ class ConfigManager {
                 currentPageId: this.currentPageId,
                 deviceSpecific: this.deviceSpecific
             });
+
+            // Update original pages after successful save
+            this.originalPagesData = JSON.parse(JSON.stringify(this.pagesData));
 
             this.ui.showNotification('Configuration saved successfully!', 'success');
         } catch (error) {

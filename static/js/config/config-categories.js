@@ -38,17 +38,26 @@ class ConfigCategories {
         const div = document.createElement('div');
         div.className = 'category-item js-item is-idle';
         div.setAttribute('data-category-index', index);
+        div.setAttribute('data-category-id', category.id); // Store the actual category ID
+        
+        // Store reference to the actual category object
+        div._categoryRef = category;
+        
         div.innerHTML = `
             <span class="drag-handle js-drag-handle" title="Drag to reorder">⠿</span>
-            <input type="text" id="category-name-${index}" name="category-name-${index}" value="${category.name}" placeholder="Category name" data-category-index="${index}" data-field="name">
+            <input type="text" id="category-name-${index}" name="category-name-${index}" value="${category.name}" placeholder="Category name" data-category-id="${category.id}" data-field="name">
             <button type="button" class="btn btn-danger" onclick="configManager.removeCategory(${index})">Remove</button>
         `;
 
         // Add event listener for name changes
         const nameInput = div.querySelector('input[data-field="name"]');
         nameInput.addEventListener('input', (e) => {
-            categories[index].name = e.target.value;
-            categories[index].id = generateId(e.target.value);
+            // Update the category object directly via stored reference
+            category.name = e.target.value;
+            category.id = generateId(e.target.value);
+            // Update the data attribute with new ID
+            e.target.setAttribute('data-category-id', category.id);
+            div.setAttribute('data-category-id', category.id);
         });
 
         return div;
@@ -72,10 +81,14 @@ class ConfigCategories {
             handleSelector: '.js-drag-handle',
             onReorder: (newOrder) => {
                 // Update categories array based on new order
+                // Use stored category references instead of looking up by ID
                 const newCategories = [];
                 newOrder.forEach((item) => {
-                    const categoryIndex = parseInt(item.element.getAttribute('data-category-index'));
-                    newCategories.push(categories[categoryIndex]);
+                    // Get the category object stored on the DOM element
+                    const category = item.element._categoryRef;
+                    if (category) {
+                        newCategories.push(category);
+                    }
                 });
                 
                 onReorder(newCategories);

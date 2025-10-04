@@ -242,6 +242,21 @@
         margin-bottom: 1.5rem;
     }
     
+    .page-selector-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .page-selector-wrapper label {
+        white-space: normal;
+    }
+    
+    .page-selector {
+        max-width: 100%;
+        width: 100%;
+    }
+    
     .category-item,
     .bookmark-item {
         display: flex;

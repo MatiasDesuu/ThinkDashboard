@@ -46,6 +46,8 @@ class ConfigBookmarks {
         const div = document.createElement('div');
         div.className = 'bookmark-item js-item is-idle';
         div.setAttribute('data-bookmark-index', index);
+        // Use index as a stable identifier since bookmarks don't have IDs
+        div.setAttribute('data-bookmark-key', index);
 
         // Create category options
         const categoryOptions = categories.map(cat => 
@@ -54,22 +56,25 @@ class ConfigBookmarks {
 
         div.innerHTML = `
             <span class="drag-handle js-drag-handle" title="Drag to reorder">⠿</span>
-            <input type="text" id="bookmark-name-${index}" name="bookmark-name-${index}" value="${bookmark.name}" placeholder="Bookmark name" data-bookmark-index="${index}" data-field="name">
-            <input type="url" id="bookmark-url-${index}" name="bookmark-url-${index}" value="${bookmark.url}" placeholder="https://example.com" data-bookmark-index="${index}" data-field="url">
-            <input type="text" id="bookmark-shortcut-${index}" name="bookmark-shortcut-${index}" value="${bookmark.shortcut || ''}" placeholder="Keys (Y, YS, YC)" maxlength="5" data-bookmark-index="${index}" data-field="shortcut">
-            <select id="bookmark-category-${index}" name="bookmark-category-${index}" data-bookmark-index="${index}" data-field="category">
+            <input type="text" id="bookmark-name-${index}" name="bookmark-name-${index}" value="${bookmark.name}" placeholder="Bookmark name" data-bookmark-key="${index}" data-field="name">
+            <input type="url" id="bookmark-url-${index}" name="bookmark-url-${index}" value="${bookmark.url}" placeholder="https://example.com" data-bookmark-key="${index}" data-field="url">
+            <input type="text" id="bookmark-shortcut-${index}" name="bookmark-shortcut-${index}" value="${bookmark.shortcut || ''}" placeholder="Keys (Y, YS, YC)" maxlength="5" data-bookmark-key="${index}" data-field="shortcut">
+            <select id="bookmark-category-${index}" name="bookmark-category-${index}" data-bookmark-key="${index}" data-field="category">
                 <option value="">No category</option>
                 ${categoryOptions}
             </select>
             <div class="bookmark-status-toggle">
                 <label class="checkbox-label">
-                    <input type="checkbox" id="bookmark-checkStatus-${index}" name="bookmark-checkStatus-${index}" ${bookmark.checkStatus ? 'checked' : ''} data-bookmark-index="${index}" data-field="checkStatus">
+                    <input type="checkbox" id="bookmark-checkStatus-${index}" name="bookmark-checkStatus-${index}" ${bookmark.checkStatus ? 'checked' : ''} data-bookmark-key="${index}" data-field="checkStatus">
                     <span class="checkbox-text">status</span>
                 </label>
             </div>
             <button type="button" class="btn btn-danger" onclick="configManager.removeBookmark(${index})">Remove</button>
         `;
 
+        // Store reference to the actual bookmark object
+        div._bookmarkRef = bookmark;
+        
         // Add event listeners for field changes
         const inputs = div.querySelectorAll('input, select');
         inputs.forEach(input => {
@@ -77,16 +82,17 @@ class ConfigBookmarks {
             input.addEventListener(eventType, (e) => {
                 const field = e.target.getAttribute('data-field');
                 
+                // Update the bookmark object directly via stored reference
                 if (field === 'checkStatus') {
-                    bookmarks[index][field] = e.target.checked;
+                    bookmark[field] = e.target.checked;
                 } else {
-                    bookmarks[index][field] = e.target.value;
+                    bookmark[field] = e.target.value;
                 }
                 
                 // Convert shortcut to uppercase and allow only letters (no numbers)
                 if (field === 'shortcut') {
                     e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
-                    bookmarks[index][field] = e.target.value;
+                    bookmark[field] = e.target.value;
                 }
             });
         });
@@ -120,10 +126,14 @@ class ConfigBookmarks {
             handleSelector: '.js-drag-handle',
             onReorder: (newOrder) => {
                 // Update bookmarks array based on new order
+                // Use stored bookmark references instead of indices
                 const newBookmarks = [];
                 newOrder.forEach((item) => {
-                    const bookmarkIndex = parseInt(item.element.getAttribute('data-bookmark-index'));
-                    newBookmarks.push(bookmarks[bookmarkIndex]);
+                    // Get the bookmark object stored on the DOM element
+                    const bookmark = item.element._bookmarkRef;
+                    if (bookmark) {
+                        newBookmarks.push(bookmark);
+                    }
                 });
                 
                 onReorder(newBookmarks);

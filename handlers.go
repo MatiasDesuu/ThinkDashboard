@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"html/template"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 type Handlers struct {
@@ -78,14 +81,19 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) GetBookmarks(w http.ResponseWriter, r *http.Request) {
-	pageID := r.URL.Query().Get("page")
+	pageIDStr := r.URL.Query().Get("page")
 	all := r.URL.Query().Get("all")
 	var bookmarks []Bookmark
 
 	if all == "true" {
 		// Get bookmarks from all pages
 		bookmarks = h.store.GetAllBookmarks()
-	} else if pageID != "" {
+	} else if pageIDStr != "" {
+		pageID, err := strconv.Atoi(pageIDStr)
+		if err != nil {
+			http.Error(w, "Invalid page ID", http.StatusBadRequest)
+			return
+		}
 		bookmarks = h.store.GetBookmarksByPage(pageID)
 	} else {
 		bookmarks = h.store.GetBookmarks()
@@ -96,14 +104,19 @@ func (h *Handlers) GetBookmarks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) SaveBookmarks(w http.ResponseWriter, r *http.Request) {
-	pageID := r.URL.Query().Get("page")
+	pageIDStr := r.URL.Query().Get("page")
 	var bookmarks []Bookmark
 	if err := json.NewDecoder(r.Body).Decode(&bookmarks); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
 
-	if pageID != "" {
+	if pageIDStr != "" {
+		pageID, err := strconv.Atoi(pageIDStr)
+		if err != nil {
+			http.Error(w, "Invalid page ID", http.StatusBadRequest)
+			return
+		}
 		h.store.SaveBookmarksByPage(pageID, bookmarks)
 	} else {
 		h.store.SaveBookmarks(bookmarks)
@@ -144,7 +157,59 @@ func (h *Handlers) SavePages(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.store.SavePages(pages)
+	// Extract page order (array of IDs)
+	order := make([]int, len(pages))
+	for i, page := range pages {
+		order[i] = page.ID
+	}
+
+	// Save the order
+	h.store.SavePageOrder(order)
+
+	// Save each page individually
+	// Note: This assumes bookmarks are saved separately via SaveBookmarks endpoint
+	for _, page := range pages {
+		// Get existing bookmarks for this page to preserve them
+		bookmarks := h.store.GetBookmarksByPage(page.ID)
+		h.store.SavePage(page, bookmarks)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+}
+
+func (h *Handlers) DeletePage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pageIDStr := vars["id"]
+
+	pageID, err := strconv.Atoi(pageIDStr)
+	if err != nil {
+		http.Error(w, "Invalid page ID", http.StatusBadRequest)
+		return
+	}
+
+	// Prevent deleting page 1 (main page)
+	if pageID == 1 {
+		http.Error(w, "Cannot delete the main page", http.StatusBadRequest)
+		return
+	}
+
+	// Delete the page file
+	if err := h.store.DeletePage(pageID); err != nil {
+		http.Error(w, "Error deleting page", http.StatusInternalServerError)
+		return
+	}
+
+	// Update the page order - remove the deleted page ID
+	order := h.store.GetPageOrder()
+	newOrder := make([]int, 0, len(order))
+	for _, id := range order {
+		if id != pageID {
+			newOrder = append(newOrder, id)
+		}
+	}
+	h.store.SavePageOrder(newOrder)
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }

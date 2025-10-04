@@ -60,26 +60,27 @@ class ConfigPages {
         const div = document.createElement('div');
         div.className = 'page-item js-item is-idle';
         div.setAttribute('data-page-index', index);
+        div.setAttribute('data-page-id', page.id); // Store the actual page ID
         
-        const isDefaultPage = page.id === 'default';
+        // Store reference to the actual page object
+        div._pageRef = page;
+        
+        const isDefaultPage = page.id === 1;
         const removeButton = isDefaultPage 
             ? '<button type="button" class="btn btn-danger" disabled title="Cannot remove default page">Remove</button>'
             : `<button type="button" class="btn btn-danger" onclick="configManager.removePage(${index})">Remove</button>`;
         
         div.innerHTML = `
             <span class="drag-handle js-drag-handle" title="Drag to reorder">⠿</span>
-            <input type="text" id="page-name-${index}" name="page-name-${index}" value="${page.name}" placeholder="Page name" data-page-index="${index}" data-field="name">
+            <input type="text" id="page-name-${index}" name="page-name-${index}" value="${page.name}" placeholder="Page name" data-page-id="${page.id}" data-field="name">
             ${removeButton}
         `;
 
-        // Add event listener for name changes (allow editing all pages now)
+        // Add event listener for name changes
         const nameInput = div.querySelector('input[data-field="name"]');
         nameInput.addEventListener('input', (e) => {
-            pages[index].name = e.target.value;
-            // Only update ID if not the default page
-            if (!isDefaultPage) {
-                pages[index].id = generateId(e.target.value);
-            }
+            // Update the page object directly via stored reference
+            page.name = e.target.value;
         });
 
         return div;
@@ -103,10 +104,14 @@ class ConfigPages {
             handleSelector: '.js-drag-handle',
             onReorder: (newOrder) => {
                 // Update pages array based on new order
+                // Use stored page references instead of looking up by ID
                 const newPages = [];
                 newOrder.forEach((item) => {
-                    const pageIndex = parseInt(item.element.getAttribute('data-page-index'));
-                    newPages.push(pages[pageIndex]);
+                    // Get the page object stored on the DOM element
+                    const page = item.element._pageRef;
+                    if (page) {
+                        newPages.push(page);
+                    }
                 });
                 
                 onReorder(newPages);
@@ -117,13 +122,15 @@ class ConfigPages {
     /**
      * Add a new page
      * @param {Array} pages
-     * @param {Function} generateId
+     * @param {Function} generateId - Not used anymore, kept for compatibility
      * @returns {Object} - The new page
      */
     add(pages, generateId) {
+        // Find the highest ID and add 1
+        const maxId = pages.length > 0 ? Math.max(...pages.map(p => p.id)) : 0;
         const newPage = {
-            id: generateId(`page-${pages.length + 1}`),
-            name: `page ${pages.length + 1}`
+            id: maxId + 1,
+            name: `Page ${maxId + 1}`
         };
         pages.push(newPage);
         return newPage;

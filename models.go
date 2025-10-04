@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
+	"strings"
 	"sync"
 )
 
@@ -20,12 +22,21 @@ type Category struct {
 }
 
 type Page struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID   int    `json:"id"`   // Numeric ID matching the file number (bookmarks-1.json = id: 1)
+	Name string `json:"name"` // Editable page name
+}
+
+type PageWithBookmarks struct {
+	Page      Page       `json:"page"`
+	Bookmarks []Bookmark `json:"bookmarks"`
+}
+
+type PageOrder struct {
+	Order []int `json:"order"` // Array of page IDs in display order
 }
 
 type Settings struct {
-	CurrentPage        string `json:"currentPage"` // ID of the current page
+	CurrentPage        int    `json:"currentPage"` // Numeric ID of the current page
 	Theme              string `json:"theme"`       // "light" or "dark"
 	OpenInNewTab       bool   `json:"openInNewTab"`
 	ColumnsPerRow      int    `json:"columnsPerRow"`
@@ -62,13 +73,16 @@ type ThemeColors struct {
 type Store interface {
 	GetBookmarks() []Bookmark
 	SaveBookmarks(bookmarks []Bookmark)
-	GetBookmarksByPage(pageID string) []Bookmark
+	GetBookmarksByPage(pageID int) []Bookmark
 	GetAllBookmarks() []Bookmark
-	SaveBookmarksByPage(pageID string, bookmarks []Bookmark)
+	SaveBookmarksByPage(pageID int, bookmarks []Bookmark)
 	GetCategories() []Category
 	SaveCategories(categories []Category)
 	GetPages() []Page
-	SavePages(pages []Page)
+	SavePage(page Page, bookmarks []Bookmark)
+	DeletePage(pageID int) error
+	GetPageOrder() []int
+	SavePageOrder(order []int)
 	GetSettings() Settings
 	SaveSettings(settings Settings)
 	GetColors() ColorTheme
@@ -80,7 +94,8 @@ type FileStore struct {
 	categoriesFile string
 	settingsFile   string
 	colorsFile     string
-	pagesFile      string
+	pageOrderFile  string
+	dataDir        string
 	mutex          sync.RWMutex
 }
 
@@ -90,7 +105,8 @@ func NewStore() Store {
 		categoriesFile: "data/categories.json",
 		settingsFile:   "data/settings.json",
 		colorsFile:     "data/colors.json",
-		pagesFile:      "data/pages.json",
+		pageOrderFile:  "data/pages.json",
+		dataDir:        "data",
 	}
 
 	// Initialize default files if they don't exist
@@ -102,20 +118,27 @@ func NewStore() Store {
 func (fs *FileStore) initializeDefaultFiles() {
 	fs.ensureDataDir()
 
-	// Initialize bookmarks if file doesn't exist
-	if _, err := os.Stat(fs.bookmarksFile); os.IsNotExist(err) {
-		defaultBookmarks := []Bookmark{
-			{Name: "GitHub", URL: "https://github.com", Shortcut: "G", Category: "development", CheckStatus: false},
-			{Name: "GitHub Issues", URL: "https://github.com/issues", Shortcut: "GI", Category: "development", CheckStatus: false},
-			{Name: "GitHub Pull Requests", URL: "https://github.com/pulls", Shortcut: "GP", Category: "development", CheckStatus: false},
-			{Name: "YouTube", URL: "https://youtube.com", Shortcut: "Y", Category: "media", CheckStatus: false},
-			{Name: "YouTube Studio", URL: "https://studio.youtube.com", Shortcut: "YS", Category: "media", CheckStatus: false},
-			{Name: "Twitter", URL: "https://twitter.com", Shortcut: "T", Category: "social", CheckStatus: false},
-			{Name: "TikTok", URL: "https://tiktok.com", Shortcut: "TT", Category: "social", CheckStatus: false},
-			{Name: "Google", URL: "https://google.com", Shortcut: "", Category: "search", CheckStatus: false},
+	// Initialize bookmarks for main page if file doesn't exist
+	mainPageBookmarksFile := "data/bookmarks-1.json"
+	if _, err := os.Stat(mainPageBookmarksFile); os.IsNotExist(err) {
+		defaultPageWithBookmarks := PageWithBookmarks{
+			Page: Page{
+				ID:   1,
+				Name: "main",
+			},
+			Bookmarks: []Bookmark{
+				{Name: "GitHub", URL: "https://github.com", Shortcut: "G", Category: "development", CheckStatus: false},
+				{Name: "GitHub Issues", URL: "https://github.com/issues", Shortcut: "GI", Category: "development", CheckStatus: false},
+				{Name: "GitHub Pull Requests", URL: "https://github.com/pulls", Shortcut: "GP", Category: "development", CheckStatus: false},
+				{Name: "YouTube", URL: "https://youtube.com", Shortcut: "Y", Category: "media", CheckStatus: false},
+				{Name: "YouTube Studio", URL: "https://studio.youtube.com", Shortcut: "YS", Category: "media", CheckStatus: false},
+				{Name: "Twitter", URL: "https://twitter.com", Shortcut: "T", Category: "social", CheckStatus: false},
+				{Name: "TikTok", URL: "https://tiktok.com", Shortcut: "TT", Category: "social", CheckStatus: false},
+				{Name: "Google", URL: "https://google.com", Shortcut: "", Category: "search", CheckStatus: false},
+			},
 		}
-		data, _ := json.MarshalIndent(defaultBookmarks, "", "  ")
-		os.WriteFile(fs.bookmarksFile, data, 0644)
+		data, _ := json.MarshalIndent(defaultPageWithBookmarks, "", "  ")
+		os.WriteFile(mainPageBookmarksFile, data, 0644)
 	}
 
 	// Initialize categories if file doesn't exist
@@ -134,7 +157,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 	// Initialize settings if file doesn't exist
 	if _, err := os.Stat(fs.settingsFile); os.IsNotExist(err) {
 		defaultSettings := Settings{
-			CurrentPage:        "default",
+			CurrentPage:        1,
 			Theme:              "dark",
 			OpenInNewTab:       true,
 			ColumnsPerRow:      3,
@@ -158,24 +181,6 @@ func (fs *FileStore) initializeDefaultFiles() {
 		os.WriteFile(fs.colorsFile, data, 0644)
 	}
 
-	// Initialize pages if file doesn't exist
-	if _, err := os.Stat(fs.pagesFile); os.IsNotExist(err) {
-		defaultPages := []Page{
-			{ID: "default", Name: "main"},
-		}
-		data, _ := json.MarshalIndent(defaultPages, "", "  ")
-		os.WriteFile(fs.pagesFile, data, 0644)
-	}
-
-	// Migrate existing bookmarks to default page if they exist and page-specific doesn't
-	defaultPageBookmarksFile := "data/bookmarks-default.json"
-	if _, err := os.Stat(fs.bookmarksFile); err == nil {
-		if _, err := os.Stat(defaultPageBookmarksFile); os.IsNotExist(err) {
-			// Copy bookmarks.json to bookmarks-default.json
-			data, _ := os.ReadFile(fs.bookmarksFile)
-			os.WriteFile(defaultPageBookmarksFile, data, 0644)
-		}
-	}
 }
 
 func (fs *FileStore) ensureDataDir() {
@@ -218,33 +223,59 @@ func (fs *FileStore) SaveBookmarks(bookmarks []Bookmark) {
 	os.WriteFile(fs.bookmarksFile, data, 0644)
 }
 
-func (fs *FileStore) GetBookmarksByPage(pageID string) []Bookmark {
+func (fs *FileStore) GetBookmarksByPage(pageID int) []Bookmark {
 	fs.mutex.RLock()
 	defer fs.mutex.RUnlock()
 
 	fs.ensureDataDir()
 
-	filename := "data/bookmarks-" + pageID + ".json"
-	data, err := os.ReadFile(filename)
+	// Read directly from bookmarks-{pageID}.json
+	filePath := fmt.Sprintf("%s/bookmarks-%d.json", fs.dataDir, pageID)
+	data, err := os.ReadFile(filePath)
 	if err != nil {
-		// Return empty bookmarks for new pages
 		return []Bookmark{}
 	}
 
-	var bookmarks []Bookmark
-	json.Unmarshal(data, &bookmarks)
-	return bookmarks
+	var pageWithBookmarks PageWithBookmarks
+	if err := json.Unmarshal(data, &pageWithBookmarks); err != nil {
+		return []Bookmark{}
+	}
+
+	return pageWithBookmarks.Bookmarks
 }
 
-func (fs *FileStore) SaveBookmarksByPage(pageID string, bookmarks []Bookmark) {
+func (fs *FileStore) SaveBookmarksByPage(pageID int, bookmarks []Bookmark) {
 	fs.mutex.Lock()
 	defer fs.mutex.Unlock()
 
 	fs.ensureDataDir()
 
-	filename := "data/bookmarks-" + pageID + ".json"
-	data, _ := json.MarshalIndent(bookmarks, "", "  ")
-	os.WriteFile(filename, data, 0644)
+	// Read the existing page data
+	filePath := fmt.Sprintf("%s/bookmarks-%d.json", fs.dataDir, pageID)
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		// If file doesn't exist, create new page with this ID
+		pageWithBookmarks := PageWithBookmarks{
+			Page: Page{
+				ID:   pageID,
+				Name: fmt.Sprintf("Page %d", pageID),
+			},
+			Bookmarks: bookmarks,
+		}
+		newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
+		os.WriteFile(filePath, newData, 0644)
+		return
+	}
+
+	var pageWithBookmarks PageWithBookmarks
+	if err := json.Unmarshal(data, &pageWithBookmarks); err != nil {
+		return
+	}
+
+	// Update only bookmarks, preserve page metadata
+	pageWithBookmarks.Bookmarks = bookmarks
+	newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
+	os.WriteFile(filePath, newData, 0644)
 }
 
 func (fs *FileStore) GetAllBookmarks() []Bookmark {
@@ -304,29 +335,150 @@ func (fs *FileStore) GetPages() []Page {
 	fs.mutex.RLock()
 	defer fs.mutex.RUnlock()
 
+	return fs.getPages()
+}
+
+func (fs *FileStore) getPages() []Page {
 	fs.ensureDataDir()
 
-	data, err := os.ReadFile(fs.pagesFile)
+	var pages []Page
+
+	// Read all bookmarks files in data directory
+	files, err := os.ReadDir(fs.dataDir)
 	if err != nil {
-		// Return default page if file doesn't exist
-		return []Page{
-			{ID: "default", Name: "main"},
+		return []Page{{ID: 1, Name: "main"}}
+	}
+
+	// First, collect all pages from bookmark files
+	pageMap := make(map[int]Page)
+	for _, file := range files {
+		if file.IsDir() || !strings.HasPrefix(file.Name(), "bookmarks-") || !strings.HasSuffix(file.Name(), ".json") {
+			continue
+		}
+
+		filePath := fmt.Sprintf("%s/%s", fs.dataDir, file.Name())
+		data, err := os.ReadFile(filePath)
+		if err != nil {
+			continue
+		}
+
+		var pageWithBookmarks PageWithBookmarks
+		if err := json.Unmarshal(data, &pageWithBookmarks); err != nil {
+			continue
+		}
+
+		pageMap[pageWithBookmarks.Page.ID] = pageWithBookmarks.Page
+	}
+
+	if len(pageMap) == 0 {
+		return []Page{{ID: 1, Name: "main"}}
+	}
+
+	// Get the order from pages.json
+	order := fs.getPageOrder()
+
+	// If no order file exists, create default order
+	if len(order) == 0 {
+		for id := range pageMap {
+			order = append(order, id)
+		}
+		// Save the default order
+		fs.savePageOrder(order)
+	}
+
+	// Build pages array in the specified order
+	for _, id := range order {
+		if page, exists := pageMap[id]; exists {
+			pages = append(pages, page)
 		}
 	}
 
-	var pages []Page
-	json.Unmarshal(data, &pages)
+	// Add any pages that exist in files but not in order
+	for id, page := range pageMap {
+		found := false
+		for _, orderId := range order {
+			if orderId == id {
+				found = true
+				break
+			}
+		}
+		if !found {
+			pages = append(pages, page)
+		}
+	}
+
 	return pages
 }
 
-func (fs *FileStore) SavePages(pages []Page) {
+func (fs *FileStore) GetPageOrder() []int {
+	fs.mutex.RLock()
+	defer fs.mutex.RUnlock()
+
+	return fs.getPageOrder()
+}
+
+func (fs *FileStore) getPageOrder() []int {
+	fs.ensureDataDir()
+
+	data, err := os.ReadFile(fs.pageOrderFile)
+	if err != nil {
+		return []int{}
+	}
+
+	var pageOrder PageOrder
+	if err := json.Unmarshal(data, &pageOrder); err != nil {
+		return []int{}
+	}
+
+	return pageOrder.Order
+}
+
+func (fs *FileStore) SavePageOrder(order []int) {
+	fs.mutex.Lock()
+	defer fs.mutex.Unlock()
+
+	fs.savePageOrder(order)
+}
+
+func (fs *FileStore) savePageOrder(order []int) {
+	fs.ensureDataDir()
+
+	pageOrder := PageOrder{
+		Order: order,
+	}
+
+	data, _ := json.MarshalIndent(pageOrder, "", "  ")
+	os.WriteFile(fs.pageOrderFile, data, 0644)
+}
+
+func (fs *FileStore) SavePage(page Page, bookmarks []Bookmark) {
 	fs.mutex.Lock()
 	defer fs.mutex.Unlock()
 
 	fs.ensureDataDir()
 
-	data, _ := json.MarshalIndent(pages, "", "  ")
-	os.WriteFile(fs.pagesFile, data, 0644)
+	// The page ID IS the file number
+	// bookmarks-1.json has page.id = 1
+	// When saving, just use page.ID directly
+	pageWithBookmarks := PageWithBookmarks{
+		Page:      page,
+		Bookmarks: bookmarks,
+	}
+
+	fileName := fmt.Sprintf("%s/bookmarks-%d.json", fs.dataDir, page.ID)
+	data, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
+	os.WriteFile(fileName, data, 0644)
+}
+
+func (fs *FileStore) DeletePage(pageID int) error {
+	fs.mutex.Lock()
+	defer fs.mutex.Unlock()
+
+	fs.ensureDataDir()
+
+	// Delete bookmarks-{pageID}.json
+	filePath := fmt.Sprintf("%s/bookmarks-%d.json", fs.dataDir, pageID)
+	return os.Remove(filePath)
 }
 
 func (fs *FileStore) GetSettings() Settings {
@@ -339,7 +491,7 @@ func (fs *FileStore) GetSettings() Settings {
 	if err != nil {
 		// Return default settings if file doesn't exist
 		return Settings{
-			CurrentPage:        "default",
+			CurrentPage:        1,
 			Theme:              "dark",
 			OpenInNewTab:       true,
 			ColumnsPerRow:      3,

@@ -43,7 +43,7 @@ class DragReorder {
         
         // Add event listeners
         this.container.addEventListener('mousedown', (e) => this.dragStart(e));
-        this.container.addEventListener('touchstart', (e) => this.dragStart(e));
+        this.container.addEventListener('touchstart', (e) => this.dragStart(e), { passive: true });
         
         document.addEventListener('mouseup', () => this.dragEnd());
         document.addEventListener('touchend', () => this.dragEnd());

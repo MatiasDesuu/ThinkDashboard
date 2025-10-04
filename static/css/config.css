@@ -14,6 +14,9 @@ body {
 /* Config Sections - Same system as dashboard */
 .config-section {
     padding: 0;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .config-section.section-header {
@@ -157,6 +160,10 @@ body {
 .config-section {
     border: none;
     padding: 0;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
 }
 
 .config-section h2 {
