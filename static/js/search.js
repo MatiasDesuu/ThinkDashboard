@@ -74,6 +74,14 @@ class SearchComponent {
                 }
             }
         });
+
+        // Add search button event listener
+        const searchButton = document.getElementById('search-button');
+        if (searchButton) {
+            searchButton.addEventListener('click', () => {
+                this.openSearchInterface();
+            });
+        }
     }
 
     handleKeyPress(e) {
@@ -198,6 +206,8 @@ class SearchComponent {
         if (searchElement) {
             searchElement.classList.remove('show');
         }
+        // Clear the displayed matches
+        this.renderSearchMatches();
     }
 
     resetQuery() {
@@ -213,14 +223,17 @@ class SearchComponent {
         matchesContainer.innerHTML = '';
 
         if (this.searchMatches.length === 0) {
-            // Show "no matches" message
-            const noMatchElement = document.createElement('div');
-            noMatchElement.className = 'search-match';
-            noMatchElement.innerHTML = `
-                <span class="search-match-shortcut">—</span>
-                <span class="search-match-name">No matches found</span>
-            `;
-            matchesContainer.appendChild(noMatchElement);
+            // Show empty container when no matches (no message when opened from button)
+            if (this.currentQuery.length > 0) {
+                // Only show "no matches" if user has typed something
+                const noMatchElement = document.createElement('div');
+                noMatchElement.className = 'search-match';
+                noMatchElement.innerHTML = `
+                    <span class="search-match-shortcut">—</span>
+                    <span class="search-match-name">No matches found</span>
+                `;
+                matchesContainer.appendChild(noMatchElement);
+            }
             return;
         }
 
@@ -311,6 +324,17 @@ class SearchComponent {
 
     getMatches() {
         return this.searchMatches;
+    }
+
+    // Open search interface directly (for button click)
+    openSearchInterface() {
+        if (!this.searchActive) {
+            this.currentQuery = '';
+            this.searchMatches = [];
+            this.selectedMatchIndex = 0;
+            this.showSearch();
+            this.renderSearchMatches();
+        }
     }
 }
 

@@ -5,6 +5,18 @@
     padding: 0;
 }
 
+/* Remove tap highlight on mobile devices */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+.clickable {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
 body {
     font-family: 'Source Code Pro', monospace;
     min-height: 100vh;
@@ -28,7 +40,7 @@ body {
 
 .dashboard-section.section-content {
     padding-top: 0;
-    padding-bottom: 2rem;
+    padding-bottom: 3rem; /* Increased to make room for search button */
 }
 
 .container {

@@ -73,6 +73,14 @@
     flex: 1;
     min-width: 0;
     color: var(--text-primary);
+    
+    /* Remove tap highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .modal-button:hover,
