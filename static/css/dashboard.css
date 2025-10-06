@@ -18,9 +18,9 @@ textarea,
 }
 
 body {
-    font-family: 'Source Code Pro', monospace;
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: var(--font-size-text);
 }
 
 /* Dashboard Sections */
@@ -57,16 +57,16 @@ body {
 }
 
 .date {
-    font-size: 1.125rem;
-    font-weight: 900;
+    font-size: var(--font-size-date);
+    font-weight: var(--font-weight-black);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-tertiary);
 }
 
 .title {
-    font-size: 4rem;
-    font-weight: 900;
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-black);
     opacity: 0.8;
     user-select: none;
     color: var(--text-primary);
@@ -87,9 +87,8 @@ body {
 
 .page-nav-btn {
     padding: 0.4rem 0.6rem;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-semibold);
     background: transparent;
     border: none;
     color: var(--text-secondary);
@@ -131,8 +130,8 @@ body {
 
 .config-link a {
     text-decoration: none;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-semibold);
     transition: color 0.3s ease;
     color: var(--text-secondary);
 }
@@ -180,8 +179,8 @@ body {
 }
 
 .category-title {
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-size: var(--font-size-category);
+    font-weight: var(--font-weight-bold);
     letter-spacing: 0.05em;
     color: var(--text-tertiary);
 }
@@ -200,8 +199,8 @@ body {
 .bookmark-link {
     display: block;
     text-decoration: none;
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: var(--font-size-bookmark);
+    font-weight: var(--font-weight-semibold);
     transition: all 0.3s ease;
     position: relative;
     padding: 0.5rem 0;
@@ -228,7 +227,7 @@ body {
     content: '>';
     position: absolute;
     left: -1.5rem;
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     color: var(--text-primary);
 }
 
@@ -237,8 +236,8 @@ body {
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 0.875rem;
-    font-weight: 400;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-semibold);
     opacity: 0.7;
     white-space: nowrap; /* Prevent shortcut from wrapping */
 }
@@ -250,7 +249,7 @@ body {
 /* Loading */
 .loading {
     text-align: center;
-    font-size: 1.125rem;
+    font-size: var(--font-size-category);
     opacity: 0.7;
     grid-column: 1 / -1;
 }

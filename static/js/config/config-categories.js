@@ -20,6 +20,11 @@ class ConfigCategories {
 
         container.innerHTML = '';
 
+        // Ensure categories is an array
+        if (!Array.isArray(categories)) {
+            categories = [];
+        }
+
         categories.forEach((category, index) => {
             const categoryElement = this.createCategoryElement(category, index, categories, generateId);
             container.appendChild(categoryElement);
@@ -103,6 +108,11 @@ class ConfigCategories {
      * @returns {Object} - The new category
      */
     add(categories, generateId) {
+        // Ensure categories is an array
+        if (!categories || !Array.isArray(categories)) {
+            console.error('Categories must be an array');
+            return null;
+        }
         const newCategory = {
             id: generateId(`category-${categories.length + 1}`),
             name: `New Category ${categories.length + 1}`

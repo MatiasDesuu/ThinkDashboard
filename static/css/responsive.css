@@ -64,7 +64,7 @@
     }
     
     .title {
-        font-size: 3rem;
+        font-size: var(--font-size-title);
     }
     
     .header-actions {
@@ -74,11 +74,11 @@
     
     .page-nav-btn {
         padding: 0.35rem 0.5rem;
-        font-size: 0.813rem;
+        font-size: var(--font-size-controls);
     }
     
     .config-link a {
-        font-size: 0.938rem;
+        font-size: var(--font-size-controls);
     }
     
     .bookmark-link {
@@ -97,7 +97,7 @@
     .search-button {
         bottom: 1.5rem;
         padding: 0.65rem 1.3rem;
-        font-size: 0.938rem;
+        font-size: var(--font-size-controls);
     }
     
     /* Config page tablet styles */
@@ -127,7 +127,7 @@
     
     .tab-button {
         padding: 0.625rem 1.25rem;
-        font-size: 0.813rem;
+        font-size: var(--font-size-controls);
     }
     
     .config-actions-top {
@@ -184,7 +184,7 @@
     .search-button {
         bottom: 1.5rem;
         padding: 0.6rem 1.2rem;
-        font-size: 0.875rem;
+        font-size: var(--font-size-controls);
         width: calc(100% - 2rem);
     }
     
@@ -226,11 +226,11 @@
     }
     
     .date {
-        font-size: 0.938rem;
+        font-size: var(--font-size-date);
     }
     
     .title {
-        font-size: 2.5rem;
+        font-size: var(--font-size-title);
     }
     
     .header-actions {
@@ -248,11 +248,11 @@
     
     .page-nav-btn {
         padding: 0.3rem 0.45rem;
-        font-size: 0.75rem;
+        font-size: var(--font-size-controls);
     }
     
     .config-link a {
-        font-size: 0.875rem;
+        font-size: var(--font-size-controls);
     }
     
     /* Config page mobile large styles */
@@ -346,7 +346,7 @@
     
     .tab-button {
         padding: 0.5rem 1rem;
-        font-size: 0.75rem;
+        font-size: var(--font-size-controls);
         flex: 1 1 auto;
         min-width: 120px;
     }
@@ -393,7 +393,7 @@
     .search-button {
         bottom: 1.25rem;
         padding: 0.55rem 1.1rem;
-        font-size: 0.813rem;
+        font-size: var(--font-size-text);
         width: calc(100% - 2rem);
     }
     
@@ -435,12 +435,12 @@
     }
     
     .date {
-        font-size: 0.875rem;
+        font-size: var(--font-size-controls);
         letter-spacing: 0.05em;
     }
     
     .title {
-        font-size: 2rem;
+        font-size: var(--font-size-title);
     }
     
     .header-actions {
@@ -452,7 +452,7 @@
     
     .page-nav-btn {
         padding: 0.25rem 0.4rem;
-        font-size: 0.688rem;
+        font-size: var(--font-size-controls);
     }
     
     .page-nav-btn::before,
@@ -461,7 +461,7 @@
     }
     
     .config-link a {
-        font-size: 0.813rem;
+        font-size: var(--font-size-text);
     }
     
     /* Config page mobile small styles */
@@ -485,7 +485,7 @@
     
     .tab-button {
         padding: 0.5rem 0.75rem;
-        font-size: 0.688rem;
+        font-size: var(--font-size-controls);
         flex: 1 1 auto;
         min-width: 100px;
     }
@@ -559,12 +559,12 @@
     .search-button {
         bottom: 1rem;
         padding: 0.5rem 1rem;
-        font-size: 0.75rem;
+        font-size: var(--font-size-controls);
         width: calc(100% - 2rem);
     }
     
     .search-button-icon {
-        font-size: 1rem;
+        font-size: var(--font-size-controls);
     }
     
     /* Header responsive - mobile extra small */
@@ -605,12 +605,12 @@
     }
     
     .date {
-        font-size: 0.75rem;
+        font-size: var(--font-size-controls);
         letter-spacing: 0.025em;
     }
     
     .title {
-        font-size: 1.75rem;
+        font-size: var(--font-size-title);
     }
     
     .header-actions {
@@ -630,7 +630,7 @@
     
     .page-nav-btn {
         padding: 0.25rem 0.35rem;
-        font-size: 0.625rem;
+        font-size: var(--font-size-controls);
         white-space: nowrap;
     }
     
@@ -640,7 +640,7 @@
     }
     
     .config-link a {
-        font-size: 0.75rem;
+        font-size: var(--font-size-controls);
         white-space: nowrap;
     }
     
@@ -723,7 +723,7 @@
     
     .tab-button {
         padding: 0.5rem;
-        font-size: 0.625rem;
+        font-size: var(--font-size-controls);
         text-align: center;
         width: 100%;
         border-bottom: 1px solid var(--border-primary);

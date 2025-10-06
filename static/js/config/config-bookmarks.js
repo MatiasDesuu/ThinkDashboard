@@ -50,7 +50,8 @@ class ConfigBookmarks {
         div.setAttribute('data-bookmark-key', index);
 
         // Create category options
-        const categoryOptions = categories.map(cat => 
+        const cats = Array.isArray(categories) ? categories : [];
+        const categoryOptions = cats.map(cat => 
             `<option value="${cat.id}" ${cat.id === bookmark.category ? 'selected' : ''}>${cat.name}</option>`
         ).join('');
 

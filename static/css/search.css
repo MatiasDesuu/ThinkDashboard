@@ -11,7 +11,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: 'Source Code Pro', monospace;
     z-index: 2000;
     opacity: 0;
     visibility: hidden;
@@ -35,8 +34,8 @@
 .search-prompt {
     display: flex;
     align-items: center;
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: var(--font-size-bookmark);
+    font-weight: var(--font-weight-semibold);
     margin-bottom: 0.75rem;
     justify-content: flex-start;
 }
@@ -110,16 +109,16 @@
 }
 
 .search-match-shortcut {
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     margin-right: 1rem;
     min-width: 3ch;
-    font-size: 0.875rem;
+    font-size: var(--font-size-controls);
     color: var(--accent-success);
 }
 
 .search-match-name {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-semibold);
 }
 
 /* Special styling for config entry */
@@ -144,9 +143,8 @@
     border: 1px solid var(--border-primary);
     background: var(--background-modal);
     color: var(--text-primary);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-semibold);
     cursor: pointer;
     
     /* TTY terminal style */
@@ -180,8 +178,8 @@
 
 .search-button-icon {
     color: var(--accent-success);
-    font-weight: 700;
-    font-size: 1.125rem;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-category);
 }
 
 .search-button-text {

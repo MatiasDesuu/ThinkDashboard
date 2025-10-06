@@ -15,15 +15,13 @@ class ConfigData {
      */
     async loadData(deviceSpecific) {
         try {
-            const [bookmarksRes, categoriesRes, pagesRes, settingsRes] = await Promise.all([
+            const [bookmarksRes, pagesRes, settingsRes] = await Promise.all([
                 fetch('/api/bookmarks'),
-                fetch('/api/categories'),
                 fetch('/api/pages'),
                 fetch('/api/settings')
             ]);
 
             const bookmarks = await bookmarksRes.json();
-            const categories = await categoriesRes.json();
             const pages = await pagesRes.json();
             
             // Load settings from localStorage or server based on device-specific flag
@@ -34,7 +32,7 @@ class ConfigData {
                 settings = await settingsRes.json();
             }
 
-            return { bookmarks, categories, pages, settings };
+            return { bookmarks, pages, settings };
         } catch (error) {
             console.error('Error loading data:', error);
             throw error;
@@ -75,6 +73,30 @@ class ConfigData {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(categories)
         });
+    }
+
+    /**
+     * Save categories to server for a specific page
+     * @param {Array} categories
+     * @param {string|null} pageId
+     */
+    async saveCategoriesByPage(categories, pageId = null) {
+        const url = pageId ? `/api/categories?page=${pageId}` : '/api/categories';
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(categories)
+        });
+    }
+
+    /**
+     * Load categories for a specific page if present, fall back to global categories
+     * @param {string|null} pageId
+     */
+    async loadCategoriesByPage(pageId = null) {
+        const url = pageId ? `/api/categories?page=${pageId}` : '/api/categories';
+        const res = await fetch(url);
+        return await res.json();
     }
 
     /**
@@ -124,7 +146,8 @@ class ConfigData {
         
         const savePromises = [
             this.saveBookmarks(bookmarks, currentPageId),
-            this.saveCategories(categories),
+            // Only save global categories if provided (allow null to skip)
+            (categories != null ? this.saveCategories(categories) : Promise.resolve()),
             this.savePages(pages)
         ];
 

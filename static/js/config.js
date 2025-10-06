@@ -18,6 +18,7 @@ class ConfigManager {
         this.pagesData = [];
         this.originalPagesData = []; // Track original pages to detect deletions
         this.currentPageId = 1; // Default to page 1
+        this.currentCategoriesPageId = 1; // Default to page 1 for categories
         this.bookmarksData = [];
         this.categoriesData = [];
         this.settingsData = {
@@ -55,16 +56,25 @@ class ConfigManager {
 
         // Show body after everything is loaded and rendered
         document.body.classList.remove('loading');
+
+        // Load categories for current page into the categories tab (if present)
+        const categoriesSelector = document.getElementById('categories-page-selector');
+        if (categoriesSelector) {
+            // Ensure selector has been populated
+            setTimeout(() => {
+                this.currentCategoriesPageId = this.currentPageId;
+                categoriesSelector.value = this.currentPageId;
+                this.loadPageCategories(this.currentPageId);
+            }, 0);
+        }
     }
 
     async loadData() {
         try {
             this.deviceSpecific = this.storage.getDeviceSpecificFlag();
+            const { bookmarks, pages, settings } = await this.data.loadData(this.deviceSpecific);
 
-            const { bookmarks, categories, pages, settings } = await this.data.loadData(this.deviceSpecific);
-            
             this.bookmarksData = bookmarks;
-            this.categoriesData = categories;
             this.pagesData = pages;
             this.originalPagesData = JSON.parse(JSON.stringify(pages)); // Deep copy
             this.settingsData = settings;
@@ -82,15 +92,32 @@ class ConfigManager {
         try {
             this.currentPageId = pageId;
             this.bookmarksData = await this.data.loadBookmarksByPage(pageId);
+            // Load categories specific to this page and render bookmarks with those categories
+            await this.loadPageCategories(pageId);
             this.bookmarks.render(this.bookmarksData, this.categoriesData);
             this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
                 this.bookmarksData = newBookmarks;
                 this.renderConfig();
                 this.initReordering();
             });
+            // categories for this page have already been loaded above
         } catch (error) {
             console.error('Error loading page bookmarks:', error);
             this.ui.showNotification('Error loading bookmarks for page', 'error');
+        }
+    }
+
+    async loadPageCategories(pageId) {
+        try {
+            const categories = await this.data.loadCategoriesByPage(pageId);
+            this.categoriesData = categories;
+            this.categories.render(this.categoriesData, this.generateId.bind(this));
+            this.categories.initReorder(this.categoriesData, (newCategories) => {
+                this.categoriesData = newCategories;
+            });
+        } catch (error) {
+            console.error('Error loading categories for page:', error);
+            this.ui.showNotification('Error loading categories for page', 'error');
         }
     }
 
@@ -164,6 +191,15 @@ class ConfigManager {
             });
         }
 
+        // Page selector in categories tab
+        const categoriesPageSelector = document.getElementById('categories-page-selector');
+        if (categoriesPageSelector) {
+            categoriesPageSelector.addEventListener('change', (e) => {
+                this.currentCategoriesPageId = e.target.value;
+                this.loadPageCategories(e.target.value);
+            });
+        }
+
         // Save button
         const saveBtn = document.getElementById('save-btn');
         if (saveBtn) {
@@ -180,6 +216,20 @@ class ConfigManager {
     renderConfig() {
         this.pages.render(this.pagesData, this.generateId.bind(this));
         this.pages.renderPageSelector(this.pagesData, this.currentPageId);
+
+        // Populate categories page selector if present
+        const categoriesSelector = document.getElementById('categories-page-selector');
+        if (categoriesSelector) {
+            categoriesSelector.innerHTML = '';
+            this.pagesData.forEach(page => {
+                const option = document.createElement('option');
+                option.value = page.id;
+                option.textContent = page.name;
+                if (page.id === this.currentPageId) option.selected = true;
+                categoriesSelector.appendChild(option);
+            });
+        }
+
         this.categories.render(this.categoriesData, this.generateId.bind(this));
         this.bookmarks.render(this.bookmarksData, this.categoriesData);
     }
@@ -208,12 +258,26 @@ class ConfigManager {
     }
 
     addPage() {
-        this.pages.add(this.pagesData, this.generateId.bind(this));
+        const newPage = this.pages.add(this.pagesData, this.generateId.bind(this));
         this.renderConfig();
         this.initReordering();
+
+        // If categories selector exists, select the new page and load its categories
+        const categoriesSelector = document.getElementById('categories-page-selector');
+        if (categoriesSelector) {
+            // newPage may be the object pushed to pagesData; select by its id
+            const id = String(newPage.id || newPage.ID || newPage);
+            this.currentCategoriesPageId = id;
+            categoriesSelector.value = id;
+            this.loadPageCategories(id);
+        }
     }
 
     addCategory() {
+        // Initialize categoriesData if it's null (for new pages)
+        if (!this.categoriesData) {
+            this.categoriesData = [];
+        }
         this.categories.add(this.categoriesData, this.generateId.bind(this));
         this.renderConfig();
         this.initReordering();
@@ -303,15 +367,21 @@ class ConfigManager {
             // Always set currentPage to the first page (don't use the editing page)
             this.settingsData.currentPage = this.pagesData.length > 0 ? this.pagesData[0].id : 1;
 
-            // Save all data
+            // Save bookmarks and pages (skip global categories)
             await this.data.saveAll({
                 bookmarks: this.bookmarksData,
-                categories: this.categoriesData,
+                categories: null,
                 pages: this.pagesData,
                 settings: this.settingsData,
                 currentPageId: this.currentPageId,
                 deviceSpecific: this.deviceSpecific
             });
+
+            // Save per-page categories if categories selector is present
+            const categoriesSelector = document.getElementById('categories-page-selector');
+            if (categoriesSelector && this.currentCategoriesPageId) {
+                await this.data.saveCategoriesByPage(this.categoriesData, this.currentCategoriesPageId);
+            }
 
             // Update original pages after successful save
             this.originalPagesData = JSON.parse(JSON.stringify(this.pagesData));

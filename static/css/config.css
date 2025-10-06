@@ -6,9 +6,9 @@
 }
 
 body {
-    font-family: 'Source Code Pro', monospace;
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: var(--font-size-text);
 }
 
 /* Config Sections - Same system as dashboard */
@@ -67,9 +67,8 @@ body {
     border: none;
     background: transparent;
     color: var(--text-tertiary);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-semibold);
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
@@ -133,15 +132,15 @@ body {
 }
 
 .title {
-    font-size: 3rem;
-    font-weight: 900;
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-black);
     opacity: 0.8;
 }
 
 .back-link {
     text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-semibold);
     transition: color 0.3s ease;
     color: var(--text-secondary);
 }
@@ -167,8 +166,8 @@ body {
 }
 
 .config-section h2 {
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-size: var(--font-size-category);
+    font-weight: var(--font-weight-bold);
     letter-spacing: 0.05em;
     margin-bottom: 1.5rem;
     color: var(--text-tertiary);
@@ -187,8 +186,8 @@ body {
 }
 
 .form-group label {
-    font-weight: 600;
-    font-size: 0.875rem;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-text);
     min-width: 120px;
 }
 
@@ -200,7 +199,7 @@ body {
     background: var(--background-primary);
     color: var(--text-primary);
     font-family: inherit;
-    font-size: 0.875rem;
+    font-size: var(--font-size-text);
     transition: border-color 0.3s ease;
     max-width: 200px;
 }
@@ -255,8 +254,7 @@ body {
     border: none;
     background: var(--background-primary);
     color: var(--text-primary);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 0.625rem;
+    font-size: var(--font-size-controls);
     cursor: pointer;
     transition: background-color 0.2s ease;
     padding: 0;
@@ -295,7 +293,6 @@ body {
     flex-direction: column;
     gap: 0;
     margin-top: 1rem;
-    font-family: 'Source Code Pro', monospace;
 }
 
 .checkbox-tree-item {
@@ -310,11 +307,10 @@ body {
 }
 
 .tree-symbol {
-    font-size: 0.875rem;
-    font-weight: 400;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-normal);
     user-select: none;
     white-space: pre;
-    font-family: 'Source Code Pro', monospace;
     color: var(--text-tertiary);
 }
 
@@ -323,8 +319,8 @@ body {
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 400;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-normal);
     margin: 0;
     padding: 0;
 }
@@ -350,8 +346,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 10px;
-    font-weight: 900;
+    font-size: var(--font-size-checkbox);
+    font-weight: var(--font-weight-black);
     line-height: 1;
     color: var(--accent-success);
 }
@@ -407,8 +403,8 @@ body {
 }
 
 .page-selector-wrapper label {
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-semibold);
     color: var(--text-secondary);
     white-space: nowrap;
 }
@@ -421,7 +417,7 @@ body {
     background: var(--background-primary);
     color: var(--text-primary);
     font-family: inherit;
-    font-size: 0.875rem;
+    font-size: var(--font-size-text);
     cursor: pointer;
     transition: border-color 0.3s ease;
 }
@@ -451,7 +447,7 @@ body {
     background: var(--background-primary);
     color: var(--text-primary);
     font-family: inherit;
-    font-size: 0.875rem;
+    font-size: var(--font-size-text);
     transition: border-color 0.3s ease;
 }
 
@@ -480,8 +476,8 @@ body {
     border: 1px solid;
     background: transparent;
     font-family: inherit;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-semibold);
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 0;
@@ -512,7 +508,7 @@ body {
 
 .btn-danger {
     padding: 0.375rem 0.5rem;
-    font-size: 0.875rem;
+    font-size: var(--font-size-controls);
     border: 1px solid var(--accent-error);
     color: var(--accent-error);
 }
@@ -528,8 +524,8 @@ body {
     bottom: 2rem;
     right: 2rem;
     padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-semibold);
     border: 1px solid;
     opacity: 0;
     transform: translateY(20px);

@@ -9,7 +9,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: 'Source Code Pro', monospace;
     z-index: 2000;
     opacity: 0;
     visibility: hidden;
@@ -33,8 +32,8 @@
 .modal-header {
     display: flex;
     align-items: center;
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: var(--font-size-bookmark);
+    font-weight: var(--font-weight-semibold);
     justify-content: flex-start;
 }
 
@@ -90,21 +89,21 @@
 }
 
 .modal-button-prefix {
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     margin-right: 1rem;
     min-width: 3ch;
-    font-size: 0.875rem;
+    font-size: var(--font-size-controls);
     color: var(--accent-success);
 }
 
 .modal-button-name {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-semibold);
 }
 
 /* Danger button styles (red) */
 .modal-button.danger {
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     color: var(--accent-error);
 }
 

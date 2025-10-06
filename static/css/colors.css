@@ -22,8 +22,8 @@
 .color-group h3 {
     margin-top: 0;
     margin-bottom: 1rem;
-    font-size: 0.875rem;
-    font-weight: 700;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-bold);
     letter-spacing: 0.05em;
     color: var(--text-tertiary);
     text-transform: lowercase;
@@ -47,9 +47,9 @@
 }
 
 .color-item label {
-    font-size: 0.875rem;
+    font-size: var(--font-size-text);
     color: var(--text-secondary);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     min-width: 160px;
     margin: 0;
 }
@@ -91,8 +91,7 @@
     border-radius: 0;
     background: transparent;
     color: var(--text-primary);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 0.875rem;
+    font-size: var(--font-size-text);
     transition: border-color 0.2s ease;
 }
 
@@ -105,8 +104,7 @@
     border-radius: 0;
     background: transparent;
     color: var(--text-primary);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 0.875rem;
+    font-size: var(--font-size-text);
     transition: border-color 0.2s ease;
 }
 
@@ -131,7 +129,7 @@
 .nav-links .back-link {
     color: var(--text-secondary);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: var(--font-size-controls);
     transition: color 0.2s ease;
 }
 
