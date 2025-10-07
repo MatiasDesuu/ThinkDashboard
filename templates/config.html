@@ -84,12 +84,19 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="font-size-select">Font size:</label>
-                    <select id="font-size-select">
-                        <option value="small">Small</option>
-                        <option value="medium">Medium</option>
-                        <option value="large">Large</option>
-                    </select>
+                    <label for="font-size-slider">Font size:</label>
+                    <div class="slider-container">
+                        <input type="range" id="font-size-slider" min="0" max="6" step="1" value="3" class="terminal-slider">
+                        <div class="slider-labels">
+                            <span class="slider-label">xs</span>
+                            <span class="slider-label">s</span>
+                            <span class="slider-label">sm</span>
+                            <span class="slider-label">m</span>
+                            <span class="slider-label">lg</span>
+                            <span class="slider-label">l</span>
+                            <span class="slider-label">xl</span>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="checkbox-tree">

@@ -31,12 +31,20 @@ class ConfigSettings {
             });
         }
 
-        // Font size select
-        const fontSizeSelect = document.getElementById('font-size-select');
-        if (fontSizeSelect) {
-            fontSizeSelect.value = settings.fontSize;
-            fontSizeSelect.addEventListener('change', (e) => {
-                settings.fontSize = e.target.value;
+        // Font size slider
+        const fontSizeSlider = document.getElementById('font-size-slider');
+        const fontSizeMap = ['xs', 's', 'sm', 'm', 'lg', 'l', 'xl'];
+        
+        if (fontSizeSlider) {
+            // Set initial value
+            const initialIndex = fontSizeMap.indexOf(settings.fontSize);
+            fontSizeSlider.value = initialIndex >= 0 ? initialIndex : 3; // Default to 'm'
+            
+            // Listen for changes
+            fontSizeSlider.addEventListener('input', (e) => {
+                const index = parseInt(e.target.value);
+                const fontSize = fontSizeMap[index];
+                settings.fontSize = fontSize;
                 if (callbacks.onFontSizeChange) callbacks.onFontSizeChange(settings.fontSize);
             });
         }
@@ -186,8 +194,8 @@ class ConfigSettings {
      * @param {string} fontSize
      */
     applyFontSize(fontSize) {
-        document.body.classList.remove('font-small', 'font-medium', 'font-large');
-        document.body.classList.add(`font-${fontSize}`);
+        document.body.classList.remove('font-size-xs', 'font-size-s', 'font-size-sm', 'font-size-m', 'font-size-lg', 'font-size-l', 'font-size-xl');
+        document.body.classList.add(`font-size-${fontSize}`);
     }
 
     /**
@@ -239,7 +247,7 @@ class ConfigSettings {
             theme: 'dark',
             openInNewTab: true,
             columnsPerRow: 3,
-            fontSize: 'medium',
+            fontSize: 'm',
             showBackgroundDots: true,
             showTitle: true,
             showDate: true,

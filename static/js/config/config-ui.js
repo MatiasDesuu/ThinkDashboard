@@ -30,6 +30,31 @@ class ConfigUI {
                 if (targetContent) {
                     targetContent.classList.add('active');
                 }
+                
+                // Reset page selectors to first page when switching to bookmarks or categories tabs
+                if (typeof configManager !== 'undefined') {
+                    if (targetTab === 'bookmarks') {
+                        const firstPageId = configManager.pagesData.length > 0 ? configManager.pagesData[0].id : 1;
+                        const pageSelector = document.getElementById('page-selector');
+                        if (pageSelector && pageSelector.value != firstPageId) {
+                            configManager.currentPageId = firstPageId;
+                            pageSelector.value = firstPageId;
+                            configManager.loadPageBookmarks(firstPageId);
+                            // Refresh custom select display
+                            configManager.refreshCustomSelects();
+                        }
+                    } else if (targetTab === 'categories') {
+                        const firstPageId = configManager.pagesData.length > 0 ? configManager.pagesData[0].id : 1;
+                        const categoriesSelector = document.getElementById('categories-page-selector');
+                        if (categoriesSelector && categoriesSelector.value != firstPageId) {
+                            configManager.currentCategoriesPageId = firstPageId;
+                            categoriesSelector.value = firstPageId;
+                            configManager.loadPageCategories(firstPageId);
+                            // Refresh custom select display
+                            configManager.refreshCustomSelects();
+                        }
+                    }
+                }
             });
         });
     }

@@ -11,7 +11,7 @@ class Dashboard {
             theme: 'dark',
             openInNewTab: true,
             columnsPerRow: 3,
-            fontSize: 'medium',
+            fontSize: 'm',
             showBackgroundDots: true,
             showTitle: true,
             showDate: true,
@@ -393,8 +393,13 @@ class Dashboard {
         const link = document.createElement('a');
         link.href = bookmark.url;
         link.className = 'bookmark-link';
-        link.textContent = bookmark.name;
         link.setAttribute('data-bookmark-url', bookmark.url);
+        
+        // Create text wrapper for ellipsis
+        const textSpan = document.createElement('span');
+        textSpan.className = 'bookmark-text';
+        textSpan.textContent = bookmark.name;
+        link.appendChild(textSpan);
         
         // Always add click handler to check HyprMode dynamically
         link.addEventListener('click', (e) => {
@@ -453,9 +458,22 @@ class Dashboard {
 
     applyFontSize() {
         // Remove existing font size classes
-        document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+        document.body.classList.remove('font-size-xs', 'font-size-s', 'font-size-sm', 'font-size-m', 'font-size-lg', 'font-size-l', 'font-size-xl');
+        document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large'); // Remove old classes
+        
+        // Migrate old values to new values
+        let fontSize = this.settings.fontSize || 'm';
+        if (fontSize === 'small') fontSize = 'sm';
+        if (fontSize === 'medium') fontSize = 'm';
+        if (fontSize === 'large') fontSize = 'l';
+        
+        // Update settings if migration occurred
+        if (this.settings.fontSize !== fontSize) {
+            this.settings.fontSize = fontSize;
+            this.saveSettings();
+        }
+        
         // Add current font size class
-        const fontSize = this.settings.fontSize || 'medium';
         document.body.classList.add(`font-size-${fontSize}`);
     }
 

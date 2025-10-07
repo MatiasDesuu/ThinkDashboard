@@ -5,10 +5,10 @@
     font-family: 'Source Code Pro', monospace;
 }
 
-/* Font Size Variables - Default (Medium) */
+/* Font Size Variables - Default (Medium/m - Level 3) */
 :root {
     /* Main Categories - Only 5 core variables */
-    --font-size-title: 4rem;           /* Dashboard title (big title) */
+    --font-size-title: 3rem;           /* Dashboard title (big title) */
     --font-size-date: 1.125rem;        /* Date in header */
     --font-size-category: 1.125rem;    /* Category/column titles */
     --font-size-bookmark: 1.25rem;     /* Bookmark links */
@@ -22,8 +22,28 @@
     --font-weight-black: 900;          /* Extra bold - titles, strong emphasis */
 }
 
-/* Small Font Size */
-body.font-size-small {
+/* Extra Small - xs (Level 0) */
+body.font-size-xs {
+    --font-size-title: 1.5rem;
+    --font-size-date: 0.75rem;
+    --font-size-category: 0.75rem;
+    --font-size-bookmark: 0.813rem;
+    --font-size-controls: 0.625rem;
+    --font-size-text: 0.625rem;
+}
+
+/* Small - s (Level 1) */
+body.font-size-s {
+    --font-size-title: 1.75rem;
+    --font-size-date: 0.813rem;
+    --font-size-category: 0.813rem;
+    --font-size-bookmark: 0.938rem;
+    --font-size-controls: 0.688rem;
+    --font-size-text: 0.688rem;
+}
+
+/* Small-Medium - sm (Level 2) */
+body.font-size-sm {
     --font-size-title: 2rem;
     --font-size-date: 0.938rem;
     --font-size-category: 0.938rem;
@@ -32,9 +52,29 @@ body.font-size-small {
     --font-size-text: 0.75rem;
 }
 
-/* Large Font Size */
-body.font-size-large {
-    --font-size-title: 5rem;
+/* Medium - m (Level 3 - Default) */
+body.font-size-m {
+    --font-size-title: 3rem;
+    --font-size-date: 1.125rem;
+    --font-size-category: 1.125rem;
+    --font-size-bookmark: 1.25rem;
+    --font-size-controls: 0.875rem;
+    --font-size-text: 0.875rem;
+}
+
+/* Large-Medium - lg (Level 4) */
+body.font-size-lg {
+    --font-size-title: 3.5rem;
+    --font-size-date: 1.25rem;
+    --font-size-category: 1.25rem;
+    --font-size-bookmark: 1.375rem;
+    --font-size-controls: 0.938rem;
+    --font-size-text: 0.938rem;
+}
+
+/* Large - l (Level 5) */
+body.font-size-l {
+    --font-size-title: 4rem;
     --font-size-date: 1.375rem;
     --font-size-category: 1.375rem;
     --font-size-bookmark: 1.5rem;
@@ -42,23 +82,67 @@ body.font-size-large {
     --font-size-text: 1rem;
 }
 
+/* Extra Large - xl (Level 6) */
+body.font-size-xl {
+    --font-size-title: 4.5rem;
+    --font-size-date: 1.5rem;
+    --font-size-category: 1.5rem;
+    --font-size-bookmark: 1.625rem;
+    --font-size-controls: 1.125rem;
+    --font-size-text: 1.125rem;
+}
+
+/* Extra Large - xl (Level 6) */
+body.font-size-xl {
+    --font-size-title: 4.5rem;
+    --font-size-date: 1.5rem;
+    --font-size-category: 1.5rem;
+    --font-size-bookmark: 1.625rem;
+    --font-size-controls: 1.125rem;
+    --font-size-text: 1.125rem;
+}
+
 /* Responsive adjustments for font sizes */
 @media (max-width: 767px) {
-    body.font-size-large {
+    body.font-size-xl {
+        --font-size-title: 3.5rem;
+    }
+    
+    body.font-size-l {
         --font-size-title: 3rem;
+    }
+    
+    body.font-size-lg {
+        --font-size-title: 2.5rem;
     }
 }
 
 @media (max-width: 479px) {
-    body.font-size-large {
+    body.font-size-xl {
+        --font-size-title: 3rem;
+    }
+    
+    body.font-size-l {
         --font-size-title: 2.5rem;
     }
     
-    body.font-size-small {
+    body.font-size-lg {
+        --font-size-title: 2.25rem;
+    }
+    
+    body.font-size-m {
+        --font-size-title: 2rem;
+    }
+    
+    body.font-size-sm {
         --font-size-title: 1.75rem;
     }
     
-    :root {
-        --font-size-title: 3rem;
+    body.font-size-s {
+        --font-size-title: 1.5rem;
+    }
+    
+    body.font-size-xs {
+        --font-size-title: 1.25rem;
     }
 }

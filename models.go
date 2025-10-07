@@ -210,6 +210,13 @@ func (fs *FileStore) ensureDataDir() {
 	os.MkdirAll("data", 0755)
 }
 
+// getDefaultNewPageCategories returns the default categories for a newly created page
+func getDefaultNewPageCategories() []Category {
+	return []Category{
+		{ID: "others", Name: "Others"},
+	}
+}
+
 func (fs *FileStore) GetBookmarks() []Bookmark {
 	fs.mutex.RLock()
 	defer fs.mutex.RUnlock()
@@ -264,9 +271,9 @@ func (fs *FileStore) GetBookmarksByPage(pageID int) []Bookmark {
 		return []Bookmark{}
 	}
 
-	// If categories is nil, initialize it to an empty slice and persist the file
+	// If categories is nil, initialize it to default categories and persist the file
 	if pageWithBookmarks.Categories == nil {
-		pageWithBookmarks.Categories = []Category{}
+		pageWithBookmarks.Categories = getDefaultNewPageCategories()
 		newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
 		// Best-effort write; ignore errors
 		_ = os.WriteFile(filePath, newData, 0644)
@@ -285,13 +292,13 @@ func (fs *FileStore) SaveBookmarksByPage(pageID int, bookmarks []Bookmark) {
 	filePath := fmt.Sprintf("%s/bookmarks-%d.json", fs.dataDir, pageID)
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		// If file doesn't exist, create new page with this ID and empty categories
+		// If file doesn't exist, create new page with this ID and default categories
 		pageWithBookmarks := PageWithBookmarks{
 			Page: Page{
 				ID:   pageID,
 				Name: fmt.Sprintf("Page %d", pageID),
 			},
-			Categories: []Category{},
+			Categories: getDefaultNewPageCategories(),
 			Bookmarks:  bookmarks,
 		}
 		newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
@@ -361,7 +368,8 @@ func (fs *FileStore) SaveCategoriesByPage(pageID int, categories []Category) {
 	filePath := fmt.Sprintf("%s/bookmarks-%d.json", fs.dataDir, pageID)
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		// Create new page file with categories and empty bookmarks
+		// Create new page file with provided categories and empty bookmarks
+		// Note: This is called when explicitly saving categories for a page
 		pageWithBookmarks := PageWithBookmarks{
 			Page: Page{
 				ID:   pageID,
@@ -574,7 +582,7 @@ func (fs *FileStore) SavePage(page Page, bookmarks []Bookmark) {
 	}
 
 	if pageWithBookmarks.Categories == nil {
-		pageWithBookmarks.Categories = []Category{}
+		pageWithBookmarks.Categories = getDefaultNewPageCategories()
 	}
 
 	data, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")

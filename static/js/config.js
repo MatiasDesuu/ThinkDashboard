@@ -22,11 +22,11 @@ class ConfigManager {
         this.bookmarksData = [];
         this.categoriesData = [];
         this.settingsData = {
-            currentPage: 1, // Default to page 1
+            currentPage: 'default',
             theme: 'dark',
             openInNewTab: true,
             columnsPerRow: 3,
-            fontSize: 'medium',
+            fontSize: 'm',
             showBackgroundDots: true,
             showTitle: true,
             showDate: true,
@@ -62,7 +62,7 @@ class ConfigManager {
         if (categoriesSelector) {
             // Ensure selector has been populated
             setTimeout(() => {
-                this.currentCategoriesPageId = this.currentPageId;
+                this.currentCategoriesPageId = parseInt(this.currentPageId);
                 categoriesSelector.value = this.currentPageId;
                 this.loadPageCategories(this.currentPageId);
             }, 0);
@@ -195,7 +195,7 @@ class ConfigManager {
         const categoriesPageSelector = document.getElementById('categories-page-selector');
         if (categoriesPageSelector) {
             categoriesPageSelector.addEventListener('change', (e) => {
-                this.currentCategoriesPageId = e.target.value;
+                this.currentCategoriesPageId = parseInt(e.target.value);
                 this.loadPageCategories(e.target.value);
             });
         }
@@ -215,23 +215,104 @@ class ConfigManager {
 
     renderConfig() {
         this.pages.render(this.pagesData, this.generateId.bind(this));
+        
+        // Preserve current page selection before re-rendering page selector
+        const pageSelector = document.getElementById('page-selector');
+        if (pageSelector && pageSelector.value) {
+            this.currentPageId = parseInt(pageSelector.value);
+        }
         this.pages.renderPageSelector(this.pagesData, this.currentPageId);
 
         // Populate categories page selector if present
         const categoriesSelector = document.getElementById('categories-page-selector');
         if (categoriesSelector) {
+            // Preserve current categories page selection
+            if (categoriesSelector.value) {
+                this.currentCategoriesPageId = parseInt(categoriesSelector.value);
+            }
+            
             categoriesSelector.innerHTML = '';
             this.pagesData.forEach(page => {
                 const option = document.createElement('option');
                 option.value = page.id;
                 option.textContent = page.name;
-                if (page.id === this.currentPageId) option.selected = true;
+                // Use currentCategoriesPageId instead of currentPageId
+                if (page.id === this.currentCategoriesPageId) option.selected = true;
                 categoriesSelector.appendChild(option);
             });
         }
 
         this.categories.render(this.categoriesData, this.generateId.bind(this));
         this.bookmarks.render(this.bookmarksData, this.categoriesData);
+        
+        // Refresh custom selects to reflect DOM changes
+        this.refreshCustomSelects();
+    }
+
+    /**
+     * Refresh custom select instances after DOM changes
+     */
+    refreshCustomSelects() {
+        // Find all select elements that have been initialized as custom selects
+        const selects = document.querySelectorAll('select[data-custom-select-init="true"]');
+        
+        selects.forEach(select => {
+            // DON'T trigger change event - it causes data reload
+            // Just update the visual display of the custom select
+            
+            // If the custom select wrapper exists, find and refresh it
+            const wrapper = select.closest('.custom-select-wrapper');
+            if (wrapper) {
+                // Re-populate options by finding the CustomSelect instance
+                // We need to manually refresh the options
+                const optionsContainer = wrapper.querySelector('.custom-select-options');
+                const trigger = wrapper.querySelector('.custom-select-trigger .custom-select-text');
+                
+                if (optionsContainer && trigger) {
+                    // Clear existing options
+                    optionsContainer.innerHTML = '';
+                    
+                    // Repopulate from the original select
+                    Array.from(select.options).forEach((option, index) => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'custom-select-option';
+                        optionDiv.textContent = option.textContent;
+                        optionDiv.dataset.value = option.value;
+                        optionDiv.dataset.index = index;
+                        
+                        if (option.selected) {
+                            optionDiv.classList.add('selected');
+                        }
+                        
+                        optionDiv.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            // Update original select
+                            select.selectedIndex = index;
+                            // Trigger change event
+                            const changeEvent = new Event('change', { bubbles: true });
+                            select.dispatchEvent(changeEvent);
+                            // Update UI
+                            trigger.textContent = option.textContent;
+                            // Update selected class
+                            optionsContainer.querySelectorAll('.custom-select-option').forEach(opt => {
+                                opt.classList.remove('selected');
+                            });
+                            optionDiv.classList.add('selected');
+                            // Close dropdown
+                            wrapper.querySelector('.custom-select').classList.remove('open');
+                        });
+                        
+                        optionsContainer.appendChild(optionDiv);
+                    });
+                    
+                    // Update trigger text
+                    const selectedOption = select.options[select.selectedIndex];
+                    if (selectedOption) {
+                        trigger.textContent = selectedOption.textContent;
+                    }
+                }
+            }
+        });
     }
 
     initReordering() {
@@ -257,19 +338,34 @@ class ConfigManager {
         });
     }
 
-    addPage() {
+    async addPage() {
         const newPage = this.pages.add(this.pagesData, this.generateId.bind(this));
+        
+        // Create the page file immediately with default "Others" category
+        const defaultCategories = [{ id: 'others', name: 'Others' }];
+        try {
+            await this.data.saveCategoriesByPage(defaultCategories, newPage.id);
+            await this.data.saveBookmarks([], newPage.id);
+        } catch (error) {
+            console.error('Error creating new page:', error);
+        }
+        
         this.renderConfig();
         this.initReordering();
 
-        // If categories selector exists, select the new page and load its categories
+        // Update both page selectors to the new page
+        const pageSelector = document.getElementById('page-selector');
+        if (pageSelector) {
+            pageSelector.value = String(newPage.id);
+            this.currentPageId = newPage.id;
+            this.loadPageBookmarks(newPage.id);
+        }
+
         const categoriesSelector = document.getElementById('categories-page-selector');
         if (categoriesSelector) {
-            // newPage may be the object pushed to pagesData; select by its id
-            const id = String(newPage.id || newPage.ID || newPage);
-            this.currentCategoriesPageId = id;
-            categoriesSelector.value = id;
-            this.loadPageCategories(id);
+            this.currentCategoriesPageId = newPage.id;
+            categoriesSelector.value = String(newPage.id);
+            this.loadPageCategories(newPage.id);
         }
     }
 
