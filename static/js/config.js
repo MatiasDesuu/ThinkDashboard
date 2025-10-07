@@ -57,15 +57,12 @@ class ConfigManager {
         // Show body after everything is loaded and rendered
         document.body.classList.remove('loading');
 
-        // Load categories for current page into the categories tab (if present)
+        // Set initial categories page selector to match bookmarks page
         const categoriesSelector = document.getElementById('categories-page-selector');
         if (categoriesSelector) {
-            // Ensure selector has been populated
-            setTimeout(() => {
-                this.currentCategoriesPageId = parseInt(this.currentPageId);
-                categoriesSelector.value = this.currentPageId;
-                this.loadPageCategories(this.currentPageId);
-            }, 0);
+            // Initialize to the current page being edited for bookmarks
+            this.currentCategoriesPageId = parseInt(this.currentPageId);
+            this.loadPageCategories(this.currentPageId);
         }
     }
 
@@ -92,15 +89,15 @@ class ConfigManager {
         try {
             this.currentPageId = pageId;
             this.bookmarksData = await this.data.loadBookmarksByPage(pageId);
-            // Load categories specific to this page and render bookmarks with those categories
-            await this.loadPageCategories(pageId);
+            // Load categories for this page (needed to display bookmarks correctly)
+            const categories = await this.data.loadCategoriesByPage(pageId);
+            this.categoriesData = categories;
+            
+            // Only render bookmarks, not full config
             this.bookmarks.render(this.bookmarksData, this.categoriesData);
             this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
                 this.bookmarksData = newBookmarks;
-                this.renderConfig();
-                this.initReordering();
             });
-            // categories for this page have already been loaded above
         } catch (error) {
             console.error('Error loading page bookmarks:', error);
             this.ui.showNotification('Error loading bookmarks for page', 'error');
@@ -109,6 +106,8 @@ class ConfigManager {
 
     async loadPageCategories(pageId) {
         try {
+            // Store which page we're editing categories for
+            this.currentCategoriesPageId = parseInt(pageId);
             const categories = await this.data.loadCategoriesByPage(pageId);
             this.categoriesData = categories;
             this.categories.render(this.categoriesData, this.generateId.bind(this));
@@ -242,6 +241,9 @@ class ConfigManager {
             });
         }
 
+        // Render categories and bookmarks
+        // Note: categoriesData should already be loaded for the correct page
+        // via loadPageCategories or loadPageBookmarks
         this.categories.render(this.categoriesData, this.generateId.bind(this));
         this.bookmarks.render(this.bookmarksData, this.categoriesData);
         
@@ -463,20 +465,23 @@ class ConfigManager {
             // Always set currentPage to the first page (don't use the editing page)
             this.settingsData.currentPage = this.pagesData.length > 0 ? this.pagesData[0].id : 1;
 
-            // Save bookmarks and pages (skip global categories)
-            await this.data.saveAll({
-                bookmarks: this.bookmarksData,
-                categories: null,
-                pages: this.pagesData,
-                settings: this.settingsData,
-                currentPageId: this.currentPageId,
-                deviceSpecific: this.deviceSpecific
-            });
-
-            // Save per-page categories if categories selector is present
-            const categoriesSelector = document.getElementById('categories-page-selector');
-            if (categoriesSelector && this.currentCategoriesPageId) {
+            // Save bookmarks for the current page being edited
+            await this.data.saveBookmarks(this.bookmarksData, this.currentPageId);
+            
+            // Save categories for the page being edited in the categories tab
+            // This ensures we save the correct categories to the correct page
+            if (this.currentCategoriesPageId) {
                 await this.data.saveCategoriesByPage(this.categoriesData, this.currentCategoriesPageId);
+            }
+            
+            // Save pages metadata
+            await this.data.savePages(this.pagesData);
+            
+            // Save settings
+            if (this.deviceSpecific) {
+                this.storage.saveDeviceSettings(this.settingsData);
+            } else {
+                await this.data.saveSettings(this.settingsData);
             }
 
             // Update original pages after successful save

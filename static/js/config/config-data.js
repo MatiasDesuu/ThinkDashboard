@@ -64,18 +64,6 @@ class ConfigData {
     }
 
     /**
-     * Save categories to server
-     * @param {Array} categories
-     */
-    async saveCategories(categories) {
-        await fetch('/api/categories', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(categories)
-        });
-    }
-
-    /**
      * Save categories to server for a specific page
      * @param {Array} categories
      * @param {string|null} pageId
@@ -135,32 +123,6 @@ class ConfigData {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(settings)
         });
-    }
-
-    /**
-     * Save all configuration
-     * @param {Object} data - Contains bookmarks, categories, pages, settings, currentPageId, deviceSpecific flag
-     */
-    async saveAll(data) {
-        const { bookmarks, categories, pages, settings, currentPageId, deviceSpecific } = data;
-        
-        const savePromises = [
-            this.saveBookmarks(bookmarks, currentPageId),
-            // Only save global categories if provided (allow null to skip)
-            (categories != null ? this.saveCategories(categories) : Promise.resolve()),
-            this.savePages(pages)
-        ];
-
-        // Save settings based on device-specific flag
-        if (deviceSpecific) {
-            // Save settings to localStorage
-            this.storage.saveDeviceSettings(settings);
-        } else {
-            // Save settings to server
-            savePromises.push(this.saveSettings(settings));
-        }
-
-        await Promise.all(savePromises);
     }
 
     /**

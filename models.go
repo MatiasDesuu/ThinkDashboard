@@ -17,8 +17,9 @@ type Bookmark struct {
 }
 
 type Category struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID         string `json:"id"`
+	Name       string `json:"name"`
+	OriginalID string `json:"originalId,omitempty"` // Track original ID for renames
 }
 
 type Page struct {
@@ -74,44 +75,41 @@ type ThemeColors struct {
 }
 
 type Store interface {
-	GetBookmarks() []Bookmark
-	SaveBookmarks(bookmarks []Bookmark)
+	// Bookmarks - per page only
 	GetBookmarksByPage(pageID int) []Bookmark
 	GetAllBookmarks() []Bookmark
 	SaveBookmarksByPage(pageID int, bookmarks []Bookmark)
+	// Categories - per page only
 	GetCategoriesByPage(pageID int) []Category
 	SaveCategoriesByPage(pageID int, categories []Category)
-	GetCategories() []Category
-	SaveCategories(categories []Category)
+	// Pages
 	GetPages() []Page
 	SavePage(page Page, bookmarks []Bookmark)
 	DeletePage(pageID int) error
 	GetPageOrder() []int
 	SavePageOrder(order []int)
+	// Settings
 	GetSettings() Settings
 	SaveSettings(settings Settings)
+	// Colors
 	GetColors() ColorTheme
 	SaveColors(colors ColorTheme)
 }
 
 type FileStore struct {
-	bookmarksFile  string
-	categoriesFile string
-	settingsFile   string
-	colorsFile     string
-	pageOrderFile  string
-	dataDir        string
-	mutex          sync.RWMutex
+	settingsFile  string
+	colorsFile    string
+	pageOrderFile string
+	dataDir       string
+	mutex         sync.RWMutex
 }
 
 func NewStore() Store {
 	store := &FileStore{
-		bookmarksFile:  "data/bookmarks.json",
-		categoriesFile: "data/categories.json",
-		settingsFile:   "data/settings.json",
-		colorsFile:     "data/colors.json",
-		pageOrderFile:  "data/pages.json",
-		dataDir:        "data",
+		settingsFile:  "data/settings.json",
+		colorsFile:    "data/colors.json",
+		pageOrderFile: "data/pages.json",
+		dataDir:       "data",
 	}
 
 	// Initialize default files if they don't exist
@@ -151,30 +149,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 		}
 		data, _ := json.MarshalIndent(defaultPageWithBookmarks, "", "  ")
 		os.WriteFile(mainPageBookmarksFile, data, 0644)
-	} else {
-		// If file exists but lacks categories, repair it by adding default categories
-		raw, err := os.ReadFile(mainPageBookmarksFile)
-		if err == nil {
-			var pw PageWithBookmarks
-			if err := json.Unmarshal(raw, &pw); err == nil {
-				if len(pw.Categories) == 0 {
-					pw.Categories = []Category{
-						{ID: "development", Name: "Development"},
-						{ID: "media", Name: "Media"},
-						{ID: "social", Name: "Social"},
-						{ID: "search", Name: "Search"},
-						{ID: "utilities", Name: "Utilities"},
-					}
-					newData, _ := json.MarshalIndent(pw, "", "  ")
-					_ = os.WriteFile(mainPageBookmarksFile, newData, 0644)
-				}
-			}
-		}
 	}
-
-	// Previously categories were stored in a global categories.json file.
-	// Now categories are stored per-page inside bookmarks-{id}.json and
-	// we intentionally do not create or use a global categories file.
 
 	// Initialize settings if file doesn't exist
 	if _, err := os.Stat(fs.settingsFile); os.IsNotExist(err) {
@@ -217,42 +192,6 @@ func getDefaultNewPageCategories() []Category {
 	}
 }
 
-func (fs *FileStore) GetBookmarks() []Bookmark {
-	fs.mutex.RLock()
-	defer fs.mutex.RUnlock()
-
-	fs.ensureDataDir()
-
-	data, err := os.ReadFile(fs.bookmarksFile)
-	if err != nil {
-		// Return default bookmarks if file doesn't exist with examples of multi-character shortcuts
-		return []Bookmark{
-			{Name: "GitHub", URL: "https://github.com", Shortcut: "G", Category: "development"},
-			{Name: "GitHub Issues", URL: "https://github.com/issues", Shortcut: "GI", Category: "development"},
-			{Name: "GitHub Pull Requests", URL: "https://github.com/pulls", Shortcut: "GP", Category: "development"},
-			{Name: "YouTube", URL: "https://youtube.com", Shortcut: "Y", Category: "media"},
-			{Name: "YouTube Studio", URL: "https://studio.youtube.com", Shortcut: "YS", Category: "media"},
-			{Name: "Twitter", URL: "https://twitter.com", Shortcut: "T", Category: "social"},
-			{Name: "TikTok", URL: "https://tiktok.com", Shortcut: "TT", Category: "social"},
-			{Name: "Google", URL: "https://google.com", Shortcut: "", Category: "search"},
-		}
-	}
-
-	var bookmarks []Bookmark
-	json.Unmarshal(data, &bookmarks)
-	return bookmarks
-}
-
-func (fs *FileStore) SaveBookmarks(bookmarks []Bookmark) {
-	fs.mutex.Lock()
-	defer fs.mutex.Unlock()
-
-	fs.ensureDataDir()
-
-	data, _ := json.MarshalIndent(bookmarks, "", "  ")
-	os.WriteFile(fs.bookmarksFile, data, 0644)
-}
-
 func (fs *FileStore) GetBookmarksByPage(pageID int) []Bookmark {
 	fs.mutex.RLock()
 	defer fs.mutex.RUnlock()
@@ -269,14 +208,6 @@ func (fs *FileStore) GetBookmarksByPage(pageID int) []Bookmark {
 	var pageWithBookmarks PageWithBookmarks
 	if err := json.Unmarshal(data, &pageWithBookmarks); err != nil {
 		return []Bookmark{}
-	}
-
-	// If categories is nil, initialize it to default categories and persist the file
-	if pageWithBookmarks.Categories == nil {
-		pageWithBookmarks.Categories = getDefaultNewPageCategories()
-		newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
-		// Best-effort write; ignore errors
-		_ = os.WriteFile(filePath, newData, 0644)
 	}
 
 	return pageWithBookmarks.Bookmarks
@@ -359,6 +290,7 @@ func (fs *FileStore) GetCategoriesByPage(pageID int) []Category {
 }
 
 // SaveCategoriesByPage saves categories inside bookmarks-{pageID}.json, creating the file if needed
+// It also updates bookmarks to use the new category IDs when category names change
 func (fs *FileStore) SaveCategoriesByPage(pageID int, categories []Category) {
 	fs.mutex.Lock()
 	defer fs.mutex.Unlock()
@@ -388,56 +320,37 @@ func (fs *FileStore) SaveCategoriesByPage(pageID int, categories []Category) {
 		return
 	}
 
+	// Create a mapping from old category IDs to new category IDs
+	// This allows us to update bookmarks when category names (and thus IDs) change
+	oldToNewCategoryMap := make(map[string]string)
+	
+	// Build the mapping using originalId if available, otherwise try to match by position or name
+	for i, newCat := range categories {
+		// If originalId is set, use it to find the old category
+		if newCat.OriginalID != "" {
+			oldToNewCategoryMap[newCat.OriginalID] = newCat.ID
+			// Also map from current ID to new ID in case they're different
+			if newCat.OriginalID != newCat.ID {
+				oldToNewCategoryMap[newCat.OriginalID] = newCat.ID
+			}
+		} else if i < len(pageWithBookmarks.Categories) {
+			// Fallback: map by position if originalId is not available
+			oldCat := pageWithBookmarks.Categories[i]
+			oldToNewCategoryMap[oldCat.ID] = newCat.ID
+		}
+	}
+
+	// Update bookmarks to use new category IDs
+	for i := range pageWithBookmarks.Bookmarks {
+		oldCategoryID := pageWithBookmarks.Bookmarks[i].Category
+		if newCategoryID, exists := oldToNewCategoryMap[oldCategoryID]; exists {
+			pageWithBookmarks.Bookmarks[i].Category = newCategoryID
+		}
+	}
+
 	pageWithBookmarks.Categories = categories
 	newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
 	os.WriteFile(filePath, newData, 0644)
-}
-
-func (fs *FileStore) GetCategories() []Category {
-	fs.mutex.RLock()
-	defer fs.mutex.RUnlock()
-
-	fs.ensureDataDir()
-
-	// Aggregate categories from all page files (bookmarks-{id}.json).
-	// Deduplicate by ID while preserving first-seen order.
-	files, err := os.ReadDir(fs.dataDir)
-	if err != nil {
-		return []Category{}
-	}
-
-	seen := make(map[string]bool)
-	var all []Category
-	for _, file := range files {
-		if file.IsDir() || !strings.HasPrefix(file.Name(), "bookmarks-") || !strings.HasSuffix(file.Name(), ".json") {
-			continue
-		}
-		filePath := fmt.Sprintf("%s/%s", fs.dataDir, file.Name())
-		data, err := os.ReadFile(filePath)
-		if err != nil {
-			continue
-		}
-		var pw PageWithBookmarks
-		if err := json.Unmarshal(data, &pw); err != nil {
-			continue
-		}
-		for _, c := range pw.Categories {
-			if c.ID == "" {
-				continue
-			}
-			if !seen[c.ID] {
-				seen[c.ID] = true
-				all = append(all, c)
-			}
-		}
-	}
-
-	return all
-}
-
-func (fs *FileStore) SaveCategories(categories []Category) {
-	// No-op: categories are now stored per-page inside bookmarks-{id}.json.
-	// This function is intentionally left empty to avoid writing a global categories.json.
 }
 
 func (fs *FileStore) GetPages() []Page {

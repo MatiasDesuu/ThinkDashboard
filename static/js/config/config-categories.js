@@ -45,6 +45,11 @@ class ConfigCategories {
         div.setAttribute('data-category-index', index);
         div.setAttribute('data-category-id', category.id); // Store the actual category ID
         
+        // Store the original ID if not already set (for tracking renames)
+        if (!category.originalId) {
+            category.originalId = category.id;
+        }
+        
         // Store reference to the actual category object
         div._categoryRef = category;
         

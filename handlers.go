@@ -98,7 +98,9 @@ func (h *Handlers) GetBookmarks(w http.ResponseWriter, r *http.Request) {
 		}
 		bookmarks = h.store.GetBookmarksByPage(pageID)
 	} else {
-		bookmarks = h.store.GetBookmarks()
+		// No page ID provided - return empty array
+		// Pages are required now, no global bookmarks
+		bookmarks = []Bookmark{}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -107,70 +109,69 @@ func (h *Handlers) GetBookmarks(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handlers) SaveBookmarks(w http.ResponseWriter, r *http.Request) {
 	pageIDStr := r.URL.Query().Get("page")
+	if pageIDStr == "" {
+		http.Error(w, "Page ID is required", http.StatusBadRequest)
+		return
+	}
+
 	var bookmarks []Bookmark
 	if err := json.NewDecoder(r.Body).Decode(&bookmarks); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
 
-	if pageIDStr != "" {
-		pageID, err := strconv.Atoi(pageIDStr)
-		if err != nil {
-			http.Error(w, "Invalid page ID", http.StatusBadRequest)
-			return
-		}
-		h.store.SaveBookmarksByPage(pageID, bookmarks)
-	} else {
-		h.store.SaveBookmarks(bookmarks)
+	pageID, err := strconv.Atoi(pageIDStr)
+	if err != nil {
+		http.Error(w, "Invalid page ID", http.StatusBadRequest)
+		return
 	}
 
+	h.store.SaveBookmarksByPage(pageID, bookmarks)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
 func (h *Handlers) GetCategories(w http.ResponseWriter, r *http.Request) {
 	pageIDStr := r.URL.Query().Get("page")
-	// If a page param is provided, return categories for that page only.
-	// If the page has no categories, return an empty array (do NOT fallback to global),
-	// so users can create page-specific categories without inheriting global ones.
-	if pageIDStr != "" {
-		pageID, err := strconv.Atoi(pageIDStr)
-		if err != nil {
-			http.Error(w, "Invalid page ID", http.StatusBadRequest)
-			return
-		}
-		categories := h.store.GetCategoriesByPage(pageID)
+	if pageIDStr == "" {
+		// No page param provided - return empty array
+		// Categories are now per-page only, no global categories
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(categories)
+		json.NewEncoder(w).Encode([]Category{})
 		return
 	}
 
-	// No page param: return aggregated/global categories
-	categories := h.store.GetCategories()
+	pageID, err := strconv.Atoi(pageIDStr)
+	if err != nil {
+		http.Error(w, "Invalid page ID", http.StatusBadRequest)
+		return
+	}
+
+	categories := h.store.GetCategoriesByPage(pageID)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(categories)
 }
 
 func (h *Handlers) SaveCategories(w http.ResponseWriter, r *http.Request) {
 	pageIDStr := r.URL.Query().Get("page")
+	if pageIDStr == "" {
+		http.Error(w, "Page ID is required", http.StatusBadRequest)
+		return
+	}
+
 	var categories []Category
 	if err := json.NewDecoder(r.Body).Decode(&categories); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
 
-	if pageIDStr != "" {
-		pageID, err := strconv.Atoi(pageIDStr)
-		if err == nil {
-			h.store.SaveCategoriesByPage(pageID, categories)
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(map[string]string{"status": "success"})
-			return
-		}
+	pageID, err := strconv.Atoi(pageIDStr)
+	if err != nil {
+		http.Error(w, "Invalid page ID", http.StatusBadRequest)
+		return
 	}
 
-	// Save global categories
-	h.store.SaveCategories(categories)
+	h.store.SaveCategoriesByPage(pageID, categories)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }

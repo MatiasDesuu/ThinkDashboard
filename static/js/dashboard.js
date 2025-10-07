@@ -52,13 +52,11 @@ class Dashboard {
 
     async loadData() {
         try {
-            const [categoriesRes, pagesRes, settingsRes] = await Promise.all([
-                fetch('/api/categories'),
+            const [pagesRes, settingsRes] = await Promise.all([
                 fetch('/api/pages'),
                 fetch('/api/settings')
             ]);
 
-            this.categories = await categoriesRes.json();
             this.pages = await pagesRes.json();
             
             // Load settings from localStorage or server based on device-specific flag
@@ -73,7 +71,7 @@ class Dashboard {
             // Always load the first page on dashboard load (not from settings)
             this.currentPageId = this.pages.length > 0 ? this.pages[0].id : 'default';
             
-            // Load bookmarks for first page
+            // Load bookmarks and categories for first page
             await this.loadPageBookmarks(this.currentPageId);
             
             // If global shortcuts is enabled, load all bookmarks for search
@@ -87,8 +85,13 @@ class Dashboard {
 
     async loadPageBookmarks(pageId) {
         try {
-            const bookmarksRes = await fetch(`/api/bookmarks?page=${pageId}`);
+            const [bookmarksRes, categoriesRes] = await Promise.all([
+                fetch(`/api/bookmarks?page=${pageId}`),
+                fetch(`/api/categories?page=${pageId}`)
+            ]);
+            
             this.bookmarks = await bookmarksRes.json();
+            this.categories = await categoriesRes.json();
             this.currentPageId = pageId;
             
             // Update page title
@@ -123,6 +126,30 @@ class Dashboard {
             }
         } catch (error) {
             console.error('Error loading all bookmarks:', error);
+        }
+    }
+
+    async saveSettings() {
+        try {
+            const response = await fetch('/api/settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.settings)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to save settings');
+            }
+            
+            // Also save to localStorage if device-specific is enabled
+            const deviceSpecific = localStorage.getItem('deviceSpecificSettings') === 'true';
+            if (deviceSpecific) {
+                localStorage.setItem('dashboardSettings', JSON.stringify(this.settings));
+            }
+        } catch (error) {
+            console.error('Error saving settings:', error);
         }
     }
 
