@@ -285,28 +285,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 : e.target.id;
             const colorPicker = document.getElementById(colorPickerId);
             
-            console.log('Text input ID:', e.target.id);
-            console.log('Color picker ID:', colorPickerId);
-            console.log('Color picker element:', colorPicker);
-            
             if (colorPicker) {
                 const theme = colorPicker.dataset.theme;
                 const prop = colorPicker.dataset.prop;
                 const value = e.target.value;
                 
-                console.log(`Updating ${theme}.${prop} to ${value}`);
-                console.log('colorsData before:', JSON.parse(JSON.stringify(colorsData)));
-                
                 // Update color picker if it's a valid hex color
                 if (value.startsWith('#') && (value.length === 7 || value.length === 4)) {
                     colorPicker.value = value;
-                    console.log('Updated color picker to:', value);
                 }
                 
                 updateColorValue(theme, prop, value);
-                console.log('colorsData after:', JSON.parse(JSON.stringify(colorsData)));
-            } else {
-                console.error('Color picker not found for ID:', colorPickerId);
             }
         };
         
@@ -316,7 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Handle Enter key
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                console.log('Enter pressed on color text input:', e.target.id);
                 e.preventDefault();
                 handleColorTextInput(e);
                 input.blur(); // Remove focus to show the change was applied
@@ -331,8 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const prop = e.target.dataset.prop;
             const value = e.target.value;
             
-            console.log(`Updating ${theme}.${prop} to ${value} (RGBA)`);
-            
             updateColorValue(theme, prop, value);
         };
         
@@ -342,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Handle Enter key
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                console.log('Enter pressed on full text input:', e.target.id);
                 e.preventDefault();
                 handleFullTextInput(e);
                 input.blur(); // Remove focus to show the change was applied
