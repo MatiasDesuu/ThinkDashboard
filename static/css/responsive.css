@@ -19,8 +19,8 @@
     }
     
     .container {
-        max-width: 85%;
-        padding: 0 1.5rem;
+        max-width: 92%;
+        padding: 0 1rem;
     }
     
     .dashboard-grid {
@@ -33,7 +33,7 @@
     
     .search-button {
         bottom: 1.75rem;
-        padding: 0.7rem 1.4rem;
+        padding: 0.8rem 1rem;
     }
 }
 
@@ -54,8 +54,8 @@
     }
     
     .container {
-        max-width: 90%;
-        padding: 0 1rem;
+        max-width: 95%;
+        padding: 0 0.75rem;
     }
     
     .dashboard-grid {
@@ -96,7 +96,7 @@
     
     .search-button {
         bottom: 1.5rem;
-        padding: 0.65rem 1.3rem;
+        padding: 0.8rem 1rem;
         font-size: var(--font-size-controls);
     }
     
@@ -139,7 +139,7 @@
 /* Mobile Large (576px - 767px) */
 @media (max-width: 767px) {
     .container {
-        padding: 1rem 0.75rem;
+        padding: 1rem 0.5rem;
     }
     
     .dashboard-grid {
@@ -183,7 +183,7 @@
     
     .search-button {
         bottom: 1.5rem;
-        padding: 0.6rem 1.2rem;
+        padding: 0.8rem 1rem;
         font-size: var(--font-size-controls);
         width: calc(100% - 2rem);
     }
@@ -217,7 +217,7 @@
     }
     
     .container {
-        padding: 0 1.5rem;
+        padding: 0 0.75rem;
     }
     
     .header-top {
@@ -365,7 +365,7 @@
 /* Mobile Small (480px - 575px) */
 @media (max-width: 575px) {
     .container {
-        padding: 0.75rem 0.5rem;
+        padding: 0.75rem 0.375rem;
     }
     
     .dashboard-grid {
@@ -392,7 +392,7 @@
     
     .search-button {
         bottom: 1.25rem;
-        padding: 0.55rem 1.1rem;
+        padding: 0.8rem 1rem;
         font-size: var(--font-size-text);
         width: calc(100% - 2rem);
     }
@@ -426,7 +426,7 @@
     }
     
     .container {
-        padding: 0 1rem;
+        padding: 0 0.5rem;
     }
     
     .header-top {
@@ -502,7 +502,7 @@
 /* Mobile Extra Small (up to 479px) */
 @media (max-width: 479px) {
     .container {
-        padding: 0.5rem 0.375rem;
+        padding: 0.5rem 0.25rem;
     }
     
     .dashboard-grid {
@@ -558,7 +558,7 @@
     
     .search-button {
         bottom: 1rem;
-        padding: 0.5rem 1rem;
+        padding: 0.8rem 1rem;
         font-size: var(--font-size-controls);
         width: calc(100% - 2rem);
     }
@@ -596,7 +596,7 @@
     }
     
     .container {
-        padding: 0 0.75rem;
+        padding: 0 0.5rem;
     }
     
     .header-top {

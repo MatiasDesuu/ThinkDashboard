@@ -195,7 +195,8 @@ body {
     flex-direction: column;
     gap: 1rem;
     min-width: 0; /* Allow flex items to shrink below content size */
-    padding-left: 1.5rem; /* Space for keyboard navigation selector */
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 .category-title {
