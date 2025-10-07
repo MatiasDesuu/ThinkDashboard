@@ -9,10 +9,10 @@ COPY go.mod go.sum ./
 # Download dependencies
 RUN go mod download
 
-# Copy source code
+# Copy source code and static files (needed for embedding)
 COPY . .
 
-# Build the application
+# Build the application (embedded files will be included)
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Final stage
@@ -22,8 +22,12 @@ RUN apk --no-cache add ca-certificates tzdata
 
 WORKDIR /app
 
-# Copy the binary from builder stage
+# Copy the binary from builder stage (includes embedded files)
 COPY --from=builder /app/main .
+
+# Copy static and template files (for development/debugging if needed)
+COPY --from=builder /app/static ./static
+COPY --from=builder /app/templates ./templates
 
 # Create data directory
 RUN mkdir -p /app/data

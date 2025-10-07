@@ -33,6 +33,7 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 
 	data := struct {
 		Theme              string
+		FontSize           string
 		ShowBackgroundDots bool
 		ShowTitle          bool
 		ShowDate           bool
@@ -40,6 +41,7 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		ShowSearchButton   bool
 	}{
 		Theme:              settings.Theme,
+		FontSize:           settings.FontSize,
 		ShowBackgroundDots: settings.ShowBackgroundDots,
 		ShowTitle:          settings.ShowTitle,
 		ShowDate:           settings.ShowDate,
@@ -64,12 +66,14 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 
 	data := struct {
 		Theme              string
+		FontSize           string
 		ShowBackgroundDots bool
 		ShowTitle          bool
 		ShowDate           bool
 		ShowConfigButton   bool
 	}{
 		Theme:              settings.Theme,
+		FontSize:           settings.FontSize,
 		ShowBackgroundDots: settings.ShowBackgroundDots,
 		ShowTitle:          settings.ShowTitle,
 		ShowDate:           settings.ShowDate,
@@ -275,9 +279,11 @@ func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
 
 	data := struct {
 		Theme              string
+		FontSize           string
 		ShowBackgroundDots bool
 	}{
 		Theme:              settings.Theme,
+		FontSize:           settings.FontSize,
 		ShowBackgroundDots: settings.ShowBackgroundDots,
 	}
 

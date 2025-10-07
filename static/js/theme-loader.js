@@ -62,11 +62,50 @@
     }
     
     /**
+     * Gets the fontSize setting
+     * @returns {string} The font size ('xs', 's', 'sm', 'm', 'lg', 'l', 'xl')
+     */
+    function getFontSize() {
+        const deviceSpecific = localStorage.getItem('deviceSpecificSettings') === 'true';
+        let fontSize = 'm'; // default
+        
+        if (deviceSpecific) {
+            const settings = localStorage.getItem('dashboardSettings');
+            if (settings) {
+                try {
+                    const parsed = JSON.parse(settings);
+                    fontSize = parsed.fontSize || 'm';
+                    
+                    // Migrate old values to new values
+                    if (fontSize === 'small') fontSize = 'sm';
+                    if (fontSize === 'medium') fontSize = 'm';
+                    if (fontSize === 'large') fontSize = 'l';
+                } catch (e) {
+                    console.error('Error parsing dashboard settings:', e);
+                }
+            }
+        } else {
+            // Use server-side fontSize from html element data attribute
+            const htmlAttr = document.documentElement.getAttribute('data-font-size');
+            if (htmlAttr) {
+                fontSize = htmlAttr;
+                // Migrate old values to new values
+                if (fontSize === 'small') fontSize = 'sm';
+                if (fontSize === 'medium') fontSize = 'm';
+                if (fontSize === 'large') fontSize = 'l';
+            }
+        }
+        
+        return fontSize;
+    }
+    
+    /**
      * Applies critical theme styles to prevent FOUC
      * @param {string} theme - The theme to apply ('dark' or 'light')
      * @param {boolean} showBackgroundDots - Whether to show background dots
+     * @param {string} fontSize - The font size to apply ('xs', 's', 'sm', 'm', 'lg', 'l', 'xl')
      */
-    function applyTheme(theme, showBackgroundDots = true) {
+    function applyTheme(theme, showBackgroundDots = true, fontSize = 'm') {
         // Remove existing FOUC prevention style if present
         const existingStyle = document.head.querySelector('style[data-fouc-prevention]');
         if (existingStyle) {
@@ -104,18 +143,24 @@
             } else {
                 document.body.classList.remove('no-background-dots');
             }
+            
+            // Apply font size class
+            document.body.classList.remove('font-size-xs', 'font-size-s', 'font-size-sm', 'font-size-m', 'font-size-lg', 'font-size-l', 'font-size-xl');
+            document.body.classList.add(`font-size-${fontSize}`);
         }
     }
     
-    // Apply theme immediately
+    // Apply theme and fontSize immediately
     const theme = getTheme();
     const showBackgroundDots = getShowBackgroundDots();
-    applyTheme(theme, showBackgroundDots);
+    const fontSize = getFontSize();
+    applyTheme(theme, showBackgroundDots, fontSize);
     
     // Export functions for use by other scripts (e.g., config.js)
     window.ThemeLoader = {
         getTheme: getTheme,
         getShowBackgroundDots: getShowBackgroundDots,
+        getFontSize: getFontSize,
         applyTheme: applyTheme
     };
 })();
