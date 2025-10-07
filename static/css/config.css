@@ -14,9 +14,23 @@ body {
 /* Config Sections - Same system as dashboard */
 .config-section {
     padding: 0;
-    max-width: 1200px;
+    max-width: 80%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* Optional: Set a reasonable max width for ultra-wide screens */
+@media (min-width: 1920px) {
+    .config-section {
+        max-width: 70%;
+    }
+}
+
+@media (min-width: 2560px) {
+    .config-section {
+        max-width: 60%;
+    }
 }
 
 .config-section.section-header {
@@ -39,7 +53,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 2rem;
 }
@@ -156,10 +170,12 @@ body {
     gap: 3rem;
 }
 
-.config-section {
+/* Config sections inside tabs - these should take full width of their parent */
+.tab-content .config-section,
+.config-main .config-section {
     border: none;
     padding: 0;
-    max-width: 1200px;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
     align-items: center;

@@ -19,7 +19,7 @@
     }
     
     .container {
-        max-width: 960px;
+        max-width: 85%;
         padding: 0 1.5rem;
     }
     
@@ -54,7 +54,7 @@
     }
     
     .container {
-        max-width: 720px;
+        max-width: 90%;
         padding: 0 1rem;
     }
     

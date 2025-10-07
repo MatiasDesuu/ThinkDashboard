@@ -46,9 +46,23 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 80%;
+    width: 100%;
     margin: 0 auto;
     padding: 0 2rem;
+}
+
+/* Optional: Set a reasonable max width for ultra-wide screens */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 70%;
+    }
+}
+
+@media (min-width: 2560px) {
+    .container {
+        max-width: 60%;
+    }
 }
 
 /* Header Top - Contains date, tabs, and config button */

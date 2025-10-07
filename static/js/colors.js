@@ -63,8 +63,8 @@ function populateColorInputs() {
             if (textInput) {
                 textInput.value = value || '';
             }
-        } else if (input.type === 'text' && !input.classList.contains('color-text-input')) {
-            // For text inputs that aren't paired with color pickers (like rgba values)
+        } else if (input.type === 'text') {
+            // For all text inputs (both paired and standalone)
             input.value = value || '';
         }
     });
@@ -259,37 +259,94 @@ document.addEventListener('DOMContentLoaded', () => {
             
             updateColorValue(theme, prop, value);
         });
+        
+        // Also listen for change event
+        input.addEventListener('change', (e) => {
+            const theme = e.target.dataset.theme;
+            const prop = e.target.dataset.prop;
+            const value = e.target.value;
+            
+            // Update the corresponding text input
+            const textInput = document.getElementById(`${e.target.id}-text`);
+            if (textInput) {
+                textInput.value = value;
+            }
+            
+            updateColorValue(theme, prop, value);
+        });
     });
     
     // Text inputs paired with color pickers
     document.querySelectorAll('.color-text-input').forEach(input => {
-        input.addEventListener('input', (e) => {
-            const colorPickerId = e.target.id.replace('-text', '');
+        const handleColorTextInput = (e) => {
+            // Remove only the '-text' suffix at the end of the ID
+            const colorPickerId = e.target.id.endsWith('-text') 
+                ? e.target.id.slice(0, -5) 
+                : e.target.id;
             const colorPicker = document.getElementById(colorPickerId);
+            
+            console.log('Text input ID:', e.target.id);
+            console.log('Color picker ID:', colorPickerId);
+            console.log('Color picker element:', colorPicker);
             
             if (colorPicker) {
                 const theme = colorPicker.dataset.theme;
                 const prop = colorPicker.dataset.prop;
                 const value = e.target.value;
                 
+                console.log(`Updating ${theme}.${prop} to ${value}`);
+                console.log('colorsData before:', JSON.parse(JSON.stringify(colorsData)));
+                
                 // Update color picker if it's a valid hex color
                 if (value.startsWith('#') && (value.length === 7 || value.length === 4)) {
                     colorPicker.value = value;
+                    console.log('Updated color picker to:', value);
                 }
                 
                 updateColorValue(theme, prop, value);
+                console.log('colorsData after:', JSON.parse(JSON.stringify(colorsData)));
+            } else {
+                console.error('Color picker not found for ID:', colorPickerId);
+            }
+        };
+        
+        input.addEventListener('input', handleColorTextInput);
+        input.addEventListener('change', handleColorTextInput);
+        
+        // Handle Enter key
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                console.log('Enter pressed on color text input:', e.target.id);
+                e.preventDefault();
+                handleColorTextInput(e);
+                input.blur(); // Remove focus to show the change was applied
             }
         });
     });
     
     // Standalone text inputs (like rgba values)
     document.querySelectorAll('.color-text-input-full').forEach(input => {
-        input.addEventListener('input', (e) => {
+        const handleFullTextInput = (e) => {
             const theme = e.target.dataset.theme;
             const prop = e.target.dataset.prop;
             const value = e.target.value;
             
+            console.log(`Updating ${theme}.${prop} to ${value} (RGBA)`);
+            
             updateColorValue(theme, prop, value);
+        };
+        
+        input.addEventListener('input', handleFullTextInput);
+        input.addEventListener('change', handleFullTextInput);
+        
+        // Handle Enter key
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                console.log('Enter pressed on full text input:', e.target.id);
+                e.preventDefault();
+                handleFullTextInput(e);
+                input.blur(); // Remove focus to show the change was applied
+            }
         });
     });
 });

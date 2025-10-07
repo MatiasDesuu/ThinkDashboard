@@ -323,7 +323,7 @@ func (fs *FileStore) SaveCategoriesByPage(pageID int, categories []Category) {
 	// Create a mapping from old category IDs to new category IDs
 	// This allows us to update bookmarks when category names (and thus IDs) change
 	oldToNewCategoryMap := make(map[string]string)
-	
+
 	// Build the mapping using originalId if available, otherwise try to match by position or name
 	for i, newCat := range categories {
 		// If originalId is set, use it to find the old category
