@@ -20,7 +20,8 @@ class ConfigManager {
         this.currentPageId = 1; // Default to page 1
         this.currentCategoriesPageId = 1; // Default to page 1 for categories
         this.bookmarksData = [];
-        this.categoriesData = [];
+        this.categoriesData = []; // Categories for the categories tab
+        this.bookmarksPageCategories = []; // Categories for the bookmarks tab (read-only)
         this.settingsData = {
             currentPage: 'default',
             theme: 'dark',
@@ -47,20 +48,14 @@ class ConfigManager {
         this.renderConfig();
         this.initReordering();
         
-        // Initialize custom selects after everything is loaded
         if (typeof initCustomSelects === 'function') {
-            setTimeout(() => {
-                initCustomSelects();
-            }, 0);
+            setTimeout(() => initCustomSelects(), 0);
         }
 
-        // Show body after everything is loaded and rendered
         document.body.classList.remove('loading');
 
-        // Set initial categories page selector to match bookmarks page
         const categoriesSelector = document.getElementById('categories-page-selector');
         if (categoriesSelector) {
-            // Initialize to the current page being edited for bookmarks
             this.currentCategoriesPageId = parseInt(this.currentPageId);
             this.loadPageCategories(this.currentPageId);
         }
@@ -73,11 +68,10 @@ class ConfigManager {
 
             this.bookmarksData = bookmarks;
             this.pagesData = pages;
-            this.originalPagesData = JSON.parse(JSON.stringify(pages)); // Deep copy
+            this.originalPagesData = JSON.parse(JSON.stringify(pages));
             this.settingsData = settings;
-            this.currentPageId = settings.currentPage || 1; // Default to page 1
+            this.currentPageId = settings.currentPage || 1;
             
-            // Load bookmarks for current page
             await this.loadPageBookmarks(this.currentPageId);
         } catch (error) {
             console.error('Error loading data:', error);
@@ -89,12 +83,9 @@ class ConfigManager {
         try {
             this.currentPageId = pageId;
             this.bookmarksData = await this.data.loadBookmarksByPage(pageId);
-            // Load categories for this page (needed to display bookmarks correctly)
-            const categories = await this.data.loadCategoriesByPage(pageId);
-            this.categoriesData = categories;
+            this.bookmarksPageCategories = await this.data.loadCategoriesByPage(pageId);
             
-            // Only render bookmarks, not full config
-            this.bookmarks.render(this.bookmarksData, this.categoriesData);
+            this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
             this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
                 this.bookmarksData = newBookmarks;
             });
@@ -106,10 +97,8 @@ class ConfigManager {
 
     async loadPageCategories(pageId) {
         try {
-            // Store which page we're editing categories for
             this.currentCategoriesPageId = parseInt(pageId);
-            const categories = await this.data.loadCategoriesByPage(pageId);
-            this.categoriesData = categories;
+            this.categoriesData = await this.data.loadCategoriesByPage(pageId);
             this.categories.render(this.categoriesData, this.generateId.bind(this));
             this.categories.initReorder(this.categoriesData, (newCategories) => {
                 this.categoriesData = newCategories;
@@ -143,7 +132,6 @@ class ConfigManager {
             }
         });
 
-        // Device-specific settings checkbox
         const deviceSpecificCheckbox = document.getElementById('device-specific-checkbox');
         if (deviceSpecificCheckbox) {
             deviceSpecificCheckbox.checked = this.deviceSpecific;
@@ -151,46 +139,35 @@ class ConfigManager {
                 this.deviceSpecific = e.target.checked;
                 this.storage.setDeviceSpecificFlag(this.deviceSpecific);
                 
+                const message = this.deviceSpecific 
+                    ? 'Device-specific settings enabled. Settings will now be stored locally.'
+                    : 'Device-specific settings disabled. Current values will be saved to global settings when you click Save.';
+                
                 if (this.deviceSpecific) {
                     this.storage.saveDeviceSettings(this.settingsData);
-                    this.ui.showNotification('Device-specific settings enabled. Settings will now be stored locally.', 'success');
                 } else {
                     this.storage.clearDeviceSettings();
-                    this.ui.showNotification('Device-specific settings disabled. Current values will be saved to global settings when you click Save.', 'success');
                 }
+                this.ui.showNotification(message, 'success');
             });
         }
 
-        // Initial update of status options visibility
         this.settings.updateStatusOptionsVisibility(this.settingsData.showStatus);
 
-        // Add page button
         const addPageBtn = document.getElementById('add-page-btn');
-        if (addPageBtn) {
-            addPageBtn.addEventListener('click', () => this.addPage());
-        }
+        if (addPageBtn) addPageBtn.addEventListener('click', () => this.addPage());
 
-        // Add category button
         const addCategoryBtn = document.getElementById('add-category-btn');
-        if (addCategoryBtn) {
-            addCategoryBtn.addEventListener('click', () => this.addCategory());
-        }
+        if (addCategoryBtn) addCategoryBtn.addEventListener('click', () => this.addCategory());
 
-        // Add bookmark button
         const addBookmarkBtn = document.getElementById('add-bookmark-btn');
-        if (addBookmarkBtn) {
-            addBookmarkBtn.addEventListener('click', () => this.addBookmark());
-        }
+        if (addBookmarkBtn) addBookmarkBtn.addEventListener('click', () => this.addBookmark());
 
-        // Page selector in bookmarks tab
         const pageSelector = document.getElementById('page-selector');
         if (pageSelector) {
-            pageSelector.addEventListener('change', (e) => {
-                this.loadPageBookmarks(e.target.value);
-            });
+            pageSelector.addEventListener('change', (e) => this.loadPageBookmarks(e.target.value));
         }
 
-        // Page selector in categories tab
         const categoriesPageSelector = document.getElementById('categories-page-selector');
         if (categoriesPageSelector) {
             categoriesPageSelector.addEventListener('change', (e) => {
@@ -199,33 +176,24 @@ class ConfigManager {
             });
         }
 
-        // Save button
         const saveBtn = document.getElementById('save-btn');
-        if (saveBtn) {
-            saveBtn.addEventListener('click', () => this.saveChanges());
-        }
+        if (saveBtn) saveBtn.addEventListener('click', () => this.saveChanges());
 
-        // Reset button
         const resetBtn = document.getElementById('reset-btn');
-        if (resetBtn) {
-            resetBtn.addEventListener('click', () => this.resetToDefaults());
-        }
+        if (resetBtn) resetBtn.addEventListener('click', () => this.resetToDefaults());
     }
 
     renderConfig() {
         this.pages.render(this.pagesData, this.generateId.bind(this));
         
-        // Preserve current page selection before re-rendering page selector
         const pageSelector = document.getElementById('page-selector');
         if (pageSelector && pageSelector.value) {
             this.currentPageId = parseInt(pageSelector.value);
         }
         this.pages.renderPageSelector(this.pagesData, this.currentPageId);
 
-        // Populate categories page selector if present
         const categoriesSelector = document.getElementById('categories-page-selector');
         if (categoriesSelector) {
-            // Preserve current categories page selection
             if (categoriesSelector.value) {
                 this.currentCategoriesPageId = parseInt(categoriesSelector.value);
             }
@@ -235,115 +203,76 @@ class ConfigManager {
                 const option = document.createElement('option');
                 option.value = page.id;
                 option.textContent = page.name;
-                // Use currentCategoriesPageId instead of currentPageId
                 if (page.id === this.currentCategoriesPageId) option.selected = true;
                 categoriesSelector.appendChild(option);
             });
         }
 
-        // Render categories and bookmarks
-        // Note: categoriesData should already be loaded for the correct page
-        // via loadPageCategories or loadPageBookmarks
-        this.categories.render(this.categoriesData, this.generateId.bind(this));
-        this.bookmarks.render(this.bookmarksData, this.categoriesData);
-        
-        // Refresh custom selects to reflect DOM changes
+        this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
         this.refreshCustomSelects();
     }
 
-    /**
-     * Refresh custom select instances after DOM changes
-     */
     refreshCustomSelects() {
-        // Find all select elements that have been initialized as custom selects
         const selects = document.querySelectorAll('select[data-custom-select-init="true"]');
         
         selects.forEach(select => {
-            // DON'T trigger change event - it causes data reload
-            // Just update the visual display of the custom select
-            
-            // If the custom select wrapper exists, find and refresh it
             const wrapper = select.closest('.custom-select-wrapper');
-            if (wrapper) {
-                // Re-populate options by finding the CustomSelect instance
-                // We need to manually refresh the options
-                const optionsContainer = wrapper.querySelector('.custom-select-options');
-                const trigger = wrapper.querySelector('.custom-select-trigger .custom-select-text');
+            if (!wrapper) return;
+
+            const optionsContainer = wrapper.querySelector('.custom-select-options');
+            const trigger = wrapper.querySelector('.custom-select-trigger .custom-select-text');
+            
+            if (optionsContainer && trigger) {
+                optionsContainer.innerHTML = '';
                 
-                if (optionsContainer && trigger) {
-                    // Clear existing options
-                    optionsContainer.innerHTML = '';
+                Array.from(select.options).forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'custom-select-option';
+                    optionDiv.textContent = option.textContent;
+                    optionDiv.dataset.value = option.value;
+                    optionDiv.dataset.index = index;
                     
-                    // Repopulate from the original select
-                    Array.from(select.options).forEach((option, index) => {
-                        const optionDiv = document.createElement('div');
-                        optionDiv.className = 'custom-select-option';
-                        optionDiv.textContent = option.textContent;
-                        optionDiv.dataset.value = option.value;
-                        optionDiv.dataset.index = index;
-                        
-                        if (option.selected) {
-                            optionDiv.classList.add('selected');
-                        }
-                        
-                        optionDiv.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            // Update original select
-                            select.selectedIndex = index;
-                            // Trigger change event
-                            const changeEvent = new Event('change', { bubbles: true });
-                            select.dispatchEvent(changeEvent);
-                            // Update UI
-                            trigger.textContent = option.textContent;
-                            // Update selected class
-                            optionsContainer.querySelectorAll('.custom-select-option').forEach(opt => {
-                                opt.classList.remove('selected');
-                            });
-                            optionDiv.classList.add('selected');
-                            // Close dropdown
-                            wrapper.querySelector('.custom-select').classList.remove('open');
+                    if (option.selected) optionDiv.classList.add('selected');
+                    
+                    optionDiv.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        select.selectedIndex = index;
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                        trigger.textContent = option.textContent;
+                        optionsContainer.querySelectorAll('.custom-select-option').forEach(opt => {
+                            opt.classList.remove('selected');
                         });
-                        
-                        optionsContainer.appendChild(optionDiv);
+                        optionDiv.classList.add('selected');
+                        wrapper.querySelector('.custom-select').classList.remove('open');
                     });
                     
-                    // Update trigger text
-                    const selectedOption = select.options[select.selectedIndex];
-                    if (selectedOption) {
-                        trigger.textContent = selectedOption.textContent;
-                    }
-                }
+                    optionsContainer.appendChild(optionDiv);
+                });
+                
+                const selectedOption = select.options[select.selectedIndex];
+                if (selectedOption) trigger.textContent = selectedOption.textContent;
             }
         });
     }
 
     initReordering() {
-        // Initialize page reordering
         this.pages.initReorder(this.pagesData, (newPages) => {
             this.pagesData = newPages;
-            // Don't re-render - we use direct object references
-            // Only update the page selector to reflect new order
             this.pages.renderPageSelector(this.pagesData, this.currentPageId);
         });
 
-        // Initialize category reordering
         this.categories.initReorder(this.categoriesData, (newCategories) => {
             this.categoriesData = newCategories;
-            // Don't re-render - we use direct object references
         });
 
-        // Initialize bookmark reordering
         this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
             this.bookmarksData = newBookmarks;
-            // Don't re-render for bookmarks - we use direct object references
-            // Re-rendering causes performance issues due to CustomSelect re-initialization
         });
     }
 
     async addPage() {
         const newPage = this.pages.add(this.pagesData, this.generateId.bind(this));
         
-        // Create the page file immediately with default "Others" category
         const defaultCategories = [{ id: 'others', name: 'Others' }];
         try {
             await this.data.saveCategoriesByPage(defaultCategories, newPage.id);
@@ -352,10 +281,13 @@ class ConfigManager {
             console.error('Error creating new page:', error);
         }
         
-        this.renderConfig();
-        this.initReordering();
+        this.pages.render(this.pagesData, this.generateId.bind(this));
+        this.pages.renderPageSelector(this.pagesData, newPage.id);
+        this.pages.initReorder(this.pagesData, (newPages) => {
+            this.pagesData = newPages;
+            this.pages.renderPageSelector(this.pagesData, this.currentPageId);
+        });
 
-        // Update both page selectors to the new page
         const pageSelector = document.getElementById('page-selector');
         if (pageSelector) {
             pageSelector.value = String(newPage.id);
@@ -365,39 +297,47 @@ class ConfigManager {
 
         const categoriesSelector = document.getElementById('categories-page-selector');
         if (categoriesSelector) {
+            categoriesSelector.innerHTML = '';
+            this.pagesData.forEach(page => {
+                const option = document.createElement('option');
+                option.value = page.id;
+                option.textContent = page.name;
+                if (page.id === newPage.id) option.selected = true;
+                categoriesSelector.appendChild(option);
+            });
+            
             this.currentCategoriesPageId = newPage.id;
-            categoriesSelector.value = String(newPage.id);
             this.loadPageCategories(newPage.id);
         }
     }
 
     addCategory() {
-        // Initialize categoriesData if it's null (for new pages)
-        if (!this.categoriesData) {
-            this.categoriesData = [];
-        }
+        if (!this.categoriesData) this.categoriesData = [];
+        
         this.categories.add(this.categoriesData, this.generateId.bind(this));
-        this.renderConfig();
-        this.initReordering();
+        this.categories.render(this.categoriesData, this.generateId.bind(this));
+        this.categories.initReorder(this.categoriesData, (newCategories) => {
+            this.categoriesData = newCategories;
+        });
     }
 
     addBookmark() {
         this.bookmarks.add(this.bookmarksData);
-        this.renderConfig();
-        this.initReordering();
+        this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
+        this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
+            this.bookmarksData = newBookmarks;
+        });
     }
 
     async removePage(index) {
         const page = this.pagesData[index];
         if (!page) return;
         
-        // Don't allow removing page 1 (main page)
         if (page.id === 1) {
             this.ui.showNotification('Cannot remove the main page', 'error');
             return;
         }
         
-        // Show confirmation modal
         const confirmed = await window.AppModal.danger({
             title: 'Remove Page',
             message: `Are you sure you want to remove the page "${page.name}"? All bookmarks in this page will be deleted. This action cannot be undone.`,
@@ -405,25 +345,45 @@ class ConfigManager {
             cancelText: 'Cancel'
         });
         
-        if (!confirmed) {
-            return;
-        }
+        if (!confirmed) return;
         
         try {
-            // Delete from server immediately
             await this.data.deletePage(page.id);
             
-            // Remove from local array
             this.pagesData.splice(index, 1);
             
-            // Update original pages as well
             const origIndex = this.originalPagesData.findIndex(p => p.id === page.id);
             if (origIndex !== -1) {
                 this.originalPagesData.splice(origIndex, 1);
             }
             
-            this.renderConfig();
-            this.initReordering();
+            this.pages.render(this.pagesData, this.generateId.bind(this));
+            this.pages.renderPageSelector(this.pagesData, 1);
+            this.pages.initReorder(this.pagesData, (newPages) => {
+                this.pagesData = newPages;
+                this.pages.renderPageSelector(this.pagesData, this.currentPageId);
+            });
+            
+            this.currentPageId = 1;
+            this.currentCategoriesPageId = 1;
+            await this.loadPageBookmarks(1);
+            await this.loadPageCategories(1);
+            
+            const pageSelector = document.getElementById('page-selector');
+            if (pageSelector) pageSelector.value = '1';
+            
+            const categoriesSelector = document.getElementById('categories-page-selector');
+            if (categoriesSelector) {
+                categoriesSelector.innerHTML = '';
+                this.pagesData.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.id;
+                    option.textContent = p.name;
+                    if (p.id === 1) option.selected = true;
+                    categoriesSelector.appendChild(option);
+                });
+            }
+            
             this.ui.showNotification('Page deleted successfully', 'success');
         } catch (error) {
             console.error('Error deleting page:', error);
@@ -437,15 +397,18 @@ class ConfigManager {
         
         const removed = await this.categories.remove(this.categoriesData, index);
         if (removed) {
-            // Remove this category from all bookmarks that use it
-            this.bookmarksData.forEach(bookmark => {
-                if (bookmark.category === category.id) {
-                    bookmark.category = ''; // Set to empty string (no category)
-                }
-            });
+            if (this.currentPageId === this.currentCategoriesPageId) {
+                this.bookmarksData.forEach(bookmark => {
+                    if (bookmark.category === category.id) {
+                        bookmark.category = '';
+                    }
+                });
+            }
             
-            this.renderConfig();
-            this.initReordering();
+            this.categories.render(this.categoriesData, this.generateId.bind(this));
+            this.categories.initReorder(this.categoriesData, (newCategories) => {
+                this.categoriesData = newCategories;
+            });
             this.ui.showNotification('Category removed and cleared from bookmarks', 'success');
         }
     }
@@ -453,40 +416,51 @@ class ConfigManager {
     async removeBookmark(index) {
         const removed = await this.bookmarks.remove(this.bookmarksData, index);
         if (removed) {
-            this.renderConfig();
-            this.initReordering();
+            this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
+            this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
+                this.bookmarksData = newBookmarks;
+            });
         }
+    }
+
+    getCategoriesFromDOM() {
+        const categoriesList = document.getElementById('categories-list');
+        if (!categoriesList) return null;
+
+        const categoryItems = categoriesList.querySelectorAll('.category-item');
+        const categories = [];
+
+        categoryItems.forEach((item) => {
+            const category = item._categoryRef;
+            if (category) categories.push(category);
+        });
+
+        return categories;
     }
 
     async saveChanges() {
         try {
-            // Update settings from UI
             this.settings.updateFromUI(this.settingsData);
-            // Always set currentPage to the first page (don't use the editing page)
             this.settingsData.currentPage = this.pagesData.length > 0 ? this.pagesData[0].id : 1;
 
-            // Save bookmarks for the current page being edited
             await this.data.saveBookmarks(this.bookmarksData, this.currentPageId);
             
-            // Save categories for the page being edited in the categories tab
-            // This ensures we save the correct categories to the correct page
             if (this.currentCategoriesPageId) {
-                await this.data.saveCategoriesByPage(this.categoriesData, this.currentCategoriesPageId);
+                const categoriesForSelectedPage = this.getCategoriesFromDOM();
+                if (categoriesForSelectedPage && categoriesForSelectedPage.length >= 0) {
+                    await this.data.saveCategoriesByPage(categoriesForSelectedPage, this.currentCategoriesPageId);
+                }
             }
             
-            // Save pages metadata
             await this.data.savePages(this.pagesData);
             
-            // Save settings
             if (this.deviceSpecific) {
                 this.storage.saveDeviceSettings(this.settingsData);
             } else {
                 await this.data.saveSettings(this.settingsData);
             }
 
-            // Update original pages after successful save
             this.originalPagesData = JSON.parse(JSON.stringify(this.pagesData));
-
             this.ui.showNotification('Configuration saved successfully!', 'success');
         } catch (error) {
             console.error('Error saving configuration:', error);
@@ -502,11 +476,7 @@ class ConfigManager {
             cancelText: 'Cancel'
         });
         
-        if (!confirmed) {
-            return;
-        }
-
-        // Reset to default data
+        if (!confirmed) return;
         this.bookmarksData = [
             { name: 'GitHub', url: 'https://github.com', shortcut: 'G', category: 'development' },
             { name: 'GitHub Issues', url: 'https://github.com/issues', shortcut: 'GI', category: 'development' },
@@ -527,8 +497,6 @@ class ConfigManager {
         ];
 
         this.settingsData = this.settings.getDefaults();
-
-        // Update UI
         document.getElementById('theme-select').value = this.settingsData.theme;
         document.getElementById('columns-input').value = this.settingsData.columnsPerRow;
         document.getElementById('font-size-select').value = this.settingsData.fontSize;
@@ -553,13 +521,10 @@ class ConfigManager {
     }
 }
 
-// Initialize when DOM is ready
 let configManager;
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        configManager = new ConfigManager();
-    });
+    document.addEventListener('DOMContentLoaded', () => configManager = new ConfigManager());
 } else {
     configManager = new ConfigManager();
 }
