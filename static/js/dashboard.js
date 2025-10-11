@@ -225,6 +225,14 @@ class Dashboard {
         }
     }
 
+    // Helper to find the header container used across different templates/layouts
+    getHeaderContainer() {
+        // Prefer an explicit .header if present, fall back to known header-top / header-actions
+        const header = document.querySelector('.header') || document.querySelector('.header-top') || document.querySelector('.header-actions') || document.querySelector('.dashboard-section.section-controls .container');
+        // Final fallback to body so insert/append operations don't throw
+        return header || document.body;
+    }
+
     initializeSearchComponent() {
         // Initialize search component with current data
         // Use all bookmarks if global shortcuts is enabled, otherwise just current page
@@ -458,21 +466,24 @@ class Dashboard {
 
     updateTitleVisibility() {
         let titleWrapper = document.querySelector('.title-wrapper');
-        
+
         if (this.settings.showTitle) {
             // Show title - create if it doesn't exist
             if (!titleWrapper) {
                 titleWrapper = document.createElement('div');
                 titleWrapper.className = 'title-wrapper';
                 titleWrapper.innerHTML = '<h1 class="title">dashboard</h1>';
-                
-                // Insert after date element if it exists, otherwise at the beginning of header
-                const header = document.querySelector('.header');
+
+                // Insert after date element if it exists and is a child of the header container,
+                // otherwise insert at the beginning of the found header container.
+                const header = this.getHeaderContainer();
                 const dateElement = document.getElementById('date-element');
-                if (dateElement) {
+                if (dateElement && dateElement.parentNode === header) {
                     header.insertBefore(titleWrapper, dateElement.nextSibling);
-                } else {
+                } else if (header.firstChild) {
                     header.insertBefore(titleWrapper, header.firstChild);
+                } else {
+                    header.appendChild(titleWrapper);
                 }
             }
         } else {
@@ -515,16 +526,16 @@ class Dashboard {
 
     updateConfigButtonVisibility() {
         let configLink = document.querySelector('.config-link');
-        
+
         if (this.settings.showConfigButton) {
             // Show config button - create if it doesn't exist
             if (!configLink) {
                 configLink = document.createElement('div');
                 configLink.className = 'config-link';
                 configLink.innerHTML = '<a href="/config">config</a>';
-                
-                // Add to header at the end
-                const header = document.querySelector('.header');
+
+                // Add to header at the end (use safe header container)
+                const header = this.getHeaderContainer();
                 header.appendChild(configLink);
             }
         } else {
@@ -578,9 +589,13 @@ class Dashboard {
                 dateElement.id = 'date-element';
                 dateElement.className = 'date';
                 
-                // Insert at the beginning of header
-                const header = document.querySelector('.header');
-                header.insertBefore(dateElement, header.firstChild);
+                // Insert at the beginning of header (use safe header container)
+                const header = this.getHeaderContainer();
+                if (header.firstChild) {
+                    header.insertBefore(dateElement, header.firstChild);
+                } else {
+                    header.appendChild(dateElement);
+                }
             }
             
             // Set date content
