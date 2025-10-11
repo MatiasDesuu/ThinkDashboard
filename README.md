@@ -13,6 +13,16 @@ A lightweight, self-hosted bookmark dashboard built with Go and vanilla JavaScri
 
 ## Screenshots
 
+<p align="center">
+    <img src="screenshots/1.png" width="45%" style="border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,0.2);margin:8px;">
+    <img src="screenshots/2.png" width="45%" style="border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,0.2);margin:8px;">
+    <img src="screenshots/3.png" width="45%" style="border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,0.2);margin:8px;">
+    <img src="screenshots/5.png" width="45%" style="border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,0.2);margin:8px;">
+    <em>📱 Mobile view</em>
+    <br>
+    <img src="screenshots/4.png" width="25%" style="border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,0.2);margin:8px;">
+    <br>
+</p>
 
 ## Quick Start
 
