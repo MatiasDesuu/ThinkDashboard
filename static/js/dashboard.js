@@ -474,16 +474,19 @@ class Dashboard {
                 titleWrapper.className = 'title-wrapper';
                 titleWrapper.innerHTML = '<h1 class="title">dashboard</h1>';
 
-                // Insert after date element if it exists and is a child of the header container,
-                // otherwise insert at the beginning of the found header container.
-                const header = this.getHeaderContainer();
-                const dateElement = document.getElementById('date-element');
-                if (dateElement && dateElement.parentNode === header) {
-                    header.insertBefore(titleWrapper, dateElement.nextSibling);
-                } else if (header.firstChild) {
-                    header.insertBefore(titleWrapper, header.firstChild);
+                const titleContainer = document.querySelector('.dashboard-section.section-title .container');
+                if (titleContainer) {
+                    titleContainer.appendChild(titleWrapper);
                 } else {
-                    header.appendChild(titleWrapper);
+                    const header = this.getHeaderContainer();
+                    const dateElement = document.getElementById('date-element');
+                    if (dateElement && dateElement.parentNode === header) {
+                        header.insertBefore(titleWrapper, dateElement.nextSibling);
+                    } else if (header.firstChild) {
+                        header.insertBefore(titleWrapper, header.firstChild);
+                    } else {
+                        header.appendChild(titleWrapper);
+                    }
                 }
             }
         } else {
