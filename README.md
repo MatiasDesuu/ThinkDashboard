@@ -18,7 +18,7 @@ A lightweight, self-hosted bookmark dashboard built with Go and vanilla JavaScri
 | ![3](screenshots/3.png) | ![5](screenshots/5.png) |
 
 <p align="center">
-  <em>📱 Mobile view</em><br>
+  📱Mobile view<br>
   <img src="screenshots/4.png" width="25%">
 </p>
 
