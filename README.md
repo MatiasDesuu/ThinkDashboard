@@ -13,15 +13,15 @@ A lightweight, self-hosted bookmark dashboard built with Go and vanilla JavaScri
 
 ## Screenshots
 
+| ![1](screenshots/1.png) | ![2](screenshots/2.png) |
+|--------------------------|--------------------------|
+| ![3](screenshots/3.png) | ![5](screenshots/5.png) |
+
 <p align="center">
-  <img src="screenshots/1.png" width="45%">
-  <img src="screenshots/2.png" width="45%">
-  <img src="screenshots/3.png" width="45%">
-  <img src="screenshots/5.png" width="45%">
-  <br>
-  📱Mobile view<br>
+  <em>📱 Mobile view</em><br>
   <img src="screenshots/4.png" width="25%">
 </p>
+
 
 
 ## Quick Start
