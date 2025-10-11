@@ -44,7 +44,7 @@ class ConfigManager {
     async init() {
         await this.loadData();
         this.setupDOM();
-        this.setupEventListeners();
+        await this.setupEventListeners();
         this.renderConfig();
         this.initReordering();
         
@@ -115,9 +115,9 @@ class ConfigManager {
         this.settings.applyBackgroundDots(this.settingsData.showBackgroundDots);
     }
 
-    setupEventListeners() {
+    async setupEventListeners() {
         // Setup settings listeners with callbacks
-        this.settings.setupListeners(this.settingsData, {
+        await this.settings.setupListeners(this.settingsData, {
             onThemeChange: (theme) => {
                 this.settings.applyTheme(theme);
             },

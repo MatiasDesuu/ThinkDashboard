@@ -45,6 +45,7 @@ func main() {
 	r.HandleFunc("/api/colors", handlers.GetColors).Methods("GET")
 	r.HandleFunc("/api/colors", handlers.SaveColors).Methods("POST")
 	r.HandleFunc("/api/colors/reset", handlers.ResetColors).Methods("POST")
+	r.HandleFunc("/api/colors/custom-themes", handlers.GetCustomThemesList).Methods("GET")
 	r.HandleFunc("/api/theme.css", handlers.CustomThemeCSS).Methods("GET")
 
 	// Static files with proper MIME type handling

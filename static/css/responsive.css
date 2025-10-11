@@ -115,7 +115,8 @@
     }
     
     /* Colors page - stack vertically on tablet */
-    .config-main {
+    .config-main,
+    .custom-themes-main-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
@@ -328,7 +329,8 @@
     }
     
     /* Colors page - stack vertically on mobile */
-    .config-main {
+    .config-main,
+    .custom-themes-main-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
     }

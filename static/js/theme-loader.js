@@ -68,18 +68,13 @@
     function getFontSize() {
         const deviceSpecific = localStorage.getItem('deviceSpecificSettings') === 'true';
         let fontSize = 'm'; // default
-        
+
         if (deviceSpecific) {
             const settings = localStorage.getItem('dashboardSettings');
             if (settings) {
                 try {
                     const parsed = JSON.parse(settings);
                     fontSize = parsed.fontSize || 'm';
-                    
-                    // Migrate old values to new values
-                    if (fontSize === 'small') fontSize = 'sm';
-                    if (fontSize === 'medium') fontSize = 'm';
-                    if (fontSize === 'large') fontSize = 'l';
                 } catch (e) {
                     console.error('Error parsing dashboard settings:', e);
                 }
@@ -89,13 +84,9 @@
             const htmlAttr = document.documentElement.getAttribute('data-font-size');
             if (htmlAttr) {
                 fontSize = htmlAttr;
-                // Migrate old values to new values
-                if (fontSize === 'small') fontSize = 'sm';
-                if (fontSize === 'medium') fontSize = 'm';
-                if (fontSize === 'large') fontSize = 'l';
             }
         }
-        
+
         return fontSize;
     }
     
@@ -133,7 +124,27 @@
         // Also set body class if body exists (for config page theme switching)
         if (document.body) {
             // Use classList to preserve other classes like font-size
+            // Remove all possible theme classes (dark, light, and any custom themes)
+            // Remove default theme classes
             document.body.classList.remove('dark', 'light');
+
+            // Remove any known custom theme classes if provided by config
+            if (window.CustomThemeIds && Array.isArray(window.CustomThemeIds)) {
+                window.CustomThemeIds.forEach(id => {
+                    try { document.body.classList.remove(id); } catch (e) {}
+                });
+            } else {
+                // Fallback: remove any class that looks like a theme (not font-size or system)
+                Array.from(document.body.classList).forEach(cls => {
+                    if (!cls.startsWith('font-size-') && !cls.startsWith('no-')) {
+                        if (cls !== 'dark' && cls !== 'light') {
+                            document.body.classList.remove(cls);
+                        }
+                    }
+                });
+            }
+            
+            // Add the new theme class
             document.body.classList.add(theme);
             document.body.setAttribute('data-theme', theme);
             

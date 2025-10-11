@@ -4,14 +4,70 @@
  */
 
 class ConfigSettings {
-    constructor() {}
+    constructor() {
+        this.customThemes = {}; // Store available custom themes (id -> name)
+    }
+
+    /**
+     * Load available custom themes from API
+     */
+    async loadCustomThemes() {
+        try {
+            const response = await fetch('/api/colors/custom-themes');
+            if (response.ok) {
+                this.customThemes = await response.json();
+                // Expose a normalized list of custom theme ids for other modules
+                window.CustomThemeIds = Array.isArray(this.customThemes)
+                    ? this.customThemes
+                    : Object.keys(this.customThemes || {});
+                this.populateThemeSelect();
+            }
+        } catch (error) {
+            console.error('Error loading custom themes:', error);
+        }
+    }
+
+    populateThemeSelect() {
+        const themeSelect = document.getElementById('theme-select');
+        if (!themeSelect) return;
+
+        const currentValue = themeSelect.value;
+
+        themeSelect.innerHTML = '';
+
+        const darkOption = document.createElement('option');
+        darkOption.value = 'dark';
+        darkOption.textContent = 'Dark';
+        themeSelect.appendChild(darkOption);
+
+        const lightOption = document.createElement('option');
+        lightOption.value = 'light';
+        lightOption.textContent = 'Light';
+        themeSelect.appendChild(lightOption);
+
+        if (this.customThemes && typeof this.customThemes === 'object') {
+            Object.keys(this.customThemes).forEach(themeId => {
+                const option = document.createElement('option');
+                option.value = themeId;
+                option.textContent = this.customThemes[themeId] || 'Unnamed Theme';
+                themeSelect.appendChild(option);
+            });
+        }
+
+        if (currentValue) {
+            themeSelect.value = currentValue;
+        }
+    }
 
     /**
      * Setup event listeners for all settings controls
      * @param {Object} settings - Reference to settings object
      * @param {Function} callbacks - Object with callback functions
      */
-    setupListeners(settings, callbacks) {
+    async setupListeners(settings, callbacks) {
+        // Load custom themes first
+        await this.loadCustomThemes();
+        
         // Theme select
         const themeSelect = document.getElementById('theme-select');
         if (themeSelect) {
@@ -34,12 +90,29 @@ class ConfigSettings {
         // Font size slider
         const fontSizeSlider = document.getElementById('font-size-slider');
         const fontSizeMap = ['xs', 's', 'sm', 'm', 'lg', 'l', 'xl'];
-        
+
         if (fontSizeSlider) {
-            // Set initial value
-            const initialIndex = fontSizeMap.indexOf(settings.fontSize);
+            // Normalize legacy alias values (if any) to current map
+            const aliasMap = {
+                small: 'sm',
+                medium: 'm',
+                large: 'l'
+            };
+
+            let fontSizeValue = settings.fontSize;
+            if (fontSizeValue && aliasMap[fontSizeValue]) {
+                fontSizeValue = aliasMap[fontSizeValue];
+            }
+
+            // Set initial value on the slider based on the fontSize map
+            const initialIndex = fontSizeMap.indexOf(fontSizeValue);
             fontSizeSlider.value = initialIndex >= 0 ? initialIndex : 3; // Default to 'm'
-            
+
+            // Ensure the current font size is applied immediately
+            const appliedFontSize = fontSizeMap[fontSizeSlider.value] || 'm';
+            settings.fontSize = appliedFontSize;
+            if (callbacks.onFontSizeChange) callbacks.onFontSizeChange(settings.fontSize);
+
             // Listen for changes
             fontSizeSlider.addEventListener('input', (e) => {
                 const index = parseInt(e.target.value);
@@ -179,7 +252,21 @@ class ConfigSettings {
      * @param {string} theme
      */
     applyTheme(theme) {
+        // Remove all theme classes
         document.body.classList.remove('dark', 'light');
+        
+        // Remove any custom theme classes
+        const themeIds = Array.isArray(this.customThemes)
+            ? this.customThemes
+            : (this.customThemes && typeof this.customThemes === 'object')
+                ? Object.keys(this.customThemes)
+                : [];
+
+        themeIds.forEach(themeId => {
+            document.body.classList.remove(themeId);
+        });
+        
+        // Add the new theme class
         document.body.classList.add(theme);
         document.body.setAttribute('data-theme', theme);
         

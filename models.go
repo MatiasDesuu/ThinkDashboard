@@ -55,11 +55,13 @@ type Settings struct {
 }
 
 type ColorTheme struct {
-	Light ThemeColors `json:"light"`
-	Dark  ThemeColors `json:"dark"`
+	Light  ThemeColors            `json:"light"`
+	Dark   ThemeColors            `json:"dark"`
+	Custom map[string]ThemeColors `json:"custom"` // Custom themes with dynamic keys
 }
 
 type ThemeColors struct {
+	Name                string `json:"name,omitempty"` // Optional name for custom themes
 	TextPrimary         string `json:"textPrimary"`
 	TextSecondary       string `json:"textSecondary"`
 	TextTertiary        string `json:"textTertiary"`
@@ -527,7 +529,7 @@ func (fs *FileStore) GetSettings() Settings {
 			Theme:              "dark",
 			OpenInNewTab:       true,
 			ColumnsPerRow:      3,
-			FontSize:           "medium",
+			FontSize:           "m",
 			ShowBackgroundDots: true,
 			ShowTitle:          true,
 			ShowDate:           true,
@@ -541,6 +543,28 @@ func (fs *FileStore) GetSettings() Settings {
 
 	var settings Settings
 	json.Unmarshal(data, &settings)
+	// Normalize legacy fontSize values (one-time migration)
+	switch settings.FontSize {
+	case "small":
+		settings.FontSize = "sm"
+	case "medium":
+		settings.FontSize = "m"
+	case "large":
+		settings.FontSize = "l"
+	}
+
+	// If we migrated a legacy value, persist it back to disk so clients receive normalized values
+	if dataStr := string(data); dataStr != "" {
+		// If normalization changed the value, save the settings file
+		// (quick compare by marshalling current settings)
+		if b, err := json.MarshalIndent(settings, "", "  "); err == nil {
+			// Only write if content differs
+			if string(b) != dataStr {
+				_ = os.WriteFile(fs.settingsFile, b, 0644)
+			}
+		}
+	}
+
 	return settings
 }
 
@@ -584,6 +608,7 @@ func getDefaultColors() ColorTheme {
 			AccentWarning:       "#F59E0B",
 			AccentError:         "#EF4444",
 		},
+		Custom: make(map[string]ThemeColors), // Initialize empty custom themes map
 	}
 }
 
@@ -603,6 +628,12 @@ func (fs *FileStore) GetColors() ColorTheme {
 	if err := json.Unmarshal(data, &colors); err != nil {
 		return getDefaultColors()
 	}
+
+	// Ensure custom themes map is initialized
+	if colors.Custom == nil {
+		colors.Custom = make(map[string]ThemeColors)
+	}
+
 	return colors
 }
 

@@ -342,11 +342,24 @@ func (h *Handlers) ResetColors(w http.ResponseWriter, r *http.Request) {
 			AccentWarning:       "#F59E0B",
 			AccentError:         "#EF4444",
 		},
+		Custom: make(map[string]ThemeColors), // Reset custom themes to empty
 	}
 
 	h.store.SaveColors(defaultColors)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(defaultColors)
+}
+
+func (h *Handlers) GetCustomThemesList(w http.ResponseWriter, r *http.Request) {
+	colors := h.store.GetColors()
+
+	themesMap := make(map[string]string)
+	for themeID, themeColors := range colors.Custom {
+		themesMap[themeID] = themeColors.Name
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(themesMap)
 }
 
 func (h *Handlers) CustomThemeCSS(w http.ResponseWriter, r *http.Request) {
@@ -403,6 +416,35 @@ body.dark {
     --accent-error: ` + colors.Dark.AccentError + `;
 }
 `
+
+	// Add custom themes CSS
+	for themeID, themeColors := range colors.Custom {
+		customThemeCSS := `
+/* Custom Theme: ` + themeID + ` */
+body.` + themeID + ` {
+    /* Text Colors */
+    --text-primary: ` + themeColors.TextPrimary + `;
+    --text-secondary: ` + themeColors.TextSecondary + `;
+    --text-tertiary: ` + themeColors.TextTertiary + `;
+    
+    /* Background Colors */
+    --background-primary: ` + themeColors.BackgroundPrimary + `;
+    --background-secondary: ` + themeColors.BackgroundSecondary + `;
+    --background-dots: ` + themeColors.BackgroundDots + `;
+    --background-modal: ` + themeColors.BackgroundModal + `;
+    
+    /* Border Colors */
+    --border-primary: ` + themeColors.BorderPrimary + `;
+    --border-secondary: ` + themeColors.BorderSecondary + `;
+    
+    /* Accent Colors */
+    --accent-success: ` + themeColors.AccentSuccess + `;
+    --accent-warning: ` + themeColors.AccentWarning + `;
+    --accent-error: ` + themeColors.AccentError + `;
+}
+`
+		css += customThemeCSS
+	}
 
 	w.Write([]byte(css))
 }

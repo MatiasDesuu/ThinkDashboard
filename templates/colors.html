@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/static/css/theme.css">
     <link rel="stylesheet" href="/static/css/config.css">
     <link rel="stylesheet" href="/static/css/colors.css">
+    <link rel="stylesheet" href="/static/css/select.css">
     <link rel="stylesheet" href="/static/css/modal.css">
     <link rel="stylesheet" href="/static/css/status.css">
     <link rel="stylesheet" href="/static/css/font-size.css">
@@ -52,6 +53,7 @@
                 <div class="tabs">
                     <button class="tab-button active" data-tab="dark">dark theme</button>
                     <button class="tab-button" data-tab="light">light theme</button>
+                    <button class="tab-button" data-tab="custom">custom themes</button>
                 </div>
             </div>
         </div>
@@ -271,6 +273,130 @@
             </div>
             </div>
 
+            <div class="tab-content" data-tab-content="custom">
+            <div class="config-section">
+                <div class="page-selector-wrapper">
+                    <label for="custom-theme-selector">Select Custom Theme:</label>
+                    <select id="custom-theme-selector" class="page-selector">
+                        <option value="">Select a custom theme</option>
+                    </select>
+                </div>
+
+                <div class="custom-themes-main-grid">
+                    <div class="custom-themes-list-section">
+                        <h3>Manage Custom Themes</h3>
+                        <div id="custom-themes-list" class="categories-list js-list">
+                            <!-- Custom themes will be rendered here -->
+                        </div>
+                        <button id="add-custom-theme-btn" class="btn btn-primary">Add Custom Theme</button>
+                    </div>
+
+                    <div id="custom-theme-colors-section" class="custom-theme-colors-section" style="display: none;">
+                        <div class="colors-grid">
+                            <div class="color-group">
+                                <h3>text colors</h3>
+                                <div class="color-item">
+                                    <label for="custom-text-primary">primary:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-text-primary" data-theme="custom" data-prop="textPrimary">
+                                        <input type="text" class="color-text-input" id="custom-text-primary-text" maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="color-item">
+                                    <label for="custom-text-secondary">secondary:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-text-secondary" data-theme="custom" data-prop="textSecondary">
+                                        <input type="text" class="color-text-input" id="custom-text-secondary-text" maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="color-item">
+                                    <label for="custom-text-tertiary">tertiary:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-text-tertiary" data-theme="custom" data-prop="textTertiary">
+                                        <input type="text" class="color-text-input" id="custom-text-tertiary-text" maxlength="25">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="color-group">
+                                <h3>background colors</h3>
+                                <div class="color-item">
+                                    <label for="custom-background-primary">primary:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-background-primary" data-theme="custom" data-prop="backgroundPrimary">
+                                        <input type="text" class="color-text-input" id="custom-background-primary-text" maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="color-item">
+                                    <label for="custom-background-secondary">secondary:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-background-secondary" data-theme="custom" data-prop="backgroundSecondary">
+                                        <input type="text" class="color-text-input" id="custom-background-secondary-text" maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="color-item">
+                                    <label for="custom-background-dots">dots:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-background-dots" data-theme="custom" data-prop="backgroundDots">
+                                        <input type="text" class="color-text-input" id="custom-background-dots-text" maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="color-item">
+                                    <label for="custom-background-modal">modal:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="text" class="color-text-input-full" id="custom-background-modal" data-theme="custom" data-prop="backgroundModal" maxlength="30" placeholder="rgba(0, 0, 0, 0.8)">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="color-group">
+                                <h3>border colors</h3>
+                                <div class="color-item">
+                                    <label for="custom-border-primary">primary:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-border-primary" data-theme="custom" data-prop="borderPrimary">
+                                        <input type="text" class="color-text-input" id="custom-border-primary-text" maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="color-item">
+                                    <label for="custom-border-secondary">secondary:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-border-secondary" data-theme="custom" data-prop="borderSecondary">
+                                        <input type="text" class="color-text-input" id="custom-border-secondary-text" maxlength="25">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="color-group">
+                                <h3>accent colors</h3>
+                                <div class="color-item">
+                                    <label for="custom-accent-success">success:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-accent-success" data-theme="custom" data-prop="accentSuccess">
+                                        <input type="text" class="color-text-input" id="custom-accent-success-text" maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="color-item">
+                                    <label for="custom-accent-warning">warning:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-accent-warning" data-theme="custom" data-prop="accentWarning">
+                                        <input type="text" class="color-text-input" id="custom-accent-warning-text" maxlength="25">
+                                    </div>
+                                </div>
+                                <div class="color-item">
+                                    <label for="custom-accent-error">error:</label>
+                                    <div class="color-input-wrapper">
+                                        <input type="color" id="custom-accent-error" data-theme="custom" data-prop="accentError">
+                                        <input type="text" class="color-text-input" id="custom-accent-error-text" maxlength="25">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
             </main>
         </div>
     </div>
@@ -280,6 +406,19 @@
     </div>
 
     <script src="/static/js/modal.js"></script>
+    <!-- Custom select component (used by config pages) -->
+    <script src="/static/js/select.js"></script>
+    <script src="/static/js/config/config-custom-themes.js"></script>
     <script src="/static/js/colors.js"></script>
+
+    <script>
+        // Ensure custom selects are initialized on this page (if the function exists)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initCustomSelects === 'function') {
+                // Initialize selects excluding any that opt-out
+                try { initCustomSelects(); } catch (e) { console.error('initCustomSelects error', e); }
+            }
+        });
+    </script>
 </body>
 </html>

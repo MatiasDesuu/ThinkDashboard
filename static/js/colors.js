@@ -1,8 +1,11 @@
 // Colors Management
 let colorsData = {
     light: {},
-    dark: {}
+    dark: {},
+    custom: {} // Object to store custom themes
 };
+
+let customThemesManager = null; // Will be initialized in DOMContentLoaded
 
 // Tab Management
 function initTabs() {
@@ -34,7 +37,19 @@ async function loadColors() {
         if (!response.ok) throw new Error('Failed to load colors');
         
         colorsData = await response.json();
+        
+        // Ensure custom themes object exists
+        if (!colorsData.custom) {
+            colorsData.custom = {};
+        }
+        
         populateColorInputs();
+        
+        // Render custom themes if manager exists
+        if (customThemesManager) {
+            customThemesManager.render(colorsData.custom);
+            customThemesManager.updateThemeSelector(colorsData.custom);
+        }
         
         // Apply colors immediately to show current theme colors
         applyColorsToPreview();
@@ -72,7 +87,14 @@ function populateColorInputs() {
 
 // Update color value from input
 function updateColorValue(theme, prop, value) {
-    colorsData[theme][prop] = value;
+    if (theme === 'custom') {
+        // For custom themes, update the currently selected theme
+        if (customThemesManager && customThemesManager.currentSelectedTheme) {
+            customThemesManager.updateColorValue(colorsData.custom, prop, value);
+        }
+    } else {
+        colorsData[theme][prop] = value;
+    }
     applyColorsToPreview();
 }
 
@@ -221,13 +243,63 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
+// Add custom theme
+function addCustomTheme() {
+    if (!customThemesManager) return;
+    
+    // Get default dark colors to use as template
+    const defaultColors = { ...colorsData.dark };
+    
+    const themeId = customThemesManager.add(colorsData.custom, defaultColors);
+    
+    if (themeId) {
+        customThemesManager.render(colorsData.custom);
+        customThemesManager.updateThemeSelector(colorsData.custom);
+        
+        // Auto-select the new theme
+        const selector = document.getElementById('custom-theme-selector');
+        if (selector) {
+            selector.value = themeId;
+            customThemesManager.currentSelectedTheme = themeId;
+            customThemesManager.showThemeColors(colorsData.custom[themeId]);
+        }
+    }
+}
+
+// Remove custom theme
+async function removeCustomTheme(themeId) {
+    if (!customThemesManager) return;
+    
+    const removed = await customThemesManager.remove(colorsData.custom, themeId);
+    
+    if (removed) {
+        customThemesManager.render(colorsData.custom);
+        customThemesManager.updateThemeSelector(colorsData.custom);
+    }
+}
+
+// Make functions globally accessible
+window.configManager = {
+    removeCustomTheme: removeCustomTheme
+};
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize custom themes manager
+    customThemesManager = new ConfigCustomThemes(() => {
+        // Callback when themes are updated
+    });
+    
     // Initialize tabs
     initTabs();
     
     // Load colors on page load
     loadColors().then(() => {
+        // Setup custom theme selector after colors are loaded
+        if (customThemesManager) {
+            customThemesManager.setupThemeSelector(colorsData.custom);
+        }
+        
         // Show body after everything is loaded and rendered
         document.body.classList.remove('loading');
     }).catch(() => {
@@ -243,6 +315,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Preview theme button
     document.getElementById('preview-theme-btn').addEventListener('click', toggleThemePreview);
+    
+    // Add custom theme button
+    const addCustomThemeBtn = document.getElementById('add-custom-theme-btn');
+    if (addCustomThemeBtn) {
+        addCustomThemeBtn.addEventListener('click', addCustomTheme);
+    }
     
     // Color picker inputs
     document.querySelectorAll('input[type="color"][data-theme][data-prop]').forEach(input => {

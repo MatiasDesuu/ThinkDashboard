@@ -76,7 +76,7 @@ class CustomSelect {
                 optionDiv.classList.add('selected');
             }
             
-            optionDiv.addEventListener('click', (e) => {
+            optionDiv.addEventListener('pointerdown', (e) => {
                 e.stopPropagation();
                 this.selectOption(index);
             });
@@ -122,9 +122,21 @@ class CustomSelect {
         this.wrapper.querySelector('.custom-select').classList.add('open');
         
         // Close other selects
-        document.querySelectorAll('.custom-select.open').forEach(select => {
-            if (select !== this.wrapper.querySelector('.custom-select')) {
-                select.classList.remove('open');
+        document.querySelectorAll('.custom-select.open').forEach(other => {
+            const otherWrapper = other.closest('.custom-select-wrapper');
+            if (!otherWrapper) return;
+            if (otherWrapper === this.wrapper) return;
+
+            // If the original select stored an instance, call its close() to keep state in sync
+            const origSelect = otherWrapper.querySelector('select');
+            try {
+                if (origSelect && origSelect.__customSelectInstance && typeof origSelect.__customSelectInstance.close === 'function') {
+                    origSelect.__customSelectInstance.close();
+                } else {
+                    other.classList.remove('open');
+                }
+            } catch (e) {
+                other.classList.remove('open');
             }
         });
     }
@@ -145,8 +157,8 @@ class CustomSelect {
     }
 
     setupEventListeners() {
-        // Toggle on trigger click
-        this.trigger.addEventListener('click', (e) => {
+        // Toggle on trigger pointerdown
+        this.trigger.addEventListener('pointerdown', (e) => {
             e.stopPropagation();
             this.toggle();
         });
@@ -196,6 +208,8 @@ function initCustomSelects(selector = 'select:not([data-no-custom])') {
         
         select.dataset.customSelectInit = 'true';
         const instance = new CustomSelect(select);
+        // Keep a reference to the CustomSelect instance on the original element
+        try { select.__customSelectInstance = instance; } catch (e) { /* ignore */ }
         instances.push(instance);
     });
     

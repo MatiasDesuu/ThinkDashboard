@@ -2,7 +2,6 @@
 
 /* Main sections container */
 .config-main {
-    display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 3rem;
 }
@@ -163,3 +162,23 @@
     }
 }
 
+/* Custom Themes Section */
+.custom-themes-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+
+.custom-themes-list-section h3 {
+    margin-bottom: 1rem;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    text-transform: lowercase;
+}
+
+.custom-themes-list-section h3::before {
+    content: '// ';
+}
