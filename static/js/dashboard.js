@@ -467,18 +467,12 @@ class Dashboard {
                 titleWrapper.innerHTML = '<h1 class="title">dashboard</h1>';
                 
                 // Insert after date element if it exists, otherwise at the beginning of header
-                const header = document.querySelector('.header') || document.querySelector('header') || document.getElementById('header');
+                const header = document.querySelector('.header');
                 const dateElement = document.getElementById('date-element');
-                if (header) {
-                    if (dateElement) {
-                        header.insertBefore(titleWrapper, dateElement.nextSibling);
-                    } else {
-                        header.insertBefore(titleWrapper, header.firstChild);
-                    }
+                if (dateElement) {
+                    header.insertBefore(titleWrapper, dateElement.nextSibling);
                 } else {
-                    // Header not found - append to body as a safe fallback
-                    console.warn('updateTitleVisibility: .header element not found, appending title to document.body');
-                    document.body.insertBefore(titleWrapper, document.body.firstChild);
+                    header.insertBefore(titleWrapper, header.firstChild);
                 }
             }
         } else {
@@ -530,13 +524,8 @@ class Dashboard {
                 configLink.innerHTML = '<a href="/config">config</a>';
                 
                 // Add to header at the end
-                const header = document.querySelector('.header') || document.querySelector('header') || document.getElementById('header');
-                if (header) {
-                    header.appendChild(configLink);
-                } else {
-                    console.warn('updateConfigButtonVisibility: .header element not found, appending config link to document.body');
-                    document.body.appendChild(configLink);
-                }
+                const header = document.querySelector('.header');
+                header.appendChild(configLink);
             }
         } else {
             // Hide config button - remove if it exists
@@ -590,13 +579,8 @@ class Dashboard {
                 dateElement.className = 'date';
                 
                 // Insert at the beginning of header
-                const header = document.querySelector('.header') || document.querySelector('header') || document.getElementById('header');
-                if (header) {
-                    header.insertBefore(dateElement, header.firstChild);
-                } else {
-                    console.warn('updateDateVisibility: .header element not found, appending date element to document.body');
-                    document.body.insertBefore(dateElement, document.body.firstChild);
-                }
+                const header = document.querySelector('.header');
+                header.insertBefore(dateElement, header.firstChild);
             }
             
             // Set date content
