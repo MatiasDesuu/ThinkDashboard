@@ -88,14 +88,6 @@ body {
     color: var(--text-primary);
 }
 
-.dashboard-section.section-title .container {
-    display: block;
-}
-
-.title-wrapper {
-    display: block;
-}
-
 .header-actions {
     display: flex;
     align-items: center;
