@@ -17,15 +17,30 @@ class SwipeNavigation {
     }
 
     init() {
-        // Add touch event listeners to the body
+        // Add touch event listeners to the body (swipes only via touch)
         document.body.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
         document.body.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: true });
         document.body.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
-        
-        // Also add mouse events for testing on desktop
-        document.body.addEventListener('mousedown', (e) => this.handleMouseDown(e));
-        document.body.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-        document.body.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+
+        // Pointer events fallback: only treat pointer events with pointerType 'touch' as touch
+        if (window.PointerEvent) {
+            document.body.addEventListener('pointerdown', (e) => {
+                if (e.pointerType !== 'touch') return;
+                this.handleTouchStart({ changedTouches: [{ clientX: e.clientX, clientY: e.clientY }] });
+            }, { passive: true });
+
+            document.body.addEventListener('pointermove', (e) => {
+                if (e.pointerType !== 'touch') return;
+                this.handleTouchMove({ changedTouches: [{ clientX: e.clientX, clientY: e.clientY }] });
+            }, { passive: true });
+
+            document.body.addEventListener('pointerup', (e) => {
+                if (e.pointerType !== 'touch') return;
+                this.handleTouchEnd({ changedTouches: [{ clientX: e.clientX, clientY: e.clientY }] });
+            }, { passive: true });
+        }
+
+        // Intentionally do NOT add mouse event listeners so swipe navigation won't work with the cursor.
     }
 
     handleTouchStart(e) {
