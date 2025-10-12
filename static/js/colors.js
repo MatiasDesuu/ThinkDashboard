@@ -6,6 +6,7 @@ let colorsData = {
 };
 
 let customThemesManager = null; // Will be initialized in DOMContentLoaded
+let currentPreviewTheme = 'dark'; // Current theme being previewed
 
 // Tab Management
 function initTabs() {
@@ -26,6 +27,35 @@ function initTabs() {
             if (targetContent) {
                 targetContent.classList.add('active');
             }
+
+            // Automatically switch theme for preview when selecting dark or light tab
+            if (targetTab === 'dark' || targetTab === 'light') {
+                switchToTheme(targetTab);
+            } else if (targetTab === 'custom') {
+                // Reset custom theme selector when entering custom tab
+                const selector = document.getElementById('custom-theme-selector');
+                if (selector) {
+                    selector.value = '';
+                    // Refresh custom select component if it exists
+                    try {
+                        const instance = selector.__customSelectInstance;
+                        if (instance && typeof instance.refresh === 'function') {
+                            instance.refresh();
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+                if (customThemesManager) {
+                    customThemesManager.currentSelectedTheme = null;
+                    customThemesManager.hideThemeColors();
+                }
+                // Remove preview when entering custom tab without selection
+                const previewStyle = document.getElementById('color-preview-style');
+                if (previewStyle) {
+                    previewStyle.remove();
+                }
+            }
         });
     });
 }
@@ -44,6 +74,13 @@ async function loadColors() {
         }
         
         populateColorInputs();
+        
+        // Set initial preview theme based on current body class
+        if (document.body.classList.contains('dark')) {
+            currentPreviewTheme = 'dark';
+        } else if (document.body.classList.contains('light')) {
+            currentPreviewTheme = 'light';
+        }
         
         // Render custom themes if manager exists
         if (customThemesManager) {
@@ -100,8 +137,17 @@ function updateColorValue(theme, prop, value) {
 
 // Apply colors to current page for preview
 function applyColorsToPreview() {
-    const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
-    const colors = colorsData[currentTheme];
+    let colors;
+    if (currentPreviewTheme === 'custom' && customThemesManager && customThemesManager.currentSelectedTheme) {
+        colors = colorsData.custom[customThemesManager.currentSelectedTheme];
+    } else if (currentPreviewTheme === 'custom') {
+        // If custom but no theme selected, don't apply preview
+        return;
+    } else {
+        colors = colorsData[currentPreviewTheme];
+    }
+    
+    if (!colors) return;
     
     // Remove existing preview style if present
     let previewStyle = document.getElementById('color-preview-style');
@@ -115,7 +161,7 @@ function applyColorsToPreview() {
     
     // Generate CSS with the current theme colors
     const css = `
-        body.${currentTheme} {
+        body {
             --text-primary: ${colors.textPrimary} !important;
             --text-secondary: ${colors.textSecondary} !important;
             --text-tertiary: ${colors.textTertiary} !important;
@@ -158,6 +204,9 @@ async function saveColors() {
         
         // Reload the dynamic theme CSS
         reloadThemeCSS();
+        
+        // Re-apply preview after saving to maintain current preview theme
+        applyColorsToPreview();
     } catch (error) {
         console.error('Error saving colors:', error);
         showNotification('Failed to save colors', 'error');
@@ -205,29 +254,23 @@ async function resetColors() {
         
         // Reload the dynamic theme CSS
         reloadThemeCSS();
+        
+        // Re-apply preview after resetting to maintain current preview theme
+        applyColorsToPreview();
     } catch (error) {
         console.error('Error resetting colors:', error);
         showNotification('Failed to reset colors', 'error');
     }
 }
 
-// Toggle theme preview
-function toggleThemePreview() {
-    const body = document.body;
-    const html = document.documentElement;
-    
-    if (body.classList.contains('dark')) {
-        body.classList.remove('dark');
-        body.classList.add('light');
-        html.setAttribute('data-theme', 'light');
-    } else {
-        body.classList.remove('light');
-        body.classList.add('dark');
-        html.setAttribute('data-theme', 'dark');
-    }
-    
+// Switch to a specific theme for preview
+function switchToTheme(theme) {
+    currentPreviewTheme = theme;
     applyColorsToPreview();
 }
+
+// Make switchToTheme globally accessible
+window.switchToTheme = switchToTheme;
 
 // Show notification
 function showNotification(message, type = 'info') {
@@ -312,9 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Reset button
     document.getElementById('reset-colors-btn').addEventListener('click', resetColors);
-    
-    // Preview theme button
-    document.getElementById('preview-theme-btn').addEventListener('click', toggleThemePreview);
     
     // Add custom theme button
     const addCustomThemeBtn = document.getElementById('add-custom-theme-btn');

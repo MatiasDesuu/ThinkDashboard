@@ -143,6 +143,10 @@ class ConfigCustomThemes {
             
             if (themeId && customThemes[themeId]) {
                 this.showThemeColors(customThemes[themeId]);
+                // Switch to custom theme preview
+                if (window.switchToTheme) {
+                    window.switchToTheme('custom');
+                }
             } else {
                 this.hideThemeColors();
             }

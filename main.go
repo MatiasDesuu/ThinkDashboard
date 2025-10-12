@@ -47,6 +47,7 @@ func main() {
 	r.HandleFunc("/api/colors/reset", handlers.ResetColors).Methods("POST")
 	r.HandleFunc("/api/colors/custom-themes", handlers.GetCustomThemesList).Methods("GET")
 	r.HandleFunc("/api/theme.css", handlers.CustomThemeCSS).Methods("GET")
+	r.HandleFunc("/api/ping", handlers.PingURL).Methods("GET")
 
 	// Static files with proper MIME type handling
 	staticFS, _ := fs.Sub(embeddedFiles, "static")

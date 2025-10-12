@@ -1,11 +1,14 @@
 package main
 
 import (
+	"crypto/tls"
 	"embed"
 	"encoding/json"
 	"html/template"
 	"net/http"
+	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -447,4 +450,113 @@ html[data-theme="` + themeID + `"] body {
 	}
 
 	w.Write([]byte(css))
+}
+
+func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
+	// Set CORS headers first
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	// Get URL from query parameter
+	urlParam := r.URL.Query().Get("url")
+	if urlParam == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"error": "URL parameter is required",
+			"status": "offline",
+			"ping": nil,
+		})
+		return
+	}
+
+	// Parse and validate URL
+	_, err := url.Parse(urlParam)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"error": "Invalid URL",
+			"status": "offline",
+			"ping": nil,
+		})
+		return
+	}
+
+	// Create HTTP client with timeout and insecure TLS for local HTTPS
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true, // Skip certificate verification for local HTTPS
+			},
+			DisableKeepAlives: true, // Disable keep-alives to avoid connection issues
+		},
+	}
+
+	// Start timing
+	start := time.Now()
+
+	// Make HEAD request first, fallback to GET if needed
+	var resp *http.Response
+	var reqErr error
+
+	// Try HEAD request
+	req, err := http.NewRequest("HEAD", urlParam, nil)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"error": "Failed to create request",
+			"status": "offline",
+			"ping": nil,
+		})
+		return
+	}
+
+	resp, reqErr = client.Do(req)
+
+	// Close response body if it exists
+	if resp != nil {
+		defer resp.Body.Close()
+	}
+
+	// If HEAD fails with certain errors, try GET
+	if reqErr != nil || (resp != nil && (resp.StatusCode == 405 || resp.StatusCode == 501)) {
+		// Try GET request
+		req, err = http.NewRequest("GET", urlParam, nil)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"error": "Failed to create request",
+				"status": "offline",
+				"ping": nil,
+			})
+			return
+		}
+
+		resp, reqErr = client.Do(req)
+
+		// Close response body if it exists
+		if resp != nil {
+			defer resp.Body.Close()
+		}
+	}
+
+	// Calculate response time
+	elapsed := time.Since(start).Milliseconds()
+
+	// Prepare response
+	response := map[string]interface{}{
+		"status": "offline",
+		"ping":   nil,
+	}
+
+	if reqErr == nil && resp != nil {
+		// Consider it online if we get any response (even 4xx/5xx)
+		response["status"] = "online"
+		response["ping"] = elapsed
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
 }

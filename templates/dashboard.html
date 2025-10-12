@@ -32,6 +32,10 @@
         <div class="container">
             <div class="header-top">
                 {{if .ShowDate}}<div id="date-element" class="date"></div>{{end}}
+                <div id="status-loading-indicator" class="status-loading-indicator">
+                    <span class="status-loading-text">checking status</span>
+                    <span class="status-loading-dots"></span>
+                </div>
                 <div class="header-actions">
                     <div id="page-navigation" class="page-navigation">
                         <!-- Pages will be loaded here -->

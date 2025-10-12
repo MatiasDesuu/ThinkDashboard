@@ -146,3 +146,51 @@
     border-color: var(--text-secondary);
     color: var(--text-primary);
 }
+
+/* Status Loading Indicator */
+.status-loading-indicator {
+    display: none; /* Hidden by default */
+    font-family: 'Source Code Pro', monospace;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-bold);
+    color: var(--accent-warning);
+    opacity: 0.8;
+    margin-left: 1rem;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+}
+
+.status-loading-indicator.show {
+    display: flex;
+}
+
+.status-loading-text {
+    letter-spacing: 0.05em;
+}
+
+.status-loading-dots::after {
+    content: '';
+    animation: loading-dots 1.5s infinite;
+    font-weight: var(--font-weight-bold);
+}
+
+@keyframes loading-dots {
+    0%, 30% {
+        content: '.';
+    }
+    31%, 60% {
+        content: '..';
+    }
+    61%, 100% {
+        content: '...';
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .status-loading-indicator {
+        font-size: calc(var(--font-size-controls) * 0.9);
+        margin-left: 0.5rem;
+    }
+}

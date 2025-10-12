@@ -121,7 +121,7 @@ class Modal {
             this.show({
                 ...options,
                 showCancel: false,
-                confirmText: 'OK',
+                confirmText: options.confirmText || 'OK',
                 onConfirm: () => resolve(true)
             });
         });

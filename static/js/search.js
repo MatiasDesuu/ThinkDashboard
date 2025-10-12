@@ -8,6 +8,7 @@ class SearchComponent {
         this.searchActive = false;
         this.searchMatches = [];
         this.selectedMatchIndex = 0;
+        this.matchElements = []; // Store references to DOM elements for selection highlighting
         
         this.init();
     }
@@ -71,9 +72,11 @@ class SearchComponent {
 
         // Add keyboard event listener
         document.addEventListener('keydown', (e) => {
-            // Don't trigger shortcuts if user is typing in an input
+            // Don't trigger shortcuts if user is typing in an input, except when search is active and it's a navigation key
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                return;
+                if (!this.searchActive || !['ArrowUp', 'ArrowDown', 'Enter', 'Escape'].includes(e.key)) {
+                    return;
+                }
             }
 
             // Don't trigger shortcuts if any modifier key is pressed
@@ -209,6 +212,15 @@ class SearchComponent {
             });
         }
 
+        // Check if 'colors' matches the current query
+        if ('colors'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
+            this.searchMatches.push({ 
+                shortcut: 'colors', 
+                bookmark: { name: 'Color Customization', url: '/colors' }, 
+                type: 'colors' 
+            });
+        }
+
         // Sort matches by shortcut length (shorter first)
         this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
 
@@ -259,10 +271,22 @@ class SearchComponent {
         this.renderSearchMatches();
     }
 
+    updateSelectionHighlight() {
+        // Update keyboard-selected class on existing elements
+        this.matchElements.forEach((element, index) => {
+            if (index === this.selectedMatchIndex) {
+                element.classList.add('keyboard-selected');
+            } else {
+                element.classList.remove('keyboard-selected');
+            }
+        });
+    }
+
     resetQuery() {
         this.currentQuery = '';
         this.searchMatches = [];
         this.selectedMatchIndex = 0;
+        this.matchElements = []; // Clear element references
     }
 
     renderSearchMatches() {
@@ -270,6 +294,7 @@ class SearchComponent {
         if (!matchesContainer) return;
 
         matchesContainer.innerHTML = '';
+        this.matchElements = []; // Reset element references
 
         if (this.searchMatches.length === 0) {
             // Show empty container when no matches (no message when opened from button)
@@ -282,14 +307,15 @@ class SearchComponent {
                     <span class="search-match-name">No matches found</span>
                 `;
                 matchesContainer.appendChild(noMatchElement);
+                this.matchElements.push(noMatchElement); // Store reference
             }
             return;
         }
 
         this.searchMatches.forEach((match, index) => {
             const matchElement = document.createElement('div');
-            const baseClass = `search-match ${index === this.selectedMatchIndex ? 'selected' : ''}`;
-            const configClass = match.type === 'config' ? ' config-entry' : '';
+            const baseClass = `search-match ${index === this.selectedMatchIndex ? 'keyboard-selected' : ''}`;
+            const configClass = (match.type === 'config' || match.type === 'colors') ? ' config-entry' : '';
             matchElement.className = baseClass + configClass;
             matchElement.innerHTML = `
                 <span class="search-match-shortcut">${match.shortcut.toUpperCase()}</span>
@@ -299,12 +325,15 @@ class SearchComponent {
             matchElement.addEventListener('click', () => {
                 if (match.type === 'config') {
                     this.openConfig();
+                } else if (match.type === 'colors') {
+                    this.openColors();
                 } else {
                     this.openBookmark(match.bookmark);
                 }
             });
             
             matchesContainer.appendChild(matchElement);
+            this.matchElements.push(matchElement); // Store reference
         });
     }
 
@@ -319,7 +348,7 @@ class SearchComponent {
             this.selectedMatchIndex = 0;
         }
         
-        this.renderSearchMatches();
+        this.updateSelectionHighlight();
     }
 
     selectCurrentMatch() {
@@ -327,6 +356,8 @@ class SearchComponent {
             const selectedMatch = this.searchMatches[this.selectedMatchIndex];
             if (selectedMatch.type === 'config') {
                 this.openConfig();
+            } else if (selectedMatch.type === 'colors') {
+                this.openColors();
             } else {
                 this.openBookmark(selectedMatch.bookmark);
             }
@@ -362,6 +393,18 @@ class SearchComponent {
         // Navigate to config page
         setTimeout(() => {
             window.location.href = '/config';
+        }, 100);
+    }
+
+    openColors() {
+        // Close search first if it's active
+        if (this.searchActive) {
+            this.closeSearch();
+        }
+        
+        // Navigate to colors page
+        setTimeout(() => {
+            window.location.href = '/colors';
         }, 100);
     }
 

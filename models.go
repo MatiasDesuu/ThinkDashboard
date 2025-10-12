@@ -50,6 +50,7 @@ type Settings struct {
 	ShowSearchButton   bool   `json:"showSearchButton"`
 	ShowStatus         bool   `json:"showStatus"`
 	ShowPing           bool   `json:"showPing"`
+	ShowStatusLoading  bool   `json:"showStatusLoading"`
 	GlobalShortcuts    bool   `json:"globalShortcuts"` // Use shortcuts from all pages
 	HyprMode           bool   `json:"hyprMode"`        // Launcher mode for PWA usage
 }
@@ -167,6 +168,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			ShowConfigButton:   true,
 			ShowStatus:         false,
 			ShowPing:           false,
+			ShowStatusLoading:  true,
 			GlobalShortcuts:    true,
 			HyprMode:           false,
 		}
@@ -536,6 +538,7 @@ func (fs *FileStore) GetSettings() Settings {
 			ShowConfigButton:   true,
 			ShowStatus:         false,
 			ShowPing:           false,
+			ShowStatusLoading:  true,
 			GlobalShortcuts:    true,
 			HyprMode:           false,
 		}

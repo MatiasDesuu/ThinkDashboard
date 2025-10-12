@@ -380,6 +380,31 @@ body {
     user-select: none;
 }
 
+/* Info button for HyprMode */
+.info-button {
+    background: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+    font-size: var(--font-size-controls);
+    cursor: pointer;
+    border-radius: 0;
+    font-family: 'Source Code Pro', monospace;
+    line-height: 0;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto !important;
+    min-width: 14px !important;
+    padding: 0 !important;
+    width: 14px !important;
+    height: 14px !important;
+}
+
+.info-button:hover {
+    background: var(--background-secondary);
+    border-color: var(--border-primary);
+    opacity: 1;
+}
+
 /* Bookmark status toggle */
 .bookmark-status-toggle {
     display: flex;

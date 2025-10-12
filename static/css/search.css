@@ -103,9 +103,19 @@
 }
 
 .search-match:hover,
-.search-match.selected {
+.search-match.keyboard-selected {
     color: var(--text-primary);
-    transform: translateX(4px);
+    transform: translateX(8px);
+    position: relative;
+    overflow: visible; /* Allow the selector to be visible */
+}
+
+.search-match.keyboard-selected::before {
+    content: '>';
+    position: absolute;
+    left: -1.5rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
 }
 
 .search-match-shortcut {

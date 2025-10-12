@@ -5,15 +5,24 @@ class StatusMonitor {
         this.statusCache = new Map(); // Cache for status results
         this.checkInterval = null;
         this.isChecking = false;
+        this.loadingIndicator = document.getElementById('status-loading-indicator');
     }
 
     updateSettings(settings) {
+        const wasStatusEnabled = this.settings.showStatus;
         this.settings = settings;
         if (!this.settings.showStatus) {
             this.clearAllStatuses();
             this.stopPeriodicChecks();
-        } else {
+            this.hideLoadingIndicator();
+        } else if (!wasStatusEnabled) {
+            // Status was just enabled, start periodic checks
             this.startPeriodicChecks();
+        }
+        
+        // Hide loading indicator if the option is disabled
+        if (!this.settings.showStatusLoading) {
+            this.hideLoadingIndicator();
         }
     }
 
@@ -30,79 +39,46 @@ class StatusMonitor {
         // Set checking state - no text, just yellow color
         this.setBookmarkStatus(bookmarkElement, 'checking', '');
 
-        const startTime = performance.now();
-        
         try {
-            // Use a timeout to prevent hanging requests
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-
-            const response = await fetch(`${bookmark.url}?t=${new Date().getTime()}`, {
-                method: 'HEAD', // Use HEAD request for faster response
-                mode: 'no-cors',
-                cache: 'no-cache',
-                signal: controller.signal
+            // Use the server-side ping API which can handle HTTPS certificates
+            const response = await fetch(`/api/ping?url=${encodeURIComponent(bookmark.url)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
 
-            clearTimeout(timeoutId);
-            const endTime = performance.now();
-            const responseTime = Math.round(endTime - startTime);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const result = await response.json();
 
             // Cache the result
             this.statusCache.set(bookmark.url, {
-                status: 'online',
-                ping: responseTime,
+                status: result.status,
+                ping: result.ping,
                 timestamp: Date.now()
             });
 
             // Update UI
-            const pingText = this.settings.showPing ? `${responseTime}ms` : '';
-            this.setBookmarkStatus(bookmarkElement, 'online', pingText);
+            const pingText = this.settings.showPing && result.ping ? `${result.ping}ms` : '';
+            this.setBookmarkStatus(bookmarkElement, result.status, pingText);
 
-            return { status: 'online', ping: responseTime };
+            return { status: result.status, ping: result.ping };
 
         } catch (error) {
-            const endTime = performance.now();
-            const responseTime = Math.round(endTime - startTime);
+            console.error('Ping error for', bookmark.url, ':', error);
 
-            // Try with regular GET request if HEAD failed
-            try {
-                const controller2 = new AbortController();
-                const timeoutId2 = setTimeout(() => controller2.abort(), 10000);
+            // Cache the result
+            this.statusCache.set(bookmark.url, {
+                status: 'offline',
+                ping: null,
+                timestamp: Date.now()
+            });
 
-                await fetch(`${bookmark.url}?t=${new Date().getTime()}`, {
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    signal: controller2.signal
-                });
-
-                clearTimeout(timeoutId2);
-                const endTime2 = performance.now();
-                const responseTime2 = Math.round(endTime2 - startTime);
-
-                // Cache the result
-                this.statusCache.set(bookmark.url, {
-                    status: 'online',
-                    ping: responseTime2,
-                    timestamp: Date.now()
-                });
-
-                const pingText = this.settings.showPing ? `${responseTime2}ms` : '';
-                this.setBookmarkStatus(bookmarkElement, 'online', pingText);
-
-                return { status: 'online', ping: responseTime2 };
-
-            } catch (finalError) {
-                // Cache the result
-                this.statusCache.set(bookmark.url, {
-                    status: 'offline',
-                    ping: null,
-                    timestamp: Date.now()
-                });
-
-                this.setBookmarkStatus(bookmarkElement, 'offline', '');
-                return { status: 'offline', ping: null };
-            }
+            this.setBookmarkStatus(bookmarkElement, 'offline', '');
+            return { status: 'offline', ping: null };
         }
     }
 
@@ -148,6 +124,7 @@ class StatusMonitor {
         }
 
         this.isChecking = true;
+        this.showLoadingIndicator();
 
         // Filter bookmarks that should be checked
         const bookmarksToCheck = bookmarks.filter(bookmark => bookmark.checkStatus);
@@ -171,6 +148,7 @@ class StatusMonitor {
         }
 
         this.isChecking = false;
+        this.hideLoadingIndicator();
     }
 
     clearAllStatuses() {
@@ -236,36 +214,18 @@ class StatusMonitor {
         this.statusCache.clear();
     }
 
-    // Method to get status statistics
-    getStatusStats(bookmarks) {
-        const stats = {
-            total: 0,
-            checked: 0,
-            online: 0,
-            offline: 0,
-            checking: 0
-        };
+    // Show loading indicator
+    showLoadingIndicator() {
+        if (this.settings.showStatusLoading && this.loadingIndicator) {
+            this.loadingIndicator.classList.add('show');
+        }
+    }
 
-        if (!bookmarks) return stats;
-
-        bookmarks.forEach(bookmark => {
-            stats.total++;
-            if (bookmark.checkStatus) {
-                stats.checked++;
-                const cached = this.statusCache.get(bookmark.url);
-                if (cached) {
-                    if (cached.status === 'online') {
-                        stats.online++;
-                    } else if (cached.status === 'offline') {
-                        stats.offline++;
-                    }
-                } else {
-                    stats.checking++;
-                }
-            }
-        });
-
-        return stats;
+    // Hide loading indicator
+    hideLoadingIndicator() {
+        if (this.loadingIndicator) {
+            this.loadingIndicator.classList.remove('show');
+        }
     }
 
     // Initialize status monitoring
@@ -281,11 +241,79 @@ class StatusMonitor {
         this.startPeriodicChecks();
     }
 
+    // Update bookmarks without clearing cache - only check new/uncached bookmarks
+    updateBookmarks(bookmarks) {
+        if (!this.settings.showStatus) {
+            return;
+        }
+
+        // First, apply cached status to existing bookmarks
+        this.applyCachedStatuses(bookmarks);
+
+        // Then check only bookmarks that don't have cached status
+        const uncachedBookmarks = bookmarks.filter(bookmark => 
+            bookmark.checkStatus && !this.statusCache.has(bookmark.url)
+        );
+
+        if (uncachedBookmarks.length > 0) {
+            // Check uncached bookmarks in the background
+            this.checkUncachedBookmarks(uncachedBookmarks);
+        }
+    }
+
+    // Apply cached statuses to bookmarks that already have them
+    applyCachedStatuses(bookmarks) {
+        bookmarks.forEach(bookmark => {
+            if (bookmark.checkStatus) {
+                const cached = this.statusCache.get(bookmark.url);
+                if (cached) {
+                    const bookmarkElement = document.querySelector(`[data-bookmark-url="${bookmark.url}"]`);
+                    if (bookmarkElement) {
+                        const pingText = this.settings.showPing && cached.ping ? `${cached.ping}ms` : '';
+                        this.setBookmarkStatus(bookmarkElement, cached.status, pingText);
+                    }
+                }
+            }
+        });
+    }
+
+    // Check only bookmarks that don't have cached status
+    async checkUncachedBookmarks(bookmarks) {
+        if (this.isChecking) {
+            return;
+        }
+
+        this.isChecking = true;
+        this.showLoadingIndicator();
+
+        // Check bookmarks in batches to avoid overwhelming the network
+        const batchSize = 5;
+        for (let i = 0; i < bookmarks.length; i += batchSize) {
+            const batch = bookmarks.slice(i, i + batchSize);
+            const promises = batch.map(bookmark => this.checkBookmarkStatus(bookmark));
+            
+            try {
+                await Promise.allSettled(promises);
+            } catch (error) {
+                console.error('Error checking bookmark batch:', error);
+            }
+
+            // Small delay between batches
+            if (i + batchSize < bookmarks.length) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+
+        this.isChecking = false;
+        this.hideLoadingIndicator();
+    }
+
     // Cleanup method
     destroy() {
         this.stopPeriodicChecks();
         this.clearAllStatuses();
         this.clearCache();
+        this.hideLoadingIndicator();
     }
 }
 

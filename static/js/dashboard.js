@@ -23,6 +23,7 @@ class Dashboard {
         };
         this.searchComponent = null;
         this.statusMonitor = null;
+        this.statusMonitorInitialized = false;
         this.keyboardNavigation = null;
         this.swipeNavigation = null;
         this.init();
@@ -378,9 +379,17 @@ class Dashboard {
         // Update search component with current data
         this.updateSearchComponent();
         
-        // Initialize status monitoring after rendering
+        // Initialize or update status monitoring after rendering
         if (this.statusMonitor) {
-            this.statusMonitor.init(this.bookmarks);
+            // Check if this is the first time initializing or just updating bookmarks
+            if (this.statusMonitorInitialized) {
+                // Just update bookmarks without clearing cache
+                this.statusMonitor.updateBookmarks(this.bookmarks);
+            } else {
+                // First time initialization
+                this.statusMonitor.init(this.bookmarks);
+                this.statusMonitorInitialized = true;
+            }
         }
     }
 

@@ -142,6 +142,20 @@ class ConfigSettings {
             });
         }
 
+        // HyprMode info button
+        const hyprModeInfoBtn = document.getElementById('hypr-mode-info-btn');
+        if (hyprModeInfoBtn) {
+            hyprModeInfoBtn.addEventListener('click', () => {
+                if (window.AppModal) {
+                    window.AppModal.alert({
+                        title: 'HyprMode Information',
+                        message: 'HyprMode is designed for when ThinkDashboard is installed as a Progressive Web App (PWA). When enabled, clicking on bookmarks will open them in a new browser tab and then automatically close the PWA window, mimicking the behavior of a traditional app launcher.',
+                        confirmText: 'Got it'
+                    });
+                }
+            });
+        }
+
         // Show background dots checkbox
         const showBackgroundDotsCheckbox = document.getElementById('show-background-dots-checkbox');
         if (showBackgroundDotsCheckbox) {
@@ -207,6 +221,15 @@ class ConfigSettings {
             });
         }
 
+        // Show status loading checkbox
+        const showStatusLoadingCheckbox = document.getElementById('show-status-loading-checkbox');
+        if (showStatusLoadingCheckbox) {
+            showStatusLoadingCheckbox.checked = settings.showStatusLoading;
+            showStatusLoadingCheckbox.addEventListener('change', (e) => {
+                settings.showStatusLoading = e.target.checked;
+            });
+        }
+
         // Global shortcuts checkbox
         const globalShortcutsCheckbox = document.getElementById('global-shortcuts-checkbox');
         if (globalShortcutsCheckbox) {
@@ -232,6 +255,7 @@ class ConfigSettings {
         const showSearchButtonCheckbox = document.getElementById('show-search-button-checkbox');
         const showStatusCheckbox = document.getElementById('show-status-checkbox');
         const showPingCheckbox = document.getElementById('show-ping-checkbox');
+        const showStatusLoadingCheckbox = document.getElementById('show-status-loading-checkbox');
         const globalShortcutsCheckbox = document.getElementById('global-shortcuts-checkbox');
 
         if (themeSelect) settings.theme = themeSelect.value;
@@ -244,6 +268,7 @@ class ConfigSettings {
         if (showSearchButtonCheckbox) settings.showSearchButton = showSearchButtonCheckbox.checked;
         if (showStatusCheckbox) settings.showStatus = showStatusCheckbox.checked;
         if (showPingCheckbox) settings.showPing = showPingCheckbox.checked;
+        if (showStatusLoadingCheckbox) settings.showStatusLoading = showStatusLoadingCheckbox.checked;
         if (globalShortcutsCheckbox) settings.globalShortcuts = globalShortcutsCheckbox.checked;
     }
 
