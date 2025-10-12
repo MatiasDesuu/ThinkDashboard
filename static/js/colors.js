@@ -305,6 +305,21 @@ function addCustomTheme() {
             selector.value = themeId;
             customThemesManager.currentSelectedTheme = themeId;
             customThemesManager.showThemeColors(colorsData.custom[themeId]);
+            
+            // Switch to custom theme preview
+            if (window.switchToTheme) {
+                window.switchToTheme('custom');
+            }
+            
+            // Refresh custom select to update display
+            try {
+                const instance = selector.__customSelectInstance;
+                if (instance && typeof instance.refresh === 'function') {
+                    instance.refresh();
+                }
+            } catch (e) {
+                // ignore
+            }
         }
     }
 }

@@ -317,7 +317,7 @@ func (h *Handlers) SaveColors(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) ResetColors(w http.ResponseWriter, r *http.Request) {
 	// Get current colors to preserve custom themes
 	currentColors := h.store.GetColors()
-	
+
 	// Reset only light and dark themes to defaults, keep custom themes
 	defaultColors := ColorTheme{
 		Light: ThemeColors{
