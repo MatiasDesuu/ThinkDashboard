@@ -227,7 +227,7 @@ function reloadThemeCSS() {
 async function resetColors() {
     const confirmed = await window.AppModal.danger({
         title: 'Reset Colors',
-        message: 'Are you sure you want to reset all colors to default values? This action cannot be undone.',
+        message: 'Are you sure you want to reset all DEFAULT colors (dark/light) to default values? This action cannot be undone.',
         confirmText: 'Reset',
         cancelText: 'Cancel'
     });
