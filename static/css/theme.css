@@ -2,14 +2,7 @@
 /* Colors are loaded dynamically from /api/theme.css */
 
 /* Background Patterns */
-body.light {
-    background-color: var(--background-primary);
-    color: var(--text-primary);
-    background-image: radial-gradient(var(--background-dots) 1px, transparent 1px);
-    background-size: 15px 15px;
-}
-
-body.dark {
+html[data-theme] body {
     background-color: var(--background-primary);
     color: var(--text-primary);
     background-image: radial-gradient(var(--background-dots) 1px, transparent 1px);

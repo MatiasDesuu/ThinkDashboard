@@ -371,7 +371,7 @@ func (h *Handlers) CustomThemeCSS(w http.ResponseWriter, r *http.Request) {
 	css := `/* Custom Theme Variables - Loaded from colors.json */
 
 /* Light Theme Variables */
-body.light {
+html[data-theme="light"] body {
     /* Text Colors */
     --text-primary: ` + colors.Light.TextPrimary + `;
     --text-secondary: ` + colors.Light.TextSecondary + `;
@@ -394,7 +394,7 @@ body.light {
 }
 
 /* Dark Theme Variables */
-body.dark {
+html[data-theme="dark"] body {
     /* Text Colors */
     --text-primary: ` + colors.Dark.TextPrimary + `;
     --text-secondary: ` + colors.Dark.TextSecondary + `;
@@ -421,7 +421,7 @@ body.dark {
 	for themeID, themeColors := range colors.Custom {
 		customThemeCSS := `
 /* Custom Theme: ` + themeID + ` */
-body.` + themeID + ` {
+html[data-theme="` + themeID + `"] body {
     /* Text Colors */
     --text-primary: ` + themeColors.TextPrimary + `;
     --text-secondary: ` + themeColors.TextSecondary + `;

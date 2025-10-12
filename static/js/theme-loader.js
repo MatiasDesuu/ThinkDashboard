@@ -103,6 +103,9 @@
             existingStyle.remove();
         }
         
+        // Set data-theme on html element
+        document.documentElement.setAttribute('data-theme', theme);
+        
         // Create and inject critical CSS using CSS variables
         const style = document.createElement('style');
         style.setAttribute('data-fouc-prevention', 'true');
