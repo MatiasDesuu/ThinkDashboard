@@ -315,7 +315,10 @@ func (h *Handlers) SaveColors(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) ResetColors(w http.ResponseWriter, r *http.Request) {
-	// Reset to default colors by removing the file
+	// Get current colors to preserve custom themes
+	currentColors := h.store.GetColors()
+	
+	// Reset only light and dark themes to defaults, keep custom themes
 	defaultColors := ColorTheme{
 		Light: ThemeColors{
 			TextPrimary:         "#1F2937",
@@ -345,7 +348,7 @@ func (h *Handlers) ResetColors(w http.ResponseWriter, r *http.Request) {
 			AccentWarning:       "#F59E0B",
 			AccentError:         "#EF4444",
 		},
-		Custom: make(map[string]ThemeColors), // Reset custom themes to empty
+		Custom: currentColors.Custom, // Preserve existing custom themes
 	}
 
 	h.store.SaveColors(defaultColors)
@@ -464,9 +467,9 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 	if urlParam == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"error": "URL parameter is required",
+			"error":  "URL parameter is required",
 			"status": "offline",
-			"ping": nil,
+			"ping":   nil,
 		})
 		return
 	}
@@ -476,9 +479,9 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"error": "Invalid URL",
+			"error":  "Invalid URL",
 			"status": "offline",
-			"ping": nil,
+			"ping":   nil,
 		})
 		return
 	}
@@ -506,9 +509,9 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"error": "Failed to create request",
+			"error":  "Failed to create request",
 			"status": "offline",
-			"ping": nil,
+			"ping":   nil,
 		})
 		return
 	}
@@ -527,9 +530,9 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]interface{}{
-				"error": "Failed to create request",
+				"error":  "Failed to create request",
 				"status": "offline",
-				"ping": nil,
+				"ping":   nil,
 			})
 			return
 		}
