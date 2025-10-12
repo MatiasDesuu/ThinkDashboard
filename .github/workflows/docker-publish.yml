@@ -6,8 +6,8 @@ permissions:
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+    tags: [ 'v*.*.*' ]
   workflow_dispatch:
 
 jobs:
@@ -31,12 +31,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v4
+      - name: Show Docker version
+        run: docker version
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
             ghcr.io/matiasdesuu/thinkdashboard:latest
             ghcr.io/matiasdesuu/thinkdashboard:${{ github.sha }}
-          # platforms: linux/amd64,linux/arm64    # descomenta si querés multi-arch
+            ghcr.io/matiasdesuu/thinkdashboard:${{ github.ref_name }}
+          cache-from: type=registry,ref=ghcr.io/matiasdesuu/thinkdashboard:latest
+          cache-to: type=inline
+          # platforms: linux/amd64,linux/arm64  # descomenta si querés multi-arch
+
+      - name: List Docker images after build
+        run: docker images
