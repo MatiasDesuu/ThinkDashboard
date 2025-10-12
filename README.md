@@ -64,23 +64,12 @@ go run .
 
 ### Using Docker
 
-1. Clone the repository:
+1. Run the container:
 ```bash
-git clone https://github.com/MatiasDesuu/ThinkDashboard.git
-cd ThinkDashboard
+docker run --name thinkdashboard -p 8080:8080 -v ./data:/app/data -e PORT=8080 --restart unless-stopped ghcr.io/matiasdesuu/thinkdashboard:latest
 ```
 
-1. Build the Docker image:
-```bash
-docker build -t thinkdashboard .
-```
-
-2. Run the container:
-```bash
-docker run -d -p 8080:8080 -v $(pwd)/data:/app/data --name thinkdashboard thinkdashboard
-```
-
-3. Open your browser and navigate to `http://localhost:8080` (or `http://youritp:yourcustomport`)
+3. Open your browser and navigate to `http://localhost:8080`
 
 ## Configuration
 
