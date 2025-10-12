@@ -26,6 +26,22 @@ A lightweight, self-hosted bookmark dashboard built with Go and vanilla JavaScri
 
 ## Quick Start
 
+### Using Docker Compose
+
+```services:
+  thinkdashboard:
+    image: ghcr.io/matiasdesuu/thinkdashboard:latest
+    container_name: thinkdashboard
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PORT=8080
+    restart: unless-stopped
+```
+
+
 ### Using Go
 
 1. Clone the repository:
