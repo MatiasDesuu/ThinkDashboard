@@ -42,6 +42,15 @@ A lightweight, self-hosted bookmark dashboard built with Go and vanilla JavaScri
 ```
 
 
+### Using Docker
+
+1. Run the container:
+```bash
+docker run --name thinkdashboard -d -p 8080:8080 -v ./data:/app/data -e PORT=8080 --restart unless-stopped ghcr.io/matiasdesuu/thinkdashboard:latest
+```
+
+3. Open your browser and navigate to `http://localhost:8080`
+
 ### Using Go
 
 1. Clone the repository:
@@ -61,15 +70,6 @@ go run .
 ```
 
 4. Open your browser and navigate to `http://localhost:8080`
-
-### Using Docker
-
-1. Run the container:
-```bash
-docker run --name thinkdashboard -p 8080:8080 -v ./data:/app/data -e PORT=8080 --restart unless-stopped ghcr.io/matiasdesuu/thinkdashboard:latest
-```
-
-3. Open your browser and navigate to `http://localhost:8080`
 
 ## Configuration
 
