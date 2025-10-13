@@ -94,6 +94,11 @@
     margin-right: 0.25rem;
 }
 
+.custom-select-option.highlighted {
+    font-weight: var(--font-weight-semibold);
+    color: white;
+}
+
 /* Scrollbar styling for options */
 .custom-select-options::-webkit-scrollbar {
     width: 8px;

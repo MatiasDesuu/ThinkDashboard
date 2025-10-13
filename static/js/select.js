@@ -10,6 +10,7 @@ class CustomSelect {
         this.trigger = null;
         this.optionsContainer = null;
         this.isOpen = false;
+        this.openedWithKeyboard = false;
         
         this.init();
     }
@@ -26,6 +27,7 @@ class CustomSelect {
         // Create trigger
         this.trigger = document.createElement('div');
         this.trigger.className = 'custom-select-trigger';
+        this.trigger.tabIndex = 0;
         
         const selectedText = document.createElement('span');
         selectedText.className = 'custom-select-text';
@@ -71,6 +73,7 @@ class CustomSelect {
             optionDiv.textContent = option.textContent;
             optionDiv.dataset.value = option.value;
             optionDiv.dataset.index = index;
+            optionDiv.tabIndex = -1; // Prevent tab navigation to options
             
             if (option.selected) {
                 optionDiv.classList.add('selected');
@@ -97,6 +100,9 @@ class CustomSelect {
         this.updateTriggerText();
         this.updateSelectedOption();
         this.close();
+        
+        // Reset keyboard flag
+        this.openedWithKeyboard = false;
     }
 
     updateTriggerText() {
@@ -115,11 +121,36 @@ class CustomSelect {
         });
     }
 
+    highlightOption(index) {
+        const options = this.optionsContainer.querySelectorAll('.custom-select-option');
+        options.forEach((option, i) => {
+            if (i === index) {
+                option.classList.add('highlighted');
+                // Scroll the highlighted option into view
+                option.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            } else {
+                option.classList.remove('highlighted');
+            }
+        });
+    }
+
     open() {
         if (this.isOpen) return;
         
         this.isOpen = true;
         this.wrapper.querySelector('.custom-select').classList.add('open');
+        
+        // Remove tabindex from trigger when open to allow tab navigation to work
+        this.trigger.tabIndex = -1;
+        
+        // Highlight the currently selected option or first option based on how it was opened
+        if (this.openedWithKeyboard) {
+            // When opened with keyboard, highlight the selected option
+            this.highlightOption(this.originalSelect.selectedIndex);
+        } else {
+            // When opened with mouse/enter/space, highlight the selected option
+            this.highlightOption(this.originalSelect.selectedIndex);
+        }
         
         // Close other selects
         document.querySelectorAll('.custom-select.open').forEach(other => {
@@ -146,6 +177,16 @@ class CustomSelect {
         
         this.isOpen = false;
         this.wrapper.querySelector('.custom-select').classList.remove('open');
+        
+        // Restore tabindex to trigger
+        this.trigger.tabIndex = 0;
+        
+        // Remove highlight from all options
+        const options = this.optionsContainer.querySelectorAll('.custom-select-option');
+        options.forEach(option => option.classList.remove('highlighted'));
+        
+        // Reset keyboard flag
+        this.openedWithKeyboard = false;
     }
 
     toggle() {
@@ -163,15 +204,81 @@ class CustomSelect {
             this.toggle();
         });
 
-        // Close when clicking outside
-        document.addEventListener('click', (e) => {
-            if (this.isOpen && !this.wrapper.contains(e.target)) {
-                this.close();
+        // Keyboard navigation
+        this.trigger.addEventListener('keydown', (e) => {
+            if (this.isOpen) {
+                const options = this.optionsContainer.querySelectorAll('.custom-select-option');
+                let currentIndex = Array.from(options).findIndex(opt => opt.classList.contains('highlighted'));
+                
+                // If no option is highlighted, use the selected one
+                if (currentIndex === -1) {
+                    currentIndex = this.originalSelect.selectedIndex;
+                }
+                
+                switch (e.key) {
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        const nextIndex = (currentIndex + 1) % options.length;
+                        this.highlightOption(nextIndex);
+                        break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        const prevIndex = currentIndex <= 0 ? options.length - 1 : currentIndex - 1;
+                        this.highlightOption(prevIndex);
+                        break;
+                    case 'Enter':
+                    case ' ':
+                        e.preventDefault();
+                        this.selectOption(currentIndex);
+                        break;
+                    case 'Escape':
+                        this.close();
+                        break;
+                }
+            } else {
+                // Handle opening with keyboard when closed
+                switch (e.key) {
+                    case 'Enter':
+                    case ' ':
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.openedWithKeyboard = false;
+                        this.toggle();
+                        break;
+                    case 'ArrowDown':
+                        if (!this.isOpen) {
+                            e.preventDefault();
+                            this.openedWithKeyboard = true;
+                            this.open();
+                        }
+                        break;
+                    case 'ArrowUp':
+                        if (!this.isOpen) {
+                            e.preventDefault();
+                            this.openedWithKeyboard = true;
+                            this.open();
+                        }
+                        break;
+                }
             }
         });
 
-        // Close on escape key
+        // Handle tab when open (close dropdown and allow normal tab navigation)
         document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab' && this.isOpen) {
+                e.preventDefault();
+                this.close();
+                // Use setTimeout to ensure the dropdown is fully closed before moving focus
+                setTimeout(() => {
+                    // Find the next focusable element after the original select
+                    const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+                    const allFocusable = Array.from(document.querySelectorAll(focusableElements));
+                    const selectIndex = allFocusable.indexOf(this.originalSelect);
+                    if (selectIndex >= 0 && selectIndex < allFocusable.length - 1) {
+                        allFocusable[selectIndex + 1].focus();
+                    }
+                }, 0);
+            }
             if (e.key === 'Escape' && this.isOpen) {
                 this.close();
             }

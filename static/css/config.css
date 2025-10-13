@@ -341,6 +341,11 @@ body {
     padding: 0;
 }
 
+/* Override opacity for bookmark status toggle */
+.bookmark-status-toggle .checkbox-label {
+    opacity: 1;
+}
+
 .checkbox-label input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
@@ -353,7 +358,8 @@ body {
     position: relative;
     margin: 0;
     flex-shrink: 0;
-    background-color: var(--background-primary);
+    background-color: var(--background-primary) !important;
+    opacity: 1 !important;
 }
 
 .checkbox-label input[type="checkbox"]:checked::before {
@@ -366,6 +372,7 @@ body {
     font-weight: var(--font-weight-black);
     line-height: 1;
     color: var(--accent-success);
+    opacity: 1 !important;
 }
 
 .checkbox-label input[type="checkbox"]:checked {
@@ -374,6 +381,15 @@ body {
 
 .checkbox-label input[type="checkbox"]:hover {
     opacity: 0.8;
+}
+
+.checkbox-label:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+.checkbox-label input[type="checkbox"]:focus {
+    box-shadow: 0 0 0 2px var(--accent-primary);
 }
 
 .checkbox-text {
@@ -414,14 +430,6 @@ body {
 
 .bookmark-status-toggle label {
     margin: 0;
-}
-
-.bookmark-status-toggle input[type="checkbox"] {
-    flex: 0 0 auto !important;
-    min-width: 14px !important;
-    padding: 0 !important;
-    width: 14px !important;
-    height: 14px !important;
 }
 
 /* Lists */
@@ -478,7 +486,7 @@ body {
 
 .page-item input,
 .category-item input,
-.bookmark-item input,
+.bookmark-item input:not([type="checkbox"]),
 .bookmark-item select {
     flex: 1;
     min-width: 120px;
@@ -499,7 +507,7 @@ body {
 
 .page-item input:focus,
 .category-item input:focus,
-.bookmark-item input:focus,
+.bookmark-item input:not([type="checkbox"]):focus,
 .bookmark-item select:focus {
     outline: none;
     border-color: var(--text-secondary);
