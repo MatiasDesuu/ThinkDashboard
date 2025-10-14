@@ -212,6 +212,16 @@ class ConfigSettings {
             });
         }
 
+        // Animations enabled checkbox
+        const animationsEnabledCheckbox = document.getElementById('animations-enabled-checkbox');
+        if (animationsEnabledCheckbox) {
+            animationsEnabledCheckbox.checked = settings.animationsEnabled !== false;
+            animationsEnabledCheckbox.addEventListener('change', (e) => {
+                settings.animationsEnabled = e.target.checked;
+                if (callbacks.onAnimationsChange) callbacks.onAnimationsChange(e.target.checked);
+            });
+        }
+
         // Show status checkbox
         const showStatusCheckbox = document.getElementById('show-status-checkbox');
         if (showStatusCheckbox) {
@@ -267,6 +277,7 @@ class ConfigSettings {
         const showPingCheckbox = document.getElementById('show-ping-checkbox');
         const showStatusLoadingCheckbox = document.getElementById('show-status-loading-checkbox');
         const globalShortcutsCheckbox = document.getElementById('global-shortcuts-checkbox');
+        const animationsEnabledCheckbox = document.getElementById('animations-enabled-checkbox');
 
         if (themeSelect) settings.theme = themeSelect.value;
         if (columnsInput) settings.columnsPerRow = parseInt(columnsInput.value);
@@ -276,6 +287,7 @@ class ConfigSettings {
         if (showDateCheckbox) settings.showDate = showDateCheckbox.checked;
         if (showConfigButtonCheckbox) settings.showConfigButton = showConfigButtonCheckbox.checked;
         if (showSearchButtonCheckbox) settings.showSearchButton = showSearchButtonCheckbox.checked;
+        if (animationsEnabledCheckbox) settings.animationsEnabled = animationsEnabledCheckbox.checked;
         if (showStatusCheckbox) settings.showStatus = showStatusCheckbox.checked;
         if (showPingCheckbox) settings.showPing = showPingCheckbox.checked;
         if (showStatusLoadingCheckbox) settings.showStatusLoading = showStatusLoadingCheckbox.checked;
@@ -386,8 +398,21 @@ class ConfigSettings {
             showStatus: false,
             showPing: false,
             globalShortcuts: true,
-            hyprMode: false
+            hyprMode: false,
+            animationsEnabled: true
         };
+    }
+
+    /**
+     * Apply animations setting to page
+     * @param {boolean} enabled
+     */
+    applyAnimations(enabled) {
+        if (enabled) {
+            document.body.classList.remove('no-animations');
+        } else {
+            document.body.classList.add('no-animations');
+        }
     }
 }
 

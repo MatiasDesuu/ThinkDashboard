@@ -210,6 +210,9 @@ class Dashboard {
         // Apply background dots
         this.applyBackgroundDots();
 
+        // Apply animations
+        this.applyAnimations();
+
         // Control title visibility dynamically
         this.updateTitleVisibility();
         
@@ -533,6 +536,15 @@ class Dashboard {
             document.body.classList.remove('no-background-dots');
         } else {
             document.body.classList.add('no-background-dots');
+        }
+    }
+
+    applyAnimations() {
+        // Toggle animations class
+        if (this.settings.animationsEnabled !== false) {
+            document.body.classList.remove('no-animations');
+        } else {
+            document.body.classList.add('no-animations');
         }
     }
 

@@ -113,6 +113,7 @@ class ConfigManager {
         this.settings.applyTheme(this.settingsData.theme);
         this.settings.applyFontSize(this.settingsData.fontSize);
         this.settings.applyBackgroundDots(this.settingsData.showBackgroundDots);
+        this.settings.applyAnimations(this.settingsData.animationsEnabled);
     }
 
     async setupEventListeners() {
@@ -126,6 +127,9 @@ class ConfigManager {
             },
             onBackgroundDotsChange: (show) => {
                 this.settings.applyBackgroundDots(show);
+            },
+            onAnimationsChange: (enabled) => {
+                this.settings.applyAnimations(enabled);
             },
             onStatusVisibilityChange: () => {
                 this.settings.updateStatusOptionsVisibility(this.settingsData.showStatus);

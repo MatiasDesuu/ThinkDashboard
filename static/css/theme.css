@@ -13,3 +13,10 @@ html[data-theme] body {
 body.no-background-dots {
     background-image: none !important;
 }
+
+/* No Animations Option */
+body.no-animations * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+}

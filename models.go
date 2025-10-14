@@ -51,8 +51,9 @@ type Settings struct {
 	ShowStatus         bool   `json:"showStatus"`
 	ShowPing           bool   `json:"showPing"`
 	ShowStatusLoading  bool   `json:"showStatusLoading"`
-	GlobalShortcuts    bool   `json:"globalShortcuts"` // Use shortcuts from all pages
-	HyprMode           bool   `json:"hyprMode"`        // Launcher mode for PWA usage
+	GlobalShortcuts    bool   `json:"globalShortcuts"`   // Use shortcuts from all pages
+	HyprMode           bool   `json:"hyprMode"`          // Launcher mode for PWA usage
+	AnimationsEnabled  bool   `json:"animationsEnabled"` // Enable or disable animations globally
 }
 
 type ColorTheme struct {
@@ -171,6 +172,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			ShowStatusLoading:  true,
 			GlobalShortcuts:    true,
 			HyprMode:           false,
+			AnimationsEnabled:  true, // Default to animations enabled
 		}
 		data, _ := json.MarshalIndent(defaultSettings, "", "  ")
 		os.WriteFile(fs.settingsFile, data, 0644)
@@ -541,6 +543,7 @@ func (fs *FileStore) GetSettings() Settings {
 			ShowStatusLoading:  true,
 			GlobalShortcuts:    true,
 			HyprMode:           false,
+			AnimationsEnabled:  true,
 		}
 	}
 
