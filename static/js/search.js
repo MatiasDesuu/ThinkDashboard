@@ -10,6 +10,8 @@ class SearchComponent {
         this.selectedMatchIndex = 0;
         this.matchElements = []; // Store references to DOM elements for selection highlighting
         
+        this.commandsComponent = new window.SearchCommandsComponent();
+
         this.init();
     }
 
@@ -48,7 +50,7 @@ class SearchComponent {
                 if (value.length > this.currentQuery.length) {
                     // Character added
                     const newChar = value[value.length - 1];
-                    if (/^[A-Z]$/.test(newChar)) {
+                    if (/^[A-Z0-9: ]$/.test(newChar)) {
                         this.addToQuery(newChar);
                     }
                 } else if (value.length < this.currentQuery.length) {
@@ -150,8 +152,22 @@ class SearchComponent {
             return;
         }
 
-        // Only handle letter keys (A-Z), not numbers
-        if (!/^[A-Z]$/.test(key)) {
+        // Handle colon key to start commands
+        if (key === ':') {
+            e.preventDefault();
+            this.addToQuery(':');
+            return;
+        }
+
+        // Handle space key for commands
+        if (key === ' ' && this.currentQuery.startsWith(':')) {
+            e.preventDefault();
+            this.addToQuery(' ');
+            return;
+        }
+
+        // Only handle letter keys (A-Z) and numbers (0-9), not other characters
+        if (!/^[A-Z0-9]$/.test(key)) {
             return;
         }
 
@@ -197,36 +213,47 @@ class SearchComponent {
     updateSearch() {
         // Find matching shortcuts
         this.searchMatches = [];
-        this.shortcuts.forEach((bookmark, shortcut) => {
-            if (shortcut.startsWith(this.currentQuery.toLowerCase())) {
-                this.searchMatches.push({ shortcut, bookmark, type: 'bookmark' });
+
+        if (this.currentQuery.startsWith(':')) {
+            // Handle commands
+            this.searchMatches = this.commandsComponent.handleCommand(this.currentQuery);
+        } else {
+            // Handle bookmark shortcuts
+            this.shortcuts.forEach((bookmark, shortcut) => {
+                if (shortcut.startsWith(this.currentQuery.toLowerCase())) {
+                    this.searchMatches.push({ shortcut, bookmark, type: 'bookmark' });
+                }
+            });
+
+            // Check if 'config' matches the current query
+            if ('config'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
+                this.searchMatches.push({ 
+                    shortcut: 'config', 
+                    bookmark: { name: 'Configuration', url: '/config' }, 
+                    type: 'config' 
+                });
             }
-        });
 
-        // Check if 'config' matches the current query
-        if ('config'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
-            this.searchMatches.push({ 
-                shortcut: 'config', 
-                bookmark: { name: 'Configuration', url: '/config' }, 
-                type: 'config' 
-            });
+            // Check if 'colors' matches the current query
+            if ('colors'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
+                this.searchMatches.push({ 
+                    shortcut: 'colors', 
+                    bookmark: { name: 'Color Customization', url: '/colors' }, 
+                    type: 'colors' 
+                });
+            }
+
+            // Sort matches by shortcut length (shorter first)
+            this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
         }
-
-        // Check if 'colors' matches the current query
-        if ('colors'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
-            this.searchMatches.push({ 
-                shortcut: 'colors', 
-                bookmark: { name: 'Color Customization', url: '/colors' }, 
-                type: 'colors' 
-            });
-        }
-
-        // Sort matches by shortcut length (shorter first)
-        this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
 
         // Always show search interface, even with no matches
         this.showSearch();
-        this.selectedMatchIndex = 0;
+        if (this.selectedMatchIndex === -1) {
+            // Keep -1 to avoid auto-selection
+        } else {
+            this.selectedMatchIndex = 0;
+        }
         this.renderSearchMatches();
     }
 
@@ -316,10 +343,11 @@ class SearchComponent {
             const matchElement = document.createElement('div');
             const baseClass = `search-match ${index === this.selectedMatchIndex ? 'keyboard-selected' : ''}`;
             const configClass = (match.type === 'config' || match.type === 'colors') ? ' config-entry' : '';
-            matchElement.className = baseClass + configClass;
+            const commandClass = (match.type === 'command' || match.type === 'command-completion') ? ' command-entry' : '';
+            matchElement.className = baseClass + configClass + commandClass;
             matchElement.innerHTML = `
                 <span class="search-match-shortcut">${match.shortcut.toUpperCase()}</span>
-                <span class="search-match-name">${match.bookmark.name}</span>
+                <span class="search-match-name">${match.name}</span>
             `;
             
             matchElement.addEventListener('click', () => {
@@ -327,6 +355,14 @@ class SearchComponent {
                     this.openConfig();
                 } else if (match.type === 'colors') {
                     this.openColors();
+                } else if (match.type === 'command') {
+                    match.action();
+                    this.closeSearch();
+                } else if (match.type === 'command-completion') {
+                    this.currentQuery = match.completion;
+                    this.updateSearch();
+                    this.selectedMatchIndex = -1; // Don't auto-select after completion
+                    this.updateSelectionHighlight(); // Update visual selection
                 } else {
                     this.openBookmark(match.bookmark);
                 }
@@ -358,6 +394,14 @@ class SearchComponent {
                 this.openConfig();
             } else if (selectedMatch.type === 'colors') {
                 this.openColors();
+            } else if (selectedMatch.type === 'command') {
+                selectedMatch.action();
+                this.closeSearch();
+            } else if (selectedMatch.type === 'command-completion') {
+                this.currentQuery = selectedMatch.completion;
+                this.updateSearch();
+                this.selectedMatchIndex = -1; // Don't auto-select after completion
+                this.updateSelectionHighlight(); // Update visual selection
             } else {
                 this.openBookmark(selectedMatch.bookmark);
             }
