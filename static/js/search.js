@@ -347,7 +347,7 @@ class SearchComponent {
             matchElement.className = baseClass + configClass + commandClass;
             
             // Get the display name based on match type
-            const displayName = match.type === 'bookmark' ? match.bookmark.name : match.name;
+            const displayName = (match.type === 'bookmark' || match.type === 'config' || match.type === 'colors') ? match.bookmark.name : match.name;
             
             matchElement.innerHTML = `
                 <span class="search-match-shortcut">${match.shortcut.toUpperCase()}</span>

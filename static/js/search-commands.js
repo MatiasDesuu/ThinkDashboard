@@ -322,7 +322,8 @@ class SearchCommandsComponent {
         
         // Apply theme using ThemeLoader
         if (window.ThemeLoader && typeof window.ThemeLoader.applyTheme === 'function') {
-            window.ThemeLoader.applyTheme(theme, showBackgroundDots);
+            const currentFontSize = window.ThemeLoader.getFontSize ? window.ThemeLoader.getFontSize() : 'm';
+            window.ThemeLoader.applyTheme(theme, showBackgroundDots, currentFontSize);
         } else {
             console.warn('ThemeLoader not available');
         }
