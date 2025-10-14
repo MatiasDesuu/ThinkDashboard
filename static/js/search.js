@@ -345,9 +345,13 @@ class SearchComponent {
             const configClass = (match.type === 'config' || match.type === 'colors') ? ' config-entry' : '';
             const commandClass = (match.type === 'command' || match.type === 'command-completion') ? ' command-entry' : '';
             matchElement.className = baseClass + configClass + commandClass;
+            
+            // Get the display name based on match type
+            const displayName = match.type === 'bookmark' ? match.bookmark.name : match.name;
+            
             matchElement.innerHTML = `
                 <span class="search-match-shortcut">${match.shortcut.toUpperCase()}</span>
-                <span class="search-match-name">${match.name}</span>
+                <span class="search-match-name">${displayName}</span>
             `;
             
             matchElement.addEventListener('click', () => {
