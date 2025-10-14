@@ -96,7 +96,6 @@
 
 .custom-select-option.highlighted {
     font-weight: var(--font-weight-semibold);
-    color: white;
 }
 
 /* Scrollbar styling for options */

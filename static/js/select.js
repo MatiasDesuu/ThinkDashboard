@@ -79,7 +79,7 @@ class CustomSelect {
                 optionDiv.classList.add('selected');
             }
             
-            optionDiv.addEventListener('pointerdown', (e) => {
+            optionDiv.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.selectOption(index);
             });
@@ -288,6 +288,13 @@ class CustomSelect {
         this.originalSelect.addEventListener('change', () => {
             this.updateTriggerText();
             this.updateSelectedOption();
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (this.isOpen && !this.wrapper.contains(e.target)) {
+                this.close();
+            }
         });
     }
 

@@ -34,7 +34,7 @@
             <header class="header">
                 <h1 class="title">configuration</h1>
                 <div class="nav-links">
-                    <a href="/colors" class="back-link">customize colors</a>
+                    <a href="/colors" class="back-link">→ customize colors</a>
                     <a href="/" class="back-link">← back to dashboard</a>
                 </div>
             </header>
@@ -84,18 +84,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="font-size-slider">Font size:</label>
-                    <div class="slider-container">
-                        <input type="range" id="font-size-slider" min="0" max="6" step="1" value="3" class="terminal-slider">
-                        <div class="slider-labels">
-                            <span class="slider-label">xs</span>
-                            <span class="slider-label">s</span>
-                            <span class="slider-label">sm</span>
-                            <span class="slider-label">m</span>
-                            <span class="slider-label">lg</span>
-                            <span class="slider-label">l</span>
-                            <span class="slider-label">xl</span>
-                        </div>
+                    <label>Font size:</label>
+                    <div class="font-size-selector">
+                        <button type="button" class="font-size-option" data-size="xs">xs</button>
+                        <button type="button" class="font-size-option" data-size="s">s</button>
+                        <button type="button" class="font-size-option" data-size="sm">sm</button>
+                        <button type="button" class="font-size-option active" data-size="m">m</button>
+                        <button type="button" class="font-size-option" data-size="lg">lg</button>
+                        <button type="button" class="font-size-option" data-size="l">l</button>
+                        <button type="button" class="font-size-option" data-size="xl">xl</button>
                     </div>
                 </div>
                 

@@ -633,3 +633,37 @@ body {
     user-select: none;
     transition: color 0.2s ease;
 }
+
+/* Font size selector buttons */
+.font-size-selector {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.font-size-option {
+    padding: 0.375rem 0.5rem;
+    border: 1px solid var(--border-primary);
+    background: var(--background-primary);
+    color: var(--text-primary);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-controls);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    min-width: 2.5rem;
+    text-align: center;
+}
+
+.font-size-option:hover {
+    background: var(--background-secondary);
+    border-color: var(--text-secondary);
+}
+
+.font-size-option.active {
+    background: var(--accent-success);
+    color: var(--background-primary);
+    border-color: var(--accent-success);
+    font-weight: var(--font-weight-semibold);
+}

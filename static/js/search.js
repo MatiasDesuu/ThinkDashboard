@@ -9,6 +9,7 @@ class SearchComponent {
         this.searchMatches = [];
         this.selectedMatchIndex = 0;
         this.matchElements = []; // Store references to DOM elements for selection highlighting
+        this.justCompleted = false; // Flag to prevent accidental execution after completion
         
         this.commandsComponent = new window.SearchCommandsComponent();
 
@@ -314,6 +315,7 @@ class SearchComponent {
         this.searchMatches = [];
         this.selectedMatchIndex = 0;
         this.matchElements = []; // Clear element references
+        this.justCompleted = false; // Reset flag
     }
 
     renderSearchMatches() {
@@ -365,8 +367,9 @@ class SearchComponent {
                 } else if (match.type === 'command-completion') {
                     this.currentQuery = match.completion;
                     this.updateSearch();
-                    this.selectedMatchIndex = -1; // Don't auto-select after completion
+                    this.selectedMatchIndex = 0; // Auto-select first match after completion
                     this.updateSelectionHighlight(); // Update visual selection
+                    this.justCompleted = true; // Prevent immediate execution
                 } else {
                     this.openBookmark(match.bookmark);
                 }
@@ -392,6 +395,11 @@ class SearchComponent {
     }
 
     selectCurrentMatch() {
+        if (this.justCompleted) {
+            this.justCompleted = false;
+            return;
+        }
+        
         if (this.searchMatches.length > 0 && this.selectedMatchIndex >= 0) {
             const selectedMatch = this.searchMatches[this.selectedMatchIndex];
             if (selectedMatch.type === 'config') {
@@ -404,8 +412,9 @@ class SearchComponent {
             } else if (selectedMatch.type === 'command-completion') {
                 this.currentQuery = selectedMatch.completion;
                 this.updateSearch();
-                this.selectedMatchIndex = -1; // Don't auto-select after completion
+                this.selectedMatchIndex = 0; // Auto-select first match after completion
                 this.updateSelectionHighlight(); // Update visual selection
+                this.justCompleted = true; // Prevent immediate execution
             } else {
                 this.openBookmark(selectedMatch.bookmark);
             }

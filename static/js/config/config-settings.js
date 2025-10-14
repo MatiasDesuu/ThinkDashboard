@@ -87,11 +87,10 @@ class ConfigSettings {
             });
         }
 
-        // Font size slider
-        const fontSizeSlider = document.getElementById('font-size-slider');
-        const fontSizeMap = ['xs', 's', 'sm', 'm', 'lg', 'l', 'xl'];
+        // Font size selector buttons
+        const fontSizeOptions = document.querySelectorAll('.font-size-option');
 
-        if (fontSizeSlider) {
+        if (fontSizeOptions.length > 0) {
             // Normalize legacy alias values (if any) to current map
             const aliasMap = {
                 small: 'sm',
@@ -104,21 +103,32 @@ class ConfigSettings {
                 fontSizeValue = aliasMap[fontSizeValue];
             }
 
-            // Set initial value on the slider based on the fontSize map
-            const initialIndex = fontSizeMap.indexOf(fontSizeValue);
-            fontSizeSlider.value = initialIndex >= 0 ? initialIndex : 3; // Default to 'm'
+            // Set initial active button
+            const initialSize = fontSizeValue || 'm';
+            fontSizeOptions.forEach(btn => {
+                if (btn.dataset.size === initialSize) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
 
             // Ensure the current font size is applied immediately
-            const appliedFontSize = fontSizeMap[fontSizeSlider.value] || 'm';
-            settings.fontSize = appliedFontSize;
+            settings.fontSize = initialSize;
             if (callbacks.onFontSizeChange) callbacks.onFontSizeChange(settings.fontSize);
 
             // Listen for changes
-            fontSizeSlider.addEventListener('input', (e) => {
-                const index = parseInt(e.target.value);
-                const fontSize = fontSizeMap[index];
-                settings.fontSize = fontSize;
-                if (callbacks.onFontSizeChange) callbacks.onFontSizeChange(settings.fontSize);
+            fontSizeOptions.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const fontSize = e.target.dataset.size;
+                    settings.fontSize = fontSize;
+
+                    // Update active state
+                    fontSizeOptions.forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+
+                    if (callbacks.onFontSizeChange) callbacks.onFontSizeChange(settings.fontSize);
+                });
             });
         }
 
@@ -297,7 +307,11 @@ class ConfigSettings {
         
         if (window.ThemeLoader) {
             const showBackgroundDots = document.getElementById('show-background-dots-checkbox')?.checked !== false;
-            window.ThemeLoader.applyTheme(theme, showBackgroundDots);
+            // Get current font size from body classes
+            const currentClasses = Array.from(document.body.classList);
+            const currentFontSizeClass = currentClasses.find(cls => cls.startsWith('font-size-'));
+            const currentFontSize = currentFontSizeClass ? currentFontSizeClass.replace('font-size-', '') : 'm';
+            window.ThemeLoader.applyTheme(theme, showBackgroundDots, currentFontSize);
         }
     }
 
@@ -318,7 +332,11 @@ class ConfigSettings {
         // Use ThemeLoader to apply background dots consistently
         if (window.ThemeLoader) {
             const theme = document.body.getAttribute('data-theme') || 'dark';
-            window.ThemeLoader.applyTheme(theme, showBackgroundDots);
+            // Get current font size from body classes
+            const currentClasses = Array.from(document.body.classList);
+            const currentFontSizeClass = currentClasses.find(cls => cls.startsWith('font-size-'));
+            const currentFontSize = currentFontSizeClass ? currentFontSizeClass.replace('font-size-', '') : 'm';
+            window.ThemeLoader.applyTheme(theme, showBackgroundDots, currentFontSize);
         }
         
         // Also set the data attribute for consistency
