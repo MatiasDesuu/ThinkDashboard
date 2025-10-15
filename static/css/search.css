@@ -202,3 +202,23 @@
     opacity: 0;
     pointer-events: none;
 }
+
+/* Preserve centering transform when animations are disabled */
+body.no-animations .search-button {
+    transform: translateX(-50%) !important;
+}
+
+/* Disable hover transforms when animations are disabled */
+body.no-animations .search-button:hover {
+    transform: translateX(-50%) !important;
+}
+
+body.no-animations .search-button:active {
+    transform: translateX(-50%) !important;
+}
+
+/* Disable search match hover transforms when animations are disabled */
+body.no-animations .search-match:hover,
+body.no-animations .search-match.keyboard-selected {
+    transform: none !important;
+}
