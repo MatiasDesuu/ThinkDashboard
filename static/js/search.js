@@ -167,9 +167,15 @@ class SearchComponent {
             return;
         }
 
-        // Only handle letter keys (A-Z) and numbers (0-9), not other characters
-        if (!/^[A-Z0-9]$/.test(key)) {
-            return;
+        // Only handle letter keys (A-Z) and numbers (0-9) when search is active, otherwise only letters and :
+        if (this.searchActive) {
+            if (!/^[A-Z0-9]$/.test(key)) {
+                return;
+            }
+        } else {
+            if (!/^[A-Z:]$/.test(key)) {
+                return;
+            }
         }
 
         e.preventDefault();
