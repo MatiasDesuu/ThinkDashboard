@@ -7,6 +7,33 @@ let colorsData = {
 
 let customThemesManager = null; // Will be initialized in DOMContentLoaded
 let currentPreviewTheme = 'dark'; // Current theme being previewed
+let settings = {}; // To store settings data
+
+// Apply animations based on settings
+function applyAnimations() {
+    if (settings.animationsEnabled !== false) {
+        document.body.classList.remove('no-animations');
+    } else {
+        document.body.classList.add('no-animations');
+    }
+}
+
+// Load settings from API or localStorage
+async function loadSettings() {
+    try {
+        const deviceSpecific = localStorage.getItem('deviceSpecificSettings') === 'true';
+        if (deviceSpecific) {
+            const deviceSettings = localStorage.getItem('dashboardSettings');
+            settings = deviceSettings ? JSON.parse(deviceSettings) : {};
+        } else {
+            const response = await fetch('/api/settings');
+            settings = await response.json();
+        }
+    } catch (error) {
+        console.error('Error loading settings:', error);
+        settings = {};
+    }
+}
 
 // Tab Management
 function initTabs() {
@@ -342,7 +369,11 @@ window.configManager = {
 };
 
 // Event listeners
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load settings and apply animations
+    await loadSettings();
+    applyAnimations();
+    
     // Initialize custom themes manager
     customThemesManager = new ConfigCustomThemes(() => {
         // Callback when themes are updated
