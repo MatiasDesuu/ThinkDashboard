@@ -42,12 +42,16 @@ func main() {
 	r.HandleFunc("/api/pages/{id:[0-9]+}", handlers.DeletePage).Methods("DELETE")
 	r.HandleFunc("/api/settings", handlers.GetSettings).Methods("GET")
 	r.HandleFunc("/api/settings", handlers.SaveSettings).Methods("POST")
+	r.HandleFunc("/api/favicon", handlers.UploadFavicon).Methods("POST")
 	r.HandleFunc("/api/colors", handlers.GetColors).Methods("GET")
 	r.HandleFunc("/api/colors", handlers.SaveColors).Methods("POST")
 	r.HandleFunc("/api/colors/reset", handlers.ResetColors).Methods("POST")
 	r.HandleFunc("/api/colors/custom-themes", handlers.GetCustomThemesList).Methods("GET")
 	r.HandleFunc("/api/theme.css", handlers.CustomThemeCSS).Methods("GET")
 	r.HandleFunc("/api/ping", handlers.PingURL).Methods("GET")
+
+	// Data files (for uploaded favicons, etc.)
+	r.PathPrefix("/data/").Handler(http.StripPrefix("/data/", http.FileServer(http.Dir("data/"))))
 
 	// Static files with proper MIME type handling
 	staticFS, _ := fs.Sub(embeddedFiles, "static")

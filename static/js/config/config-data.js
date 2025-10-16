@@ -24,12 +24,19 @@ class ConfigData {
             const bookmarks = await bookmarksRes.json();
             const pages = await pagesRes.json();
             
+            // Load settings from server first
+            const serverSettings = await settingsRes.json();
+            
             // Load settings from localStorage or server based on device-specific flag
             let settings;
             if (deviceSpecific) {
-                settings = this.storage.getDeviceSettings() || await settingsRes.json();
+                const deviceSettings = this.storage.getDeviceSettings();
+                settings = deviceSettings ? { ...serverSettings, ...deviceSettings } : serverSettings;
+                // Always use favicon settings from server, regardless of device-specific
+                settings.enableCustomFavicon = serverSettings.enableCustomFavicon;
+                settings.customFaviconPath = serverSettings.customFaviconPath;
             } else {
-                settings = await settingsRes.json();
+                settings = serverSettings;
             }
 
             return { bookmarks, pages, settings };

@@ -215,6 +215,57 @@ class ConfigSettings {
             this.toggleCustomTitleInput(settings.enableCustomTitle);
         }
 
+        // Enable custom favicon checkbox
+        const enableCustomFaviconCheckbox = document.getElementById('enable-custom-favicon-checkbox');
+        if (enableCustomFaviconCheckbox) {
+            enableCustomFaviconCheckbox.checked = settings.enableCustomFavicon;
+            enableCustomFaviconCheckbox.addEventListener('change', async (e) => {
+                settings.enableCustomFavicon = e.target.checked;
+                this.toggleCustomFaviconInput(e.target.checked);
+                // Always save to server regardless of device-specific settings
+                await this.saveSettingsToServer(settings);
+            });
+        }
+
+        // Custom favicon input
+        const customFaviconInput = document.getElementById('custom-favicon-input');
+        if (customFaviconInput) {
+            customFaviconInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('favicon', file);
+
+                    try {
+                        const response = await fetch('/api/favicon', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            settings.customFaviconPath = result.path;
+                            // Auto-enable checkbox when user uploads a file
+                            if (!settings.enableCustomFavicon) {
+                                settings.enableCustomFavicon = true;
+                                const checkbox = document.getElementById('enable-custom-favicon-checkbox');
+                                if (checkbox) checkbox.checked = true;
+                                this.toggleCustomFaviconInput(true);
+                            }
+                            // Always save to server regardless of device-specific settings
+                            await this.saveSettingsToServer(settings);
+                        } else {
+                            console.error('Failed to upload favicon');
+                        }
+                    } catch (error) {
+                        console.error('Error uploading favicon:', error);
+                    }
+                }
+            });
+            // Initial visibility
+            this.toggleCustomFaviconInput(settings.enableCustomFavicon);
+        }
+
         // Show page in title checkbox
         const showPageInTitleCheckbox = document.getElementById('show-page-in-title-checkbox');
         if (showPageInTitleCheckbox) {
@@ -329,6 +380,8 @@ class ConfigSettings {
         const enableCustomTitleCheckbox = document.getElementById('enable-custom-title-checkbox');
         const customTitleInput = document.getElementById('custom-title-input');
         const showPageInTitleCheckbox = document.getElementById('show-page-in-title-checkbox');
+        const showPageNamesInTabsCheckbox = document.getElementById('show-page-names-in-tabs-checkbox');
+        const enableCustomFaviconCheckbox = document.getElementById('enable-custom-favicon-checkbox');
 
         if (themeSelect) settings.theme = themeSelect.value;
         if (columnsInput) settings.columnsPerRow = parseInt(columnsInput.value);
@@ -346,6 +399,8 @@ class ConfigSettings {
         if (enableCustomTitleCheckbox) settings.enableCustomTitle = enableCustomTitleCheckbox.checked;
         if (customTitleInput) settings.customTitle = customTitleInput.value;
         if (showPageInTitleCheckbox) settings.showPageInTitle = showPageInTitleCheckbox.checked;
+        if (showPageNamesInTabsCheckbox) settings.showPageNamesInTabs = showPageNamesInTabsCheckbox.checked;
+        if (enableCustomFaviconCheckbox) settings.enableCustomFavicon = enableCustomFaviconCheckbox.checked;
     }
 
     /**
@@ -439,13 +494,54 @@ class ConfigSettings {
      * @param {boolean} enabled
      */
     toggleCustomTitleInput(enabled) {
-        const customTitleChild = document.getElementById('custom-title-child');
-        if (customTitleChild) {
-            customTitleChild.style.display = enabled ? 'block' : 'none';
+        // Find the checkbox
+        const checkbox = document.getElementById('enable-custom-title-checkbox');
+        if (!checkbox) return;
+        
+        // Find the parent item
+        const parentItem = checkbox.closest('.checkbox-tree-item');
+        if (!parentItem) return;
+        
+        // Find all sibling items after this one that are checkbox-tree-child
+        const siblings = Array.from(parentItem.parentNode.children);
+        const startIndex = siblings.indexOf(parentItem);
+        
+        for (let i = startIndex + 1; i < siblings.length; i++) {
+            const sibling = siblings[i];
+            if (sibling.classList.contains('checkbox-tree-child')) {
+                sibling.style.display = enabled ? 'block' : 'none';
+            } else {
+                // Stop at the first non-child item (assuming they are grouped)
+                break;
+            }
         }
-        const showPageChild = document.getElementById('show-page-child');
-        if (showPageChild) {
-            showPageChild.style.display = enabled ? 'block' : 'none';
+    }
+
+    /**
+     * Toggle custom favicon input visibility
+     * @param {boolean} enabled
+     */
+    toggleCustomFaviconInput(enabled) {
+        // Find the checkbox
+        const checkbox = document.getElementById('enable-custom-favicon-checkbox');
+        if (!checkbox) return;
+        
+        // Find the parent item
+        const parentItem = checkbox.closest('.checkbox-tree-item');
+        if (!parentItem) return;
+        
+        // Find all sibling items after this one that are checkbox-tree-child
+        const siblings = Array.from(parentItem.parentNode.children);
+        const startIndex = siblings.indexOf(parentItem);
+        
+        for (let i = startIndex + 1; i < siblings.length; i++) {
+            const sibling = siblings[i];
+            if (sibling.classList.contains('checkbox-tree-child')) {
+                sibling.style.display = enabled ? 'block' : 'none';
+            } else {
+                // Stop at the first non-child item (assuming they are grouped)
+                break;
+            }
         }
     }
 
@@ -472,7 +568,9 @@ class ConfigSettings {
             enableCustomTitle: false,
             customTitle: '',
             showPageInTitle: false,
-            showPageNamesInTabs: false
+            showPageNamesInTabs: false,
+            enableCustomFavicon: false,
+            customFaviconPath: ''
         };
     }
 
@@ -485,6 +583,22 @@ class ConfigSettings {
             document.body.classList.remove('no-animations');
         } else {
             document.body.classList.add('no-animations');
+        }
+    }
+
+    /**
+     * Save settings to server (used for favicon changes to always persist globally)
+     * @param {Object} settings
+     */
+    async saveSettingsToServer(settings) {
+        try {
+            await fetch('/api/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+        } catch (error) {
+            console.error('Error saving settings to server:', error);
         }
     }
 }

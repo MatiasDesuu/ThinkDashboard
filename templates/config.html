@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Configuration</title>
     <script src="/static/js/theme-loader.js"></script>
-    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="{{if and .EnableCustomFavicon .CustomFaviconPath}}{{.CustomFaviconPath}}{{else}}/static/favicon.ico{{end}}">
     <link rel="stylesheet" href="/api/theme.css">
     <link rel="stylesheet" href="/static/css/theme.css">
     <link rel="stylesheet" href="/static/css/config.css">
@@ -130,10 +130,8 @@
                     </div>
                     <div class="checkbox-tree-item checkbox-tree-child">
                         <span class="tree-symbol">└──</span>
-                        <div class="form-group">
-                            <label for="custom-title-input">Custom title:</label>
-                            <input type="text" id="custom-title-input" placeholder="Enter custom title">
-                        </div>
+                        <label for="custom-title-input">Custom title:</label>
+                        <input type="text" id="custom-title-input" placeholder="Enter custom title">
                     </div>
                     <div class="checkbox-tree-item checkbox-tree-child">
                         <span class="tree-symbol">└──</span>
@@ -159,6 +157,17 @@
                             <input type="checkbox" id="show-page-names-in-tabs-checkbox">
                             <span class="checkbox-text">Show page names in tabs</span>
                         </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="enable-custom-favicon-checkbox">
+                            <span class="checkbox-text">Enable custom favicon</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item checkbox-tree-child">
+                        <span class="tree-symbol">└──</span>
+                        <label for="custom-favicon-input">Upload favicon:</label>
+                        <input type="file" id="custom-favicon-input" accept="image/x-icon,image/png,image/jpeg,image/gif">
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">

@@ -58,6 +58,8 @@ type Settings struct {
 	CustomTitle         string `json:"customTitle"`         // Custom page title
 	ShowPageInTitle     bool   `json:"showPageInTitle"`     // Show current page name in title
 	ShowPageNamesInTabs bool   `json:"showPageNamesInTabs"` // Show page names in tabs instead of numbers
+	EnableCustomFavicon bool   `json:"enableCustomFavicon"` // Enable custom favicon
+	CustomFaviconPath   string `json:"customFaviconPath"`   // Path to custom favicon file
 }
 
 type ColorTheme struct {

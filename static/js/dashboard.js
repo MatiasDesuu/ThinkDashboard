@@ -60,13 +60,19 @@ class Dashboard {
 
             this.pages = await pagesRes.json();
             
+            // Load settings from server first
+            const serverSettings = await settingsRes.json();
+            
             // Load settings from localStorage or server based on device-specific flag
             const deviceSpecific = localStorage.getItem('deviceSpecificSettings') === 'true';
             if (deviceSpecific) {
                 const deviceSettings = localStorage.getItem('dashboardSettings');
-                this.settings = deviceSettings ? JSON.parse(deviceSettings) : await settingsRes.json();
+                this.settings = deviceSettings ? { ...serverSettings, ...JSON.parse(deviceSettings) } : serverSettings;
+                // Always use favicon settings from server, regardless of device-specific
+                this.settings.enableCustomFavicon = serverSettings.enableCustomFavicon;
+                this.settings.customFaviconPath = serverSettings.customFaviconPath;
             } else {
-                this.settings = await settingsRes.json();
+                this.settings = serverSettings;
             }
 
             // Update document title based on custom title settings

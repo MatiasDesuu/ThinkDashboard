@@ -5,8 +5,11 @@ import (
 	"embed"
 	"encoding/json"
 	"html/template"
+	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -35,25 +38,29 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 	settings := h.store.GetSettings()
 
 	data := struct {
-		Theme              string
-		FontSize           string
-		ShowBackgroundDots bool
-		ShowTitle          bool
-		ShowDate           bool
-		ShowConfigButton   bool
-		ShowSearchButton   bool
-		EnableCustomTitle  bool
-		CustomTitle        string
+		Theme               string
+		FontSize            string
+		ShowBackgroundDots  bool
+		ShowTitle           bool
+		ShowDate            bool
+		ShowConfigButton    bool
+		ShowSearchButton    bool
+		EnableCustomTitle   bool
+		CustomTitle         string
+		EnableCustomFavicon bool
+		CustomFaviconPath   string
 	}{
-		Theme:              settings.Theme,
-		FontSize:           settings.FontSize,
-		ShowBackgroundDots: settings.ShowBackgroundDots,
-		ShowTitle:          settings.ShowTitle,
-		ShowDate:           settings.ShowDate,
-		ShowConfigButton:   settings.ShowConfigButton,
-		ShowSearchButton:   settings.ShowSearchButton,
-		EnableCustomTitle:  settings.EnableCustomTitle,
-		CustomTitle:        settings.CustomTitle,
+		Theme:               settings.Theme,
+		FontSize:            settings.FontSize,
+		ShowBackgroundDots:  settings.ShowBackgroundDots,
+		ShowTitle:           settings.ShowTitle,
+		ShowDate:            settings.ShowDate,
+		ShowConfigButton:    settings.ShowConfigButton,
+		ShowSearchButton:    settings.ShowSearchButton,
+		EnableCustomTitle:   settings.EnableCustomTitle,
+		CustomTitle:         settings.CustomTitle,
+		EnableCustomFavicon: settings.EnableCustomFavicon,
+		CustomFaviconPath:   settings.CustomFaviconPath,
 	}
 
 	if err := tmpl.Execute(w, data); err != nil {
@@ -72,19 +79,23 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 	settings := h.store.GetSettings()
 
 	data := struct {
-		Theme              string
-		FontSize           string
-		ShowBackgroundDots bool
-		ShowTitle          bool
-		ShowDate           bool
-		ShowConfigButton   bool
+		Theme               string
+		FontSize            string
+		ShowBackgroundDots  bool
+		ShowTitle           bool
+		ShowDate            bool
+		ShowConfigButton    bool
+		EnableCustomFavicon bool
+		CustomFaviconPath   string
 	}{
-		Theme:              settings.Theme,
-		FontSize:           settings.FontSize,
-		ShowBackgroundDots: settings.ShowBackgroundDots,
-		ShowTitle:          settings.ShowTitle,
-		ShowDate:           settings.ShowDate,
-		ShowConfigButton:   settings.ShowConfigButton,
+		Theme:               settings.Theme,
+		FontSize:            settings.FontSize,
+		ShowBackgroundDots:  settings.ShowBackgroundDots,
+		ShowTitle:           settings.ShowTitle,
+		ShowDate:            settings.ShowDate,
+		ShowConfigButton:    settings.ShowConfigButton,
+		EnableCustomFavicon: settings.EnableCustomFavicon,
+		CustomFaviconPath:   settings.CustomFaviconPath,
 	}
 
 	if err := tmpl.Execute(w, data); err != nil {
@@ -273,6 +284,73 @@ func (h *Handlers) SaveSettings(w http.ResponseWriter, r *http.Request) {
 	h.store.SaveSettings(settings)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+}
+
+func (h *Handlers) UploadFavicon(w http.ResponseWriter, r *http.Request) {
+	// Parse multipart form
+	err := r.ParseMultipartForm(10 << 20) // 10 MB max
+	if err != nil {
+		http.Error(w, "Unable to parse form", http.StatusBadRequest)
+		return
+	}
+
+	file, header, err := r.FormFile("favicon")
+	if err != nil {
+		http.Error(w, "Error retrieving file", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	// Validate file type (should be image)
+	contentType := header.Header.Get("Content-Type")
+	if contentType != "image/x-icon" && contentType != "image/png" && contentType != "image/jpeg" && contentType != "image/gif" {
+		http.Error(w, "Invalid file type. Only ico, png, jpg, gif allowed", http.StatusBadRequest)
+		return
+	}
+
+	// Create data directory if it doesn't exist
+	dataDir := "data"
+	if _, err := os.Stat(dataDir); os.IsNotExist(err) {
+		os.MkdirAll(dataDir, 0755)
+	}
+
+	// Determine file extension
+	var ext string
+	switch contentType {
+	case "image/x-icon":
+		ext = ".ico"
+	case "image/png":
+		ext = ".png"
+	case "image/jpeg":
+		ext = ".jpg"
+	case "image/gif":
+		ext = ".gif"
+	default:
+		ext = filepath.Ext(header.Filename)
+	}
+
+	// Save file as favicon with appropriate extension
+	faviconPath := filepath.Join(dataDir, "favicon"+ext)
+	dst, err := os.Create(faviconPath)
+	if err != nil {
+		http.Error(w, "Unable to save file", http.StatusInternalServerError)
+		return
+	}
+	defer dst.Close()
+
+	_, err = io.Copy(dst, file)
+	if err != nil {
+		http.Error(w, "Unable to save file", http.StatusInternalServerError)
+		return
+	}
+
+	// Update settings with the new favicon path
+	settings := h.store.GetSettings()
+	settings.CustomFaviconPath = "/data/favicon" + ext
+	h.store.SaveSettings(settings)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success", "path": settings.CustomFaviconPath})
 }
 
 func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
