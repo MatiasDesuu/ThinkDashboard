@@ -83,39 +83,37 @@
 
 .color-text-input {
     flex: 1;
-    max-width: 200px;
+    min-width: 120px;
     padding: 0.375rem 0.5rem;
-    border: none;
-    border-bottom: 1px solid var(--border-primary);
-    border-radius: 0;
-    background: transparent;
+    border: 1px solid var(--border-primary);
+    background: var(--background-primary);
     color: var(--text-primary);
+    font-family: inherit;
     font-size: var(--font-size-text);
-    transition: border-color 0.2s ease;
+    transition: border-color 0.3s ease;
 }
 
 .color-text-input-full {
     width: 100%;
     max-width: 300px;
     padding: 0.375rem 0.5rem;
-    border: none;
-    border-bottom: 1px solid var(--border-primary);
-    border-radius: 0;
-    background: transparent;
+    border: 1px solid var(--border-primary);
+    background: var(--background-primary);
     color: var(--text-primary);
+    font-family: inherit;
     font-size: var(--font-size-text);
-    transition: border-color 0.2s ease;
+    transition: border-color 0.3s ease;
 }
 
 .color-text-input:focus,
 .color-text-input-full:focus {
     outline: none;
-    border-bottom-color: var(--text-primary);
+    border-color: var(--text-secondary);
 }
 
 .color-text-input:hover,
 .color-text-input-full:hover {
-    border-bottom-color: var(--text-secondary);
+    border-color: var(--text-secondary);
 }
 
 /* Navigation links for colors page */
