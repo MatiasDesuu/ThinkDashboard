@@ -47,6 +47,17 @@ class Dashboard {
             this.updatePageTitle(firstPage.name);
         }
 
+        // Add hash change listener for navigation
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash && /^\d+$/.test(hash)) {
+                const pageIndex = parseInt(hash) - 1;
+                if (pageIndex >= 0 && pageIndex < this.pages.length && this.pages[pageIndex].id !== this.currentPageId) {
+                    this.loadPageBookmarks(this.pages[pageIndex].id);
+                }
+            }
+        });
+
         // Show body after everything is loaded and rendered
         document.body.classList.remove('loading');
     }
@@ -78,10 +89,18 @@ class Dashboard {
             // Update document title based on custom title settings
             this.updateDocumentTitle();
 
-            // Always load the first page on dashboard load (not from settings)
-            this.currentPageId = this.pages.length > 0 ? this.pages[0].id : 'default';
+            // Check for page hash in URL
+            const hash = window.location.hash.substring(1);
+            let initialPageId = this.pages.length > 0 ? this.pages[0].id : 'default';
+            if (hash && /^\d+$/.test(hash)) {
+                const pageIndex = parseInt(hash) - 1;
+                if (pageIndex >= 0 && pageIndex < this.pages.length) {
+                    initialPageId = this.pages[pageIndex].id;
+                }
+            }
+            this.currentPageId = initialPageId;
             
-            // Load bookmarks and categories for first page
+            // Load bookmarks and categories for initial page
             await this.loadPageBookmarks(this.currentPageId);
             
             // If global shortcuts is enabled, load all bookmarks for search
@@ -103,6 +122,12 @@ class Dashboard {
             this.bookmarks = await bookmarksRes.json();
             this.categories = await categoriesRes.json();
             this.currentPageId = pageId;
+            
+            // Update URL hash
+            const pageIndex = this.pages.findIndex(p => p.id === pageId);
+            if (pageIndex !== -1) {
+                window.location.hash = `#${pageIndex + 1}`;
+            }
             
             // Update page title
             const page = this.pages.find(p => p.id === pageId);

@@ -235,7 +235,7 @@ body {
     padding-right: 32px;
     appearance: textfield;
     -moz-appearance: textfield;
-    -webkit-appearance: none;
+    -webkit-appearance: textfield;
 }
 
 /* Remove default spinners */

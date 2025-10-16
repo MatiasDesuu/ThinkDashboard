@@ -43,7 +43,7 @@ class DragReorder {
         
         // Add event listeners
         this.container.addEventListener('mousedown', (e) => this.dragStart(e));
-        this.container.addEventListener('touchstart', (e) => this.dragStart(e), { passive: true });
+        this.container.addEventListener('touchstart', (e) => this.dragStart(e), { passive: false });
         
         document.addEventListener('mouseup', () => this.dragEnd());
         document.addEventListener('touchend', () => this.dragEnd());
@@ -80,6 +80,9 @@ class DragReorder {
         }
         
         if (!targetItem || !this.container.contains(targetItem)) return;
+        
+        // Prevent default touch behavior to avoid scrolling
+        e.preventDefault();
         
         this.draggableItem = targetItem;
         this.pointerStartY = e.clientY || e.touches[0].clientY;
