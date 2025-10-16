@@ -69,6 +69,9 @@ class Dashboard {
                 this.settings = await settingsRes.json();
             }
 
+            // Update document title based on custom title settings
+            this.updateDocumentTitle();
+
             // Always load the first page on dashboard load (not from settings)
             this.currentPageId = this.pages.length > 0 ? this.pages[0].id : 'default';
             
@@ -100,6 +103,9 @@ class Dashboard {
             if (page) {
                 this.updatePageTitle(page.name);
             }
+            
+            // Update document title with page name if enabled
+            this.updateDocumentTitle();
             
             // Update search component and render
             if (this.searchComponent) {
@@ -159,6 +165,26 @@ class Dashboard {
         if (titleElement) {
             titleElement.textContent = pageName || 'dashboard';
         }
+    }
+
+    updateDocumentTitle() {
+        let title = 'Dashboard';
+        
+        if (this.settings && this.settings.enableCustomTitle) {
+            if (this.settings.customTitle && this.settings.customTitle.trim()) {
+                title = this.settings.customTitle.trim();
+            }
+            
+            // Add page name if enabled
+            if (this.settings.showPageInTitle && this.pages && this.currentPageId) {
+                const currentPage = this.pages.find(p => p.id === this.currentPageId);
+                if (currentPage && currentPage.name) {
+                    title += ' | ' + currentPage.name;
+                }
+            }
+        }
+        
+        document.title = title;
     }
 
     renderPageNavigation() {

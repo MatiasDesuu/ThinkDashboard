@@ -185,6 +185,45 @@ class ConfigSettings {
             });
         }
 
+        // Enable custom title checkbox
+        const enableCustomTitleCheckbox = document.getElementById('enable-custom-title-checkbox');
+        if (enableCustomTitleCheckbox) {
+            enableCustomTitleCheckbox.checked = settings.enableCustomTitle;
+            enableCustomTitleCheckbox.addEventListener('change', (e) => {
+                settings.enableCustomTitle = e.target.checked;
+                this.toggleCustomTitleInput(e.target.checked);
+            });
+        }
+
+        // Custom title input
+        const customTitleInput = document.getElementById('custom-title-input');
+        if (customTitleInput) {
+            customTitleInput.value = settings.customTitle || '';
+            customTitleInput.addEventListener('input', (e) => {
+                const value = e.target.value.trim();
+                settings.customTitle = value;
+                
+                // Auto-enable checkbox when user starts typing (only if not already enabled)
+                if (value && !settings.enableCustomTitle) {
+                    settings.enableCustomTitle = true;
+                    const checkbox = document.getElementById('enable-custom-title-checkbox');
+                    if (checkbox) checkbox.checked = true;
+                    this.toggleCustomTitleInput(true);
+                }
+            });
+            // Initial visibility
+            this.toggleCustomTitleInput(settings.enableCustomTitle);
+        }
+
+        // Show page in title checkbox
+        const showPageInTitleCheckbox = document.getElementById('show-page-in-title-checkbox');
+        if (showPageInTitleCheckbox) {
+            showPageInTitleCheckbox.checked = settings.showPageInTitle;
+            showPageInTitleCheckbox.addEventListener('change', (e) => {
+                settings.showPageInTitle = e.target.checked;
+            });
+        }
+
         // Show date checkbox
         const showDateCheckbox = document.getElementById('show-date-checkbox');
         if (showDateCheckbox) {
@@ -278,6 +317,9 @@ class ConfigSettings {
         const showStatusLoadingCheckbox = document.getElementById('show-status-loading-checkbox');
         const globalShortcutsCheckbox = document.getElementById('global-shortcuts-checkbox');
         const animationsEnabledCheckbox = document.getElementById('animations-enabled-checkbox');
+        const enableCustomTitleCheckbox = document.getElementById('enable-custom-title-checkbox');
+        const customTitleInput = document.getElementById('custom-title-input');
+        const showPageInTitleCheckbox = document.getElementById('show-page-in-title-checkbox');
 
         if (themeSelect) settings.theme = themeSelect.value;
         if (columnsInput) settings.columnsPerRow = parseInt(columnsInput.value);
@@ -292,6 +334,9 @@ class ConfigSettings {
         if (showPingCheckbox) settings.showPing = showPingCheckbox.checked;
         if (showStatusLoadingCheckbox) settings.showStatusLoading = showStatusLoadingCheckbox.checked;
         if (globalShortcutsCheckbox) settings.globalShortcuts = globalShortcutsCheckbox.checked;
+        if (enableCustomTitleCheckbox) settings.enableCustomTitle = enableCustomTitleCheckbox.checked;
+        if (customTitleInput) settings.customTitle = customTitleInput.value;
+        if (showPageInTitleCheckbox) settings.showPageInTitle = showPageInTitleCheckbox.checked;
     }
 
     /**
@@ -381,6 +426,21 @@ class ConfigSettings {
     }
 
     /**
+     * Toggle custom title input visibility
+     * @param {boolean} enabled
+     */
+    toggleCustomTitleInput(enabled) {
+        const customTitleChild = document.getElementById('custom-title-child');
+        if (customTitleChild) {
+            customTitleChild.style.display = enabled ? 'block' : 'none';
+        }
+        const showPageChild = document.getElementById('show-page-child');
+        if (showPageChild) {
+            showPageChild.style.display = enabled ? 'block' : 'none';
+        }
+    }
+
+    /**
      * Reset settings to defaults
      * @returns {Object} - Default settings
      */
@@ -399,7 +459,10 @@ class ConfigSettings {
             showPing: false,
             globalShortcuts: true,
             hyprMode: false,
-            animationsEnabled: true
+            animationsEnabled: true,
+            enableCustomTitle: false,
+            customTitle: '',
+            showPageInTitle: false
         };
     }
 

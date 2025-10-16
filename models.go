@@ -54,6 +54,9 @@ type Settings struct {
 	GlobalShortcuts    bool   `json:"globalShortcuts"`   // Use shortcuts from all pages
 	HyprMode           bool   `json:"hyprMode"`          // Launcher mode for PWA usage
 	AnimationsEnabled  bool   `json:"animationsEnabled"` // Enable or disable animations globally
+	EnableCustomTitle  bool   `json:"enableCustomTitle"` // Enable custom page title
+	CustomTitle        string `json:"customTitle"`       // Custom page title
+	ShowPageInTitle    bool   `json:"showPageInTitle"`   // Show current page name in title
 }
 
 type ColorTheme struct {

@@ -42,6 +42,8 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		ShowDate           bool
 		ShowConfigButton   bool
 		ShowSearchButton   bool
+		EnableCustomTitle  bool
+		CustomTitle        string
 	}{
 		Theme:              settings.Theme,
 		FontSize:           settings.FontSize,
@@ -50,6 +52,8 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		ShowDate:           settings.ShowDate,
 		ShowConfigButton:   settings.ShowConfigButton,
 		ShowSearchButton:   settings.ShowSearchButton,
+		EnableCustomTitle:  settings.EnableCustomTitle,
+		CustomTitle:        settings.CustomTitle,
 	}
 
 	if err := tmpl.Execute(w, data); err != nil {
