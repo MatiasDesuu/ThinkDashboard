@@ -26,11 +26,11 @@
 }
 
 .reorder-item.is-draggable {
-    opacity: 0.8;
+    opacity: 0.9;
     z-index: 1000;
     cursor: grabbing;
     background-color: var(--background-primary);
-    border: 1px solid var(--border-primary);
+    border: 2px solid var(--border-primary);
     padding: 0.5rem;
     margin: -0.5rem;
 }
