@@ -204,13 +204,21 @@ class Dashboard {
         if (this.settings && this.settings.enableCustomTitle) {
             if (this.settings.customTitle && this.settings.customTitle.trim()) {
                 title = this.settings.customTitle.trim();
-            }
-            
-            // Add page name if enabled
-            if (this.settings.showPageInTitle && this.pages && this.currentPageId) {
-                const currentPage = this.pages.find(p => p.id === this.currentPageId);
-                if (currentPage && currentPage.name) {
-                    title += ' | ' + currentPage.name;
+                
+                // Add page name if enabled
+                if (this.settings.showPageInTitle && this.pages && this.currentPageId) {
+                    const currentPage = this.pages.find(p => p.id === this.currentPageId);
+                    if (currentPage && currentPage.name) {
+                        title += ' | ' + currentPage.name;
+                    }
+                }
+            } else {
+                // Custom title is empty, show only page name if enabled
+                if (this.settings.showPageInTitle && this.pages && this.currentPageId) {
+                    const currentPage = this.pages.find(p => p.id === this.currentPageId);
+                    if (currentPage && currentPage.name) {
+                        title = currentPage.name;
+                    }
                 }
             }
         }
