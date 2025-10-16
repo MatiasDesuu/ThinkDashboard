@@ -242,6 +242,15 @@ class ConfigSettings {
             });
         }
 
+        // Show page names in tabs checkbox
+        const showPageNamesInTabsCheckbox = document.getElementById('show-page-names-in-tabs-checkbox');
+        if (showPageNamesInTabsCheckbox) {
+            showPageNamesInTabsCheckbox.checked = settings.showPageNamesInTabs;
+            showPageNamesInTabsCheckbox.addEventListener('change', (e) => {
+                settings.showPageNamesInTabs = e.target.checked;
+            });
+        }
+
         // Show search button checkbox
         const showSearchButtonCheckbox = document.getElementById('show-search-button-checkbox');
         if (showSearchButtonCheckbox) {
@@ -462,7 +471,8 @@ class ConfigSettings {
             animationsEnabled: true,
             enableCustomTitle: false,
             customTitle: '',
-            showPageInTitle: false
+            showPageInTitle: false,
+            showPageNamesInTabs: false
         };
     }
 

@@ -34,7 +34,8 @@ class ConfigManager {
             showStatus: false,
             showPing: false,
             globalShortcuts: true,
-            hyprMode: false
+            hyprMode: false,
+            showPageNamesInTabs: false
         };
         this.deviceSpecific = false;
 

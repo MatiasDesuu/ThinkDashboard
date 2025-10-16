@@ -199,8 +199,8 @@ class Dashboard {
             if (page.id === this.currentPageId) {
                 pageBtn.classList.add('active');
             }
-            // Show page number instead of name
-            pageBtn.textContent = (index + 1).toString();
+            // Show page number or name based on settings
+            pageBtn.textContent = this.settings.showPageNamesInTabs ? page.name : (index + 1).toString();
             pageBtn.addEventListener('click', () => {
                 // Update all buttons
                 container.querySelectorAll('.page-nav-btn').forEach(btn => {
