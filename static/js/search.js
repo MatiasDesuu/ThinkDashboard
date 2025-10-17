@@ -13,6 +13,8 @@ class SearchComponent {
         
         this.commandsComponent = new window.SearchCommandsComponent();
 
+        this.fuzzySearchComponent = new window.FuzzySearchComponent(this.bookmarks, (bookmark) => this.openBookmark(bookmark));
+
         this.init();
     }
 
@@ -24,6 +26,7 @@ class SearchComponent {
     updateData(bookmarks, settings) {
         this.bookmarks = bookmarks;
         this.settings = settings;
+        this.fuzzySearchComponent.updateBookmarks(bookmarks);
         this.buildShortcutsMap();
     }
 
@@ -51,7 +54,7 @@ class SearchComponent {
                 if (value.length > this.currentQuery.length) {
                     // Character added
                     const newChar = value[value.length - 1];
-                    if (/^[A-Z0-9: ]$/.test(newChar)) {
+                    if (/^[A-Z0-9: >]$/.test(newChar)) {
                         this.addToQuery(newChar);
                     }
                 } else if (value.length < this.currentQuery.length) {
@@ -160,6 +163,20 @@ class SearchComponent {
             return;
         }
 
+        // Handle > key to start fuzzy search
+        if (key === '>') {
+            e.preventDefault();
+            this.addToQuery('>');
+            return;
+        }
+
+        // Handle Shift + > to start fuzzy search
+        if (e.shiftKey && key === '>') {
+            e.preventDefault();
+            this.addToQuery('>');
+            return;
+        }
+
         // Handle space key for commands
         if (key === ' ' && this.currentQuery.startsWith(':')) {
             e.preventDefault();
@@ -173,7 +190,7 @@ class SearchComponent {
                 return;
             }
         } else {
-            if (!/^[A-Z:]$/.test(key)) {
+            if (!/^[A-Z:>]$/.test(key)) {
                 return;
             }
         }
@@ -224,6 +241,9 @@ class SearchComponent {
         if (this.currentQuery.startsWith(':')) {
             // Handle commands
             this.searchMatches = this.commandsComponent.handleCommand(this.currentQuery);
+        } else if (this.currentQuery.startsWith('>')) {
+            // Handle fuzzy search
+            this.searchMatches = this.fuzzySearchComponent.handleFuzzy(this.currentQuery.slice(1));
         } else {
             // Handle bookmark shortcuts
             this.shortcuts.forEach((bookmark, shortcut) => {
@@ -310,6 +330,12 @@ class SearchComponent {
         this.matchElements.forEach((element, index) => {
             if (index === this.selectedMatchIndex) {
                 element.classList.add('keyboard-selected');
+                // Scroll the selected element into view
+                element.scrollIntoView({
+                    behavior: 'instant',
+                    block: 'nearest',
+                    inline: 'nearest'
+                });
             } else {
                 element.classList.remove('keyboard-selected');
             }
@@ -322,6 +348,23 @@ class SearchComponent {
         this.selectedMatchIndex = 0;
         this.matchElements = []; // Clear element references
         this.justCompleted = false; // Reset flag
+    }
+
+    /**
+     * Highlights the matching prefix in fuzzy search results
+     * @param {string} name - The bookmark name
+     * @param {string} query - The fuzzy search query (without '>')
+     * @returns {string} HTML string with highlighted prefix
+     */
+    highlightFuzzyMatch(name, query) {
+        if (!query) return name;
+        const lowerName = name.toLowerCase();
+        const lowerQuery = query.toLowerCase();
+        if (!lowerName.startsWith(lowerQuery)) return name;
+        const highlightLength = query.length;
+        const highlighted = name.substring(0, highlightLength);
+        const rest = name.substring(highlightLength);
+        return `<span class="fuzzy-highlight">${highlighted}</span>${rest}`;
     }
 
     renderSearchMatches() {
@@ -352,13 +395,25 @@ class SearchComponent {
             const baseClass = `search-match ${index === this.selectedMatchIndex ? 'keyboard-selected' : ''}`;
             const configClass = (match.type === 'config' || match.type === 'colors') ? ' config-entry' : '';
             const commandClass = (match.type === 'command' || match.type === 'command-completion') ? ' command-entry' : '';
-            matchElement.className = baseClass + configClass + commandClass;
+            const fuzzyClass = match.type === 'fuzzy' ? ' fuzzy-entry' : '';
+            matchElement.className = baseClass + configClass + commandClass + fuzzyClass;
             
             // Get the display name based on match type
-            const displayName = (match.type === 'bookmark' || match.type === 'config' || match.type === 'colors') ? match.bookmark.name : match.name;
+            let displayName;
+            if (match.type === 'fuzzy') {
+                displayName = this.highlightFuzzyMatch(match.name, this.currentQuery.slice(1));
+            } else {
+                displayName = (match.type === 'bookmark' || match.type === 'config' || match.type === 'colors') ? match.bookmark.name : match.name;
+            }
+            
+            // For fuzzy search, don't show shortcut span to avoid empty space
+            let shortcutHtml = '';
+            if (match.type !== 'fuzzy') {
+                shortcutHtml = `<span class="search-match-shortcut">${match.shortcut.toUpperCase()}</span>`;
+            }
             
             matchElement.innerHTML = `
-                <span class="search-match-shortcut">${match.shortcut.toUpperCase()}</span>
+                ${shortcutHtml}
                 <span class="search-match-name">${displayName}</span>
             `;
             
@@ -376,6 +431,9 @@ class SearchComponent {
                     this.selectedMatchIndex = 0; // Auto-select first match after completion
                     this.updateSelectionHighlight(); // Update visual selection
                     this.justCompleted = true; // Prevent immediate execution
+                } else if (match.type === 'fuzzy') {
+                    match.action();
+                    this.closeSearch();
                 } else {
                     this.openBookmark(match.bookmark);
                 }
@@ -421,6 +479,9 @@ class SearchComponent {
                 this.selectedMatchIndex = 0; // Auto-select first match after completion
                 this.updateSelectionHighlight(); // Update visual selection
                 this.justCompleted = true; // Prevent immediate execution
+            } else if (selectedMatch.type === 'fuzzy') {
+                selectedMatch.action();
+                this.closeSearch();
             } else {
                 this.openBookmark(selectedMatch.bookmark);
             }
