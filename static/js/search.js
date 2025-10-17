@@ -343,23 +343,6 @@ class SearchComponent {
         this.justCompleted = false; // Reset flag
     }
 
-    /**
-     * Highlights the matching prefix in fuzzy search results
-     * @param {string} name - The bookmark name
-     * @param {string} query - The fuzzy search query (without '/')
-     * @returns {string} HTML string with highlighted prefix
-     */
-    highlightFuzzyMatch(name, query) {
-        if (!query) return name;
-        const lowerName = name.toLowerCase();
-        const lowerQuery = query.toLowerCase();
-        if (!lowerName.startsWith(lowerQuery)) return name;
-        const highlightLength = query.length;
-        const highlighted = name.substring(0, highlightLength);
-        const rest = name.substring(highlightLength);
-        return `<span class="fuzzy-highlight">${highlighted}</span>${rest}`;
-    }
-
     renderSearchMatches() {
         const matchesContainer = document.getElementById('search-matches');
         if (!matchesContainer) return;
@@ -394,7 +377,7 @@ class SearchComponent {
             // Get the display name based on match type
             let displayName;
             if (match.type === 'fuzzy') {
-                displayName = this.highlightFuzzyMatch(match.name, this.currentQuery.slice(1));
+                displayName = this.fuzzySearchComponent.highlightFuzzyMatch(match.name, this.currentQuery.slice(1));
             } else {
                 displayName = (match.type === 'bookmark' || match.type === 'config' || match.type === 'colors') ? match.bookmark.name : match.name;
             }
