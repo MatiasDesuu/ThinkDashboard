@@ -383,7 +383,7 @@ class Dashboard {
                 return;
             }
             
-            // Don't trigger if modifier keys are pressed
+            // Don't trigger if Ctrl, Alt, or Meta are pressed (but allow Shift)
             if (e.ctrlKey || e.altKey || e.metaKey) {
                 return;
             }
@@ -411,6 +411,38 @@ class Dashboard {
                     this.loadPageBookmarks(page.id);
                     this.updatePageTitle(page.name);
                 }
+            }
+            
+            // Handle Shift + Arrow keys for page navigation
+            if (e.shiftKey && (key === 'ArrowLeft' || key === 'ArrowRight')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Find current page index
+                const currentIndex = this.pages.findIndex(page => page.id === this.currentPageId);
+                if (currentIndex === -1) return;
+                
+                let newIndex;
+                if (key === 'ArrowLeft') {
+                    // Previous page
+                    newIndex = currentIndex > 0 ? currentIndex - 1 : this.pages.length - 1;
+                } else {
+                    // Next page
+                    newIndex = currentIndex < this.pages.length - 1 ? currentIndex + 1 : 0;
+                }
+                
+                const page = this.pages[newIndex];
+                
+                // Update navigation buttons
+                const navButtons = document.querySelectorAll('.page-nav-btn');
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                if (navButtons[newIndex]) {
+                    navButtons[newIndex].classList.add('active');
+                }
+                
+                // Load the page
+                this.loadPageBookmarks(page.id);
+                this.updatePageTitle(page.name);
             }
         });
     }
