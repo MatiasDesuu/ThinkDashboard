@@ -54,7 +54,7 @@ class SearchComponent {
                 if (value.length > this.currentQuery.length) {
                     // Character added
                     const newChar = value[value.length - 1];
-                    if (/^[A-Z0-9: >]$/.test(newChar)) {
+                    if (/^[A-Z0-9: /]$/.test(newChar)) {
                         this.addToQuery(newChar);
                     }
                 } else if (value.length < this.currentQuery.length) {
@@ -163,17 +163,10 @@ class SearchComponent {
             return;
         }
 
-        // Handle > key to start fuzzy search
-        if (key === '>') {
+        // Handle / key to start fuzzy search
+        if (key === '/') {
             e.preventDefault();
-            this.addToQuery('>');
-            return;
-        }
-
-        // Handle Shift + > to start fuzzy search
-        if (e.shiftKey && key === '>') {
-            e.preventDefault();
-            this.addToQuery('>');
+            this.addToQuery('/');
             return;
         }
 
@@ -190,7 +183,7 @@ class SearchComponent {
                 return;
             }
         } else {
-            if (!/^[A-Z:>]$/.test(key)) {
+            if (!/^[A-Z:/]$/.test(key)) {
                 return;
             }
         }
@@ -241,7 +234,7 @@ class SearchComponent {
         if (this.currentQuery.startsWith(':')) {
             // Handle commands
             this.searchMatches = this.commandsComponent.handleCommand(this.currentQuery);
-        } else if (this.currentQuery.startsWith('>')) {
+        } else if (this.currentQuery.startsWith('/')) {
             // Handle fuzzy search
             this.searchMatches = this.fuzzySearchComponent.handleFuzzy(this.currentQuery.slice(1));
         } else {
@@ -353,7 +346,7 @@ class SearchComponent {
     /**
      * Highlights the matching prefix in fuzzy search results
      * @param {string} name - The bookmark name
-     * @param {string} query - The fuzzy search query (without '>')
+     * @param {string} query - The fuzzy search query (without '/')
      * @returns {string} HTML string with highlighted prefix
      */
     highlightFuzzyMatch(name, query) {

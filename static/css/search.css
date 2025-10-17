@@ -29,6 +29,9 @@
     width: 90%;
     border: 1px solid var(--border-primary);
     background: var(--background-modal);
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh; /* Limitar altura total del contenedor */
 }
 
 .search-prompt {
@@ -77,9 +80,11 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    max-height: 60vh;
-    overflow: visible; /* Allow the > indicator to be visible and scroll if needed */
-    
+    max-height: 50vh;
+    overflow-y: auto; /* Cambiar a auto para permitir scroll */
+    overflow-x: visible; /* Mantener visible horizontalmente para el indicador */
+    padding-left: 1.5rem; /* Añadir padding para hacer espacio al indicador */
+    margin-left: -1.5rem; /* Compensar el padding para mantener alineación */
     /* Hide scrollbar but keep scrolling functionality */
     scrollbar-width: none; /* Firefox */
 }
@@ -102,7 +107,7 @@
     display: flex;
     align-items: center;
     color: var(--text-primary);
-    
+    position: relative; /* Necesario para el ::before */
     /* Remove tap highlight on mobile */
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -116,14 +121,12 @@
 .search-match.keyboard-selected {
     color: var(--text-primary);
     transform: translateX(8px);
-    position: relative;
-    overflow: visible; /* Allow the selector to be visible */
 }
 
 .search-match.keyboard-selected::before {
     content: '>';
     position: absolute;
-    left: -1.5rem;
+    left: -1.5rem; /* Ahora está dentro del área con padding */
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
 }

@@ -23,7 +23,7 @@ class FuzzySearchComponent {
 
     /**
      * Handle fuzzy search query
-     * @param {string} query - The search query (without the '>' prefix)
+     * @param {string} query - The search query (without the '/' prefix)
      * @returns {Array} Array of match objects with name and action
      */
     handleFuzzy(query) {
