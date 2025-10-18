@@ -79,7 +79,7 @@ class ConfigManager {
             this.bookmarksData = bookmarks;
             this.pagesData = pages;
             this.originalPagesData = JSON.parse(JSON.stringify(pages));
-            this.settingsData = settings;
+            this.settingsData = { ...this.settingsData, ...settings };
             this.currentPageId = settings.currentPage || 1;
             
             await this.loadPageBookmarks(this.currentPageId);
