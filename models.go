@@ -552,6 +552,7 @@ func (fs *FileStore) GetSettings() Settings {
 			GlobalShortcuts:    true,
 			HyprMode:           false,
 			AnimationsEnabled:  true,
+			Language:           "en",
 		}
 	}
 
@@ -565,6 +566,11 @@ func (fs *FileStore) GetSettings() Settings {
 		settings.FontSize = "m"
 	case "large":
 		settings.FontSize = "l"
+	}
+
+	// Set default language if empty
+	if settings.Language == "" {
+		settings.Language = "en"
 	}
 
 	// If we migrated a legacy value, persist it back to disk so clients receive normalized values
