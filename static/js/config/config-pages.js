@@ -4,8 +4,8 @@
  */
 
 class ConfigPages {
-    constructor(onUpdate) {
-        this.onUpdate = onUpdate; // Callback when pages are updated
+    constructor(t) {
+        this.t = t; // Translation function
         this.pageReorder = null;
     }
 
@@ -67,12 +67,12 @@ class ConfigPages {
         
         const isDefaultPage = page.id === 1;
         const removeButton = isDefaultPage 
-            ? '<button type="button" class="btn btn-danger" disabled title="Cannot remove default page">Remove</button>'
-            : `<button type="button" class="btn btn-danger" onclick="configManager.removePage(${index})">Remove</button>`;
+            ? `<button type="button" class="btn btn-danger" disabled title="${this.t('config.cannotRemoveDefaultPage')}">${this.t('config.remove')}</button>`
+            : `<button type="button" class="btn btn-danger" onclick="configManager.removePage(${index})">${this.t('config.remove')}</button>`;
         
         div.innerHTML = `
             <span class="drag-handle js-drag-handle" title="Drag to reorder">⠿</span>
-            <input type="text" id="page-name-${index}" name="page-name-${index}" value="${page.name}" placeholder="Page name" data-page-id="${page.id}" data-field="name">
+            <input type="text" id="page-name-${index}" name="page-name-${index}" value="${page.name}" placeholder="${this.t('config.pageNamePlaceholder')}" data-page-id="${page.id}" data-field="name">
             ${removeButton}
         `;
 
@@ -130,7 +130,7 @@ class ConfigPages {
         const maxId = pages.length > 0 ? Math.max(...pages.map(p => p.id)) : 0;
         const newPage = {
             id: maxId + 1,
-            name: `Page ${maxId + 1}`
+            name: `${this.t('config.pagePrefix')} ${maxId + 1}`
         };
         pages.push(newPage);
         return newPage;

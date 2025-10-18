@@ -53,6 +53,9 @@ func main() {
 	// Data files (for uploaded favicons, etc.)
 	r.PathPrefix("/data/").Handler(http.StripPrefix("/data/", http.FileServer(http.Dir("data/"))))
 
+	// Locales files
+	r.PathPrefix("/locales/").Handler(http.StripPrefix("/locales/", http.FileServer(http.Dir("locales/"))))
+
 	// Static files with proper MIME type handling
 	staticFS, _ := fs.Sub(embeddedFiles, "static")
 	staticHandler := http.FileServer(http.FS(staticFS))

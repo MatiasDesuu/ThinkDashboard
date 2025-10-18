@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"crypto/tls"
 	"embed"
 	"encoding/json"
@@ -49,6 +50,7 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		CustomTitle         string
 		EnableCustomFavicon bool
 		CustomFaviconPath   string
+		Language            string
 	}{
 		Theme:               settings.Theme,
 		FontSize:            settings.FontSize,
@@ -61,12 +63,18 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		CustomTitle:         settings.CustomTitle,
 		EnableCustomFavicon: settings.EnableCustomFavicon,
 		CustomFaviconPath:   settings.CustomFaviconPath,
+		Language:            settings.Language,
 	}
 
-	if err := tmpl.Execute(w, data); err != nil {
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
 		http.Error(w, "Template execution error", http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write(buf.Bytes())
 }
 
 func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
@@ -87,6 +95,7 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 		ShowConfigButton    bool
 		EnableCustomFavicon bool
 		CustomFaviconPath   string
+		Language            string
 	}{
 		Theme:               settings.Theme,
 		FontSize:            settings.FontSize,
@@ -96,12 +105,18 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 		ShowConfigButton:    settings.ShowConfigButton,
 		EnableCustomFavicon: settings.EnableCustomFavicon,
 		CustomFaviconPath:   settings.CustomFaviconPath,
+		Language:            settings.Language,
 	}
 
-	if err := tmpl.Execute(w, data); err != nil {
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
 		http.Error(w, "Template execution error", http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write(buf.Bytes())
 }
 
 func (h *Handlers) GetBookmarks(w http.ResponseWriter, r *http.Request) {
@@ -366,16 +381,23 @@ func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
 		Theme              string
 		FontSize           string
 		ShowBackgroundDots bool
+		Language           string
 	}{
 		Theme:              settings.Theme,
 		FontSize:           settings.FontSize,
 		ShowBackgroundDots: settings.ShowBackgroundDots,
+		Language:           settings.Language,
 	}
 
-	if err := tmpl.Execute(w, data); err != nil {
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
 		http.Error(w, "Template execution error", http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write(buf.Bytes())
 }
 
 func (h *Handlers) GetColors(w http.ResponseWriter, r *http.Request) {

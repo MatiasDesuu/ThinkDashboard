@@ -4,8 +4,8 @@
  */
 
 class ConfigCategories {
-    constructor(onUpdate) {
-        this.onUpdate = onUpdate; // Callback when categories are updated
+    constructor(t) {
+        this.t = t; // Translation function
         this.categoryReorder = null;
     }
 
@@ -55,8 +55,8 @@ class ConfigCategories {
         
         div.innerHTML = `
             <span class="drag-handle js-drag-handle" title="Drag to reorder">⠿</span>
-            <input type="text" id="category-name-${index}" name="category-name-${index}" value="${category.name}" placeholder="Category name" data-category-id="${category.id}" data-field="name">
-            <button type="button" class="btn btn-danger" onclick="configManager.removeCategory(${index})">Remove</button>
+            <input type="text" id="category-name-${index}" name="category-name-${index}" value="${category.name}" placeholder="${this.t('config.categoryNamePlaceholder')}" data-category-id="${category.id}" data-field="name">
+            <button type="button" class="btn btn-danger" onclick="configManager.removeCategory(${index})">${this.t('config.remove')}</button>
         `;
 
         // Add event listener for name changes
@@ -120,7 +120,7 @@ class ConfigCategories {
         }
         const newCategory = {
             id: generateId(`category-${categories.length + 1}`),
-            name: `New Category ${categories.length + 1}`
+            name: `${this.t('config.newCategoryPrefix')} ${categories.length + 1}`
         };
         categories.push(newCategory);
         return newCategory;
@@ -134,10 +134,10 @@ class ConfigCategories {
      */
     async remove(categories, index) {
         const confirmed = await window.AppModal.danger({
-            title: 'Remove Category',
-            message: 'Are you sure you want to remove this category? This action cannot be undone.',
-            confirmText: 'Remove',
-            cancelText: 'Cancel'
+            title: this.t('config.removeCategoryTitle'),
+            message: this.t('config.removeCategoryMessage'),
+            confirmText: this.t('config.remove'),
+            cancelText: this.t('config.cancel')
         });
         
         if (!confirmed) {

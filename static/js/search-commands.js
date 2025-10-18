@@ -1,6 +1,8 @@
 // Search Commands Component JavaScript
 class SearchCommandsComponent {
-    constructor() {
+    constructor(language = null) {
+        this.language = language;
+        
         // Available commands
         this.availableCommands = {
             'theme': this.handleThemeCommand.bind(this),
@@ -14,6 +16,14 @@ class SearchCommandsComponent {
         
         // Load themes on initialization
         this.loadThemes();
+    }
+
+    /**
+     * Set language for translations
+     * @param {Object} language - Language translation object
+     */
+    setLanguage(language) {
+        this.language = language;
     }
 
     /**
@@ -145,13 +155,13 @@ class SearchCommandsComponent {
     handleFontSizeCommand(args) {
         const fontSizeMap = ['xs', 's', 'sm', 'm', 'lg', 'l', 'xl'];
         const fontSizeDisplayNames = {
-            'xs': 'Extra Small',
-            's': 'Small',
-            'sm': 'Small Medium',
-            'm': 'Medium',
-            'lg': 'Large Medium',
-            'l': 'Large',
-            'xl': 'Extra Large'
+            'xs': this.language ? this.language.t('dashboard.extraSmall') : 'Extra Small',
+            's': this.language ? this.language.t('dashboard.small') : 'Small',
+            'sm': this.language ? this.language.t('dashboard.smallMedium') : 'Small Medium',
+            'm': this.language ? this.language.t('dashboard.medium') : 'Medium',
+            'lg': this.language ? this.language.t('dashboard.largeMedium') : 'Large Medium',
+            'l': this.language ? this.language.t('dashboard.large') : 'Large',
+            'xl': this.language ? this.language.t('dashboard.extraLarge') : 'Extra Large'
         };
 
         // If args has one empty string, treat as no args
@@ -196,12 +206,12 @@ class SearchCommandsComponent {
     handleColumnsCommand(args) {
         const columnMap = ['1', '2', '3', '4', '5', '6'];
         const columnDisplayNames = {
-            '1': '1 Column',
-            '2': '2 Columns',
-            '3': '3 Columns',
-            '4': '4 Columns',
-            '5': '5 Columns',
-            '6': '6 Columns'
+            '1': this.language ? this.language.t('dashboard.oneColumn') : '1 Column',
+            '2': this.language ? this.language.t('dashboard.twoColumns') : '2 Columns',
+            '3': this.language ? this.language.t('dashboard.threeColumns') : '3 Columns',
+            '4': this.language ? this.language.t('dashboard.fourColumns') : '4 Columns',
+            '5': this.language ? this.language.t('dashboard.fiveColumns') : '5 Columns',
+            '6': this.language ? this.language.t('dashboard.sixColumns') : '6 Columns'
         };
 
         // If args has one empty string, treat as no args
@@ -244,8 +254,8 @@ class SearchCommandsComponent {
      * @returns {string} The display name
      */
     getThemeDisplayName(themeId) {
-        if (themeId === 'light') return 'Light';
-        if (themeId === 'dark') return 'Dark';
+        if (themeId === 'light') return this.language ? this.language.t('dashboard.lightTheme') : 'Light';
+        if (themeId === 'dark') return this.language ? this.language.t('dashboard.darkTheme') : 'Dark';
         
         // Check custom themes
         if (this.customThemes && typeof this.customThemes === 'object') {

@@ -4,8 +4,9 @@
  */
 
 class ConfigCustomThemes {
-    constructor(onUpdate) {
+    constructor(onUpdate, t = null) {
         this.onUpdate = onUpdate; // Callback when themes are updated
+        this.t = t || ((key) => key); // Translation function, default to return key
         this.currentSelectedTheme = null; // Currently selected custom theme for editing
     }
 
@@ -64,13 +65,13 @@ class ConfigCustomThemes {
                 id="custom-theme-name-${index}" 
                 name="custom-theme-name-${index}" 
                 value="${theme.name}" 
-                placeholder="Theme name" 
+                placeholder="${this.t('config.customThemeNamePlaceholder')}" 
                 data-theme-id="${theme.id}" 
                 data-field="name">
             <button type="button" 
                     class="btn btn-danger" 
                     onclick="configManager.removeCustomTheme('${theme.id}')">
-                Remove
+                ${this.t('config.remove')}
             </button>
         `;
 
@@ -97,12 +98,12 @@ class ConfigCustomThemes {
         if (!selector) return;
 
         const currentValue = selector.value;
-        selector.innerHTML = '<option value="">Select a custom theme</option>';
+        selector.innerHTML = '<option value="">' + this.t('config.selectCustomTheme') + '</option>';
 
         Object.keys(customThemes).forEach(themeId => {
             const option = document.createElement('option');
             option.value = themeId;
-            option.textContent = customThemes[themeId].name || 'Unnamed Theme';
+            option.textContent = customThemes[themeId].name || this.t('config.unnamedTheme');
             selector.appendChild(option);
         });
 
@@ -227,7 +228,7 @@ class ConfigCustomThemes {
         }
 
         const themeCount = Object.keys(customThemes).length;
-        const themeName = `Custom Theme ${themeCount + 1}`;
+        const themeName = `${this.t('config.customThemePrefix')} ${themeCount + 1}`;
         const themeId = this.generateUniqueId();
 
         // Create new theme with default dark colors
@@ -247,10 +248,10 @@ class ConfigCustomThemes {
      */
     async remove(customThemes, themeId) {
         const confirmed = await window.AppModal.danger({
-            title: 'Remove Custom Theme',
-            message: 'Are you sure you want to remove this custom theme? This action cannot be undone.',
-            confirmText: 'Remove',
-            cancelText: 'Cancel'
+            title: this.t('config.removeCustomThemeTitle'),
+            message: this.t('config.removeCustomThemeMessage'),
+            confirmText: this.t('config.remove'),
+            cancelText: this.t('config.cancel')
         });
         
         if (!confirmed) {

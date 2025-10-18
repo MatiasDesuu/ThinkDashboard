@@ -32,10 +32,10 @@
     <div class="config-section section-header">
         <div class="container">
             <header class="header">
-                <h1 class="title">configuration</h1>
+                <h1 class="title" data-i18n="config.title">configuration</h1>
                 <div class="nav-links">
-                    <a href="/colors" class="back-link">→ customize colors</a>
-                    <a href="/" class="back-link">← back to dashboard</a>
+                    <a href="/colors" class="back-link" data-i18n="config.customizeColors">→ customize colors</a>
+                    <a href="/" class="back-link" data-i18n="config.backToDashboard">← back to dashboard</a>
                 </div>
             </header>
         </div>
@@ -46,15 +46,15 @@
         <div class="container">
             <div class="config-controls-wrapper">
                 <div class="config-actions-top">
-                    <button id="save-btn" class="btn btn-success">Save Changes</button>
-                    <button id="reset-btn" class="btn btn-secondary">Reset to Defaults</button>
+                    <button id="save-btn" class="btn btn-success" data-i18n="config.saveChanges">Save Changes</button>
+                    <button id="reset-btn" class="btn btn-secondary" data-i18n="config.resetToDefaults">Reset to Defaults</button>
                 </div>
 
                 <div class="tabs">
-                    <button class="tab-button active" data-tab="general">general</button>
-                    <button class="tab-button" data-tab="pages">pages</button>
-                    <button class="tab-button" data-tab="categories">categories</button>
-                    <button class="tab-button" data-tab="bookmarks">bookmarks</button>
+                    <button class="tab-button active" data-tab="general" data-i18n="config.generalTab">general</button>
+                    <button class="tab-button" data-tab="pages" data-i18n="config.pagesTab">pages</button>
+                    <button class="tab-button" data-tab="categories" data-i18n="config.categoriesTab">categories</button>
+                    <button class="tab-button" data-tab="bookmarks" data-i18n="config.bookmarksTab">bookmarks</button>
                 </div>
             </div>
         </div>
@@ -67,10 +67,17 @@
             <div class="tab-content active" data-tab-content="general">
             <div class="config-section">
                 <div class="form-group">
-                    <label for="theme-select">Theme:</label>
+                    <label for="theme-select" data-i18n="config.themeLabel">Theme:</label>
                     <select id="theme-select">
-                        <option value="dark">Dark</option>
-                        <option value="light">Light</option>
+                        <option value="dark" data-i18n="dashboard.darkTheme">Dark</option>
+                        <option value="light" data-i18n="dashboard.lightTheme">Light</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="language-select" data-i18n="config.languageLabel">Language:</label>
+                    <select id="language-select">
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -84,7 +91,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Font size:</label>
+                    <label data-i18n="config.fontSizeLabel">Font size:</label>
                     <div class="font-size-selector">
                         <button type="button" class="font-size-option" data-size="xs">xs</button>
                         <button type="button" class="font-size-option" data-size="s">s</button>
@@ -100,117 +107,117 @@
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="new-tab-checkbox">
-                            <span class="checkbox-text">Open links in new tab</span>
+                            <span class="checkbox-text" data-i18n="config.openLinksInNewTab">Open links in new tab</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="hypr-mode-checkbox">
-                            <span class="checkbox-text">HyprMode (Launcher mode for PWA)</span>
+                            <span class="checkbox-text" data-i18n="config.hyprMode">HyprMode (Launcher mode for PWA)</span>
                             <button type="button" id="hypr-mode-info-btn" class="info-button">ℹ</button>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-background-dots-checkbox">
-                            <span class="checkbox-text">Show background dots</span>
+                            <span class="checkbox-text" data-i18n="config.showBackgroundDots">Show background dots</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-title-checkbox">
-                            <span class="checkbox-text">Show dashboard title</span>
+                            <span class="checkbox-text" data-i18n="config.showDashboardTitle">Show dashboard title</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="enable-custom-title-checkbox">
-                            <span class="checkbox-text">Enable custom title</span>
+                            <span class="checkbox-text" data-i18n="config.enableCustomTitle">Enable custom title</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item checkbox-tree-child">
                         <span class="tree-symbol">└──</span>
-                        <label for="custom-title-input">Custom title:</label>
-                        <input type="text" id="custom-title-input" placeholder="Enter custom title">
+                        <label for="custom-title-input" data-i18n="config.customTitleLabel">Custom title:</label>
+                        <input type="text" id="custom-title-input" data-i18n-placeholder="config.customTitlePlaceholder" placeholder="Enter custom title">
                     </div>
                     <div class="checkbox-tree-item checkbox-tree-child">
                         <span class="tree-symbol">└──</span>
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-page-in-title-checkbox">
-                            <span class="checkbox-text">Show page name in title</span>
+                            <span class="checkbox-text" data-i18n="config.showPageInTitle">Show page name in title</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-date-checkbox">
-                            <span class="checkbox-text">Show date</span>
+                            <span class="checkbox-text" data-i18n="config.showDate">Show date</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-config-button-checkbox">
-                            <span class="checkbox-text">Show config button</span>
+                            <span class="checkbox-text" data-i18n="config.showConfigButton">Show config button</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-page-names-in-tabs-checkbox">
-                            <span class="checkbox-text">Show page names in tabs</span>
+                            <span class="checkbox-text" data-i18n="config.showPageNamesInTabs">Show page names in tabs</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="enable-custom-favicon-checkbox">
-                            <span class="checkbox-text">Enable custom favicon</span>
+                            <span class="checkbox-text" data-i18n="config.enableCustomFavicon">Enable custom favicon</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item checkbox-tree-child">
                         <span class="tree-symbol">└──</span>
-                        <label for="custom-favicon-input">Upload favicon:</label>
+                        <label for="custom-favicon-input" data-i18n="config.uploadFaviconLabel">Upload favicon:</label>
                         <input type="file" id="custom-favicon-input" accept="image/x-icon,image/png,image/jpeg,image/gif">
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-search-button-checkbox">
-                            <span class="checkbox-text">Show search button</span>
+                            <span class="checkbox-text" data-i18n="config.showSearchButton">Show search button</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="animations-enabled-checkbox">
-                            <span class="checkbox-text">Enable animations</span>
+                            <span class="checkbox-text" data-i18n="config.enableAnimations">Enable animations</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="device-specific-checkbox">
-                            <span class="checkbox-text">Use device-specific settings</span>
+                            <span class="checkbox-text" data-i18n="config.deviceSpecificSettings">Use device-specific settings</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="global-shortcuts-checkbox">
-                            <span class="checkbox-text">Use shortcuts from all pages</span>
+                            <span class="checkbox-text" data-i18n="config.globalShortcuts">Use shortcuts from all pages</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-status-checkbox">
-                            <span class="checkbox-text">Show bookmark status (online/offline)</span>
+                            <span class="checkbox-text" data-i18n="config.showBookmarkStatus">Show bookmark status (online/offline)</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item checkbox-tree-child">
                         <span class="tree-symbol">└──</span>
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-ping-checkbox">
-                            <span class="checkbox-text">Show ping times (ms)</span>
+                            <span class="checkbox-text" data-i18n="config.showPingTimes">Show ping times (ms)</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item checkbox-tree-child">
                         <span class="tree-symbol">└──</span>
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-status-loading-checkbox">
-                            <span class="checkbox-text">Show status loading indicator</span>
+                            <span class="checkbox-text" data-i18n="config.showStatusLoading">Show status loading indicator</span>
                         </label>
                     </div>
                 </div>
@@ -222,14 +229,14 @@
                 <div id="pages-list" class="pages-list js-list">
                     <!-- Pages will be loaded here -->
                 </div>
-                <button id="add-page-btn" class="btn btn-primary">Add Page</button>
+                <button id="add-page-btn" class="btn btn-primary" data-i18n="config.addPage">Add Page</button>
             </div>
             </div>
 
             <div class="tab-content" data-tab-content="categories">
             <div class="config-section">
                 <div class="page-selector-wrapper">
-                    <label for="categories-page-selector">Categories page:</label>
+                    <label for="categories-page-selector" data-i18n="config.categoriesPageLabel">Categories page:</label>
                     <select id="categories-page-selector" class="page-selector">
                         <!-- Pages will be loaded here -->
                     </select>
@@ -237,14 +244,14 @@
                 <div id="categories-list" class="categories-list js-list">
                     <!-- Categories will be loaded here -->
                 </div>
-                <button id="add-category-btn" class="btn btn-primary">Add Category</button>
+                <button id="add-category-btn" class="btn btn-primary" data-i18n="config.addCategory">Add Category</button>
             </div>
             </div>
 
             <div class="tab-content" data-tab-content="bookmarks">
             <div class="config-section">
                 <div class="page-selector-wrapper">
-                    <label for="page-selector">Bookmarks page:</label>
+                    <label for="page-selector" data-i18n="config.bookmarksPageLabel">Bookmarks page:</label>
                     <select id="page-selector" class="page-selector">
                         <!-- Pages will be loaded here -->
                     </select>
@@ -252,7 +259,7 @@
                 <div id="bookmarks-list" class="bookmarks-list js-list">
                     <!-- Bookmarks will be loaded here -->
                 </div>
-                <button id="add-bookmark-btn" class="btn btn-primary">Add Bookmark</button>
+                <button id="add-bookmark-btn" class="btn btn-primary" data-i18n="config.addBookmark">Add Bookmark</button>
             </div>
             </div>
 
@@ -277,6 +284,7 @@
     <script src="/static/js/config/config-categories.js"></script>
     <script src="/static/js/config/config-bookmarks.js"></script>
     <script src="/static/js/config/config-settings.js"></script>
+    <script src="/static/js/config/config-language.js"></script>
     <!-- Main config orchestrator -->
     <script src="/static/js/config.js"></script>
     <!-- Keyboard shortcuts -->

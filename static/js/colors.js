@@ -8,6 +8,7 @@ let colorsData = {
 let customThemesManager = null; // Will be initialized in DOMContentLoaded
 let currentPreviewTheme = 'dark'; // Current theme being previewed
 let settings = {}; // To store settings data
+let language = null; // Language instance for translations
 
 // Apply animations based on settings
 function applyAnimations() {
@@ -119,7 +120,7 @@ async function loadColors() {
         applyColorsToPreview();
     } catch (error) {
         console.error('Error loading colors:', error);
-        showNotification('Failed to load colors', 'error');
+        showNotification(window.t('colors.errorLoadingColors'), 'error');
     }
 }
 
@@ -221,7 +222,7 @@ async function saveColors() {
         
         if (!response.ok) throw new Error('Failed to save colors');
         
-        showNotification('Colors saved successfully!', 'success');
+        showNotification(window.t('colors.colorsSaved'), 'success');
         
         // Remove preview style since we're loading the saved version
         const previewStyle = document.getElementById('color-preview-style');
@@ -236,7 +237,7 @@ async function saveColors() {
         applyColorsToPreview();
     } catch (error) {
         console.error('Error saving colors:', error);
-        showNotification('Failed to save colors', 'error');
+        showNotification(window.t('colors.errorSavingColors'), 'error');
     }
 }
 
@@ -253,10 +254,10 @@ function reloadThemeCSS() {
 // Reset colors to defaults
 async function resetColors() {
     const confirmed = await window.AppModal.danger({
-        title: 'Reset Colors',
-        message: 'Are you sure you want to reset all DEFAULT colors (dark/light) to default values? This action cannot be undone.',
-        confirmText: 'Reset',
-        cancelText: 'Cancel'
+        title: window.t('colors.resetColorsTitle'),
+        message: window.t('colors.resetColorsMessage'),
+        confirmText: window.t('config.reset'),
+        cancelText: window.t('config.cancel')
     });
     
     if (!confirmed) return;
@@ -271,7 +272,7 @@ async function resetColors() {
         colorsData = await response.json();
         populateColorInputs();
         applyColorsToPreview();
-        showNotification('Colors reset to defaults', 'success');
+        showNotification(window.t('colors.colorsReset'), 'success');
         
         // Remove preview style since we're loading the saved version
         const previewStyle = document.getElementById('color-preview-style');
@@ -286,7 +287,7 @@ async function resetColors() {
         applyColorsToPreview();
     } catch (error) {
         console.error('Error resetting colors:', error);
-        showNotification('Failed to reset colors', 'error');
+        showNotification(window.t('colors.errorResettingColors'), 'error');
     }
 }
 
@@ -374,10 +375,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadSettings();
     applyAnimations();
     
+    // Initialize language and load translations
+    language = new ConfigLanguage();
+    const lang = document.documentElement.getAttribute('data-lang') || 'en';
+    await language.loadTranslations(lang);
+    window.t = language.t.bind(language);
+    
     // Initialize custom themes manager
     customThemesManager = new ConfigCustomThemes(() => {
         // Callback when themes are updated
-    });
+    }, language.t.bind(language));
     
     // Initialize tabs
     initTabs();

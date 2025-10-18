@@ -1,8 +1,9 @@
 // Search Component JavaScript
 class SearchComponent {
-    constructor(bookmarks = [], settings = {}) {
+    constructor(bookmarks = [], settings = {}, language = null) {
         this.bookmarks = bookmarks;
         this.settings = settings;
+        this.language = language;
         this.shortcuts = new Map();
         this.currentQuery = '';
         this.searchActive = false;
@@ -11,7 +12,7 @@ class SearchComponent {
         this.matchElements = []; // Store references to DOM elements for selection highlighting
         this.justCompleted = false; // Flag to prevent accidental execution after completion
         
-        this.commandsComponent = new window.SearchCommandsComponent();
+        this.commandsComponent = new window.SearchCommandsComponent(this.language);
 
         this.fuzzySearchComponent = new window.FuzzySearchComponent(this.bookmarks, (bookmark) => this.openBookmark(bookmark));
 
@@ -23,9 +24,11 @@ class SearchComponent {
         this.setupEventListeners();
     }
 
-    updateData(bookmarks, settings) {
+    updateData(bookmarks, settings, language = null) {
         this.bookmarks = bookmarks;
         this.settings = settings;
+        this.language = language || this.language;
+        this.commandsComponent.setLanguage(this.language);
         this.fuzzySearchComponent.updateBookmarks(bookmarks);
         this.buildShortcutsMap();
     }
@@ -249,7 +252,7 @@ class SearchComponent {
             if ('config'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
                 this.searchMatches.push({ 
                     shortcut: 'config', 
-                    bookmark: { name: 'Configuration', url: '/config' }, 
+                    bookmark: { name: this.language ? this.language.t('dashboard.configuration') : 'Configuration', url: '/config' }, 
                     type: 'config' 
                 });
             }
@@ -258,7 +261,7 @@ class SearchComponent {
             if ('colors'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
                 this.searchMatches.push({ 
                     shortcut: 'colors', 
-                    bookmark: { name: 'Color Customization', url: '/colors' }, 
+                    bookmark: { name: this.language ? this.language.t('dashboard.colorCustomization') : 'Color Customization', url: '/colors' }, 
                     type: 'colors' 
                 });
             }
@@ -358,7 +361,7 @@ class SearchComponent {
                 noMatchElement.className = 'search-match';
                 noMatchElement.innerHTML = `
                     <span class="search-match-shortcut">—</span>
-                    <span class="search-match-name">No matches found</span>
+                    <span class="search-match-name">${this.language ? this.language.t('dashboard.noMatchesFound') : 'No matches found'}</span>
                 `;
                 matchesContainer.appendChild(noMatchElement);
                 this.matchElements.push(noMatchElement); // Store reference

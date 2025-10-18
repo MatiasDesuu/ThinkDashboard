@@ -4,7 +4,9 @@
  */
 
 class ConfigSettings {
-    constructor() {
+    constructor(language) {
+        this.language = language;
+        this.t = language.t.bind(language); // Translation function
         this.customThemes = {}; // Store available custom themes (id -> name)
     }
 
@@ -37,19 +39,19 @@ class ConfigSettings {
 
         const darkOption = document.createElement('option');
         darkOption.value = 'dark';
-        darkOption.textContent = 'Dark';
+        darkOption.textContent = this.t('dashboard.darkTheme');
         themeSelect.appendChild(darkOption);
 
         const lightOption = document.createElement('option');
         lightOption.value = 'light';
-        lightOption.textContent = 'Light';
+        lightOption.textContent = this.t('dashboard.lightTheme');
         themeSelect.appendChild(lightOption);
 
         if (this.customThemes && typeof this.customThemes === 'object') {
             Object.keys(this.customThemes).forEach(themeId => {
                 const option = document.createElement('option');
                 option.value = themeId;
-                option.textContent = this.customThemes[themeId] || 'Unnamed Theme';
+                option.textContent = this.customThemes[themeId] || this.t('config.unnamedTheme');
                 themeSelect.appendChild(option);
             });
         }
@@ -67,6 +69,18 @@ class ConfigSettings {
     async setupListeners(settings, callbacks) {
         // Load custom themes first
         await this.loadCustomThemes();
+        
+        // Language select
+        const languageSelect = document.getElementById('language-select');
+        if (languageSelect) {
+            this.language.setupLanguageSelector();
+            languageSelect.addEventListener('change', async (e) => {
+                const newLang = e.target.value;
+                settings.language = newLang;
+                await this.language.loadTranslations(newLang);
+                await this.saveSettingsToServer(settings);
+            });
+        }
         
         // Theme select
         const themeSelect = document.getElementById('theme-select');
@@ -158,9 +172,9 @@ class ConfigSettings {
             hyprModeInfoBtn.addEventListener('click', () => {
                 if (window.AppModal) {
                     window.AppModal.alert({
-                        title: 'HyprMode Information',
-                        message: 'HyprMode is designed for when ThinkDashboard is installed as a Progressive Web App (PWA). When enabled, clicking on bookmarks will open them in a new browser tab and then automatically close the PWA window, mimicking the behavior of a traditional app launcher.',
-                        confirmText: 'Got it'
+                        title: this.t('config.hyprModeInfoTitle'),
+                        message: this.t('config.hyprModeInfoMessage'),
+                        confirmText: this.t('config.gotIt')
                     });
                 }
             });
@@ -382,6 +396,7 @@ class ConfigSettings {
         const showPageInTitleCheckbox = document.getElementById('show-page-in-title-checkbox');
         const showPageNamesInTabsCheckbox = document.getElementById('show-page-names-in-tabs-checkbox');
         const enableCustomFaviconCheckbox = document.getElementById('enable-custom-favicon-checkbox');
+        const languageSelect = document.getElementById('language-select');
 
         if (themeSelect) settings.theme = themeSelect.value;
         if (columnsInput) settings.columnsPerRow = parseInt(columnsInput.value);
@@ -401,6 +416,7 @@ class ConfigSettings {
         if (showPageInTitleCheckbox) settings.showPageInTitle = showPageInTitleCheckbox.checked;
         if (showPageNamesInTabsCheckbox) settings.showPageNamesInTabs = showPageNamesInTabsCheckbox.checked;
         if (enableCustomFaviconCheckbox) settings.enableCustomFavicon = enableCustomFaviconCheckbox.checked;
+        if (languageSelect) settings.language = languageSelect.value;
     }
 
     /**
@@ -570,7 +586,8 @@ class ConfigSettings {
             showPageInTitle: false,
             showPageNamesInTabs: false,
             enableCustomFavicon: false,
-            customFaviconPath: ''
+            customFaviconPath: '',
+            language: 'en'
         };
     }
 

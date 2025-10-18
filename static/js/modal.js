@@ -1,5 +1,6 @@
 class Modal {
-    constructor() {
+    constructor(language = null) {
+        this.language = language;
         this.createModalHTML();
         this.setupEventListeners();
     }
@@ -46,10 +47,10 @@ class Modal {
 
     show(options) {
         const {
-            title = 'Confirm',
-            message = 'Are you sure?',
-            confirmText = 'Confirm',
-            cancelText = 'Cancel',
+            title = this.language ? this.language.t('dashboard.confirmTitle') : 'Confirm',
+            message = this.language ? this.language.t('dashboard.confirmMessage') : 'Are you sure?',
+            confirmText = this.language ? this.language.t('dashboard.confirmTitle') : 'Confirm',
+            cancelText = this.language ? this.language.t('dashboard.cancel') : 'Cancel',
             confirmClass = '',
             onConfirm = () => {},
             onCancel = () => {},
@@ -121,7 +122,7 @@ class Modal {
             this.show({
                 ...options,
                 showCancel: false,
-                confirmText: options.confirmText || 'OK',
+                confirmText: options.confirmText || (this.language ? this.language.t('dashboard.ok') : 'OK'),
                 onConfirm: () => resolve(true)
             });
         });
@@ -132,6 +133,11 @@ class Modal {
             ...options,
             confirmClass: 'danger'
         });
+    }
+
+    // Method to update language after initialization
+    setLanguage(language) {
+        this.language = language;
     }
 }
 

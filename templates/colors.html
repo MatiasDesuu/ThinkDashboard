@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{.Theme}}" data-font-size="{{.FontSize}}" data-show-background-dots="{{.ShowBackgroundDots}}">
+<html lang="en" data-theme="{{.Theme}}" data-font-size="{{.FontSize}}" data-show-background-dots="{{.ShowBackgroundDots}}" data-lang="{{.Language}}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,10 +31,10 @@
     <div class="config-section section-header">
         <div class="container">
             <header class="header">
-                <h1 class="title">color customization</h1>
+                <h1 class="title" data-i18n="colors.title">color customization</h1>
                 <div class="nav-links">
-                    <a href="/config" class="back-link">← back to config</a>
-                    <a href="/" class="back-link">← back to dashboard</a>
+                    <a href="/config" class="back-link" data-i18n="colors.backToConfig">← back to config</a>
+                    <a href="/" class="back-link" data-i18n="config.backToDashboard">← back to dashboard</a>
                 </div>
             </header>
         </div>
@@ -45,14 +45,14 @@
         <div class="container">
             <div class="config-controls-wrapper">
                 <div class="config-actions-top">
-                    <button id="save-colors-btn" class="btn btn-success">Save Colors</button>
-                    <button id="reset-colors-btn" class="btn btn-secondary">Reset to Defaults</button>
+                    <button id="save-colors-btn" class="btn btn-success" data-i18n="colors.saveColors">Save Colors</button>
+                    <button id="reset-colors-btn" class="btn btn-secondary" data-i18n="config.resetToDefaults">Reset to Defaults</button>
                 </div>
 
                 <div class="tabs">
-                    <button class="tab-button active" data-tab="dark">dark theme</button>
-                    <button class="tab-button" data-tab="light">light theme</button>
-                    <button class="tab-button" data-tab="custom">custom themes</button>
+                    <button class="tab-button active" data-tab="dark" data-i18n="colors.darkThemeTab">dark theme</button>
+                    <button class="tab-button" data-tab="light" data-i18n="colors.lightThemeTab">light theme</button>
+                    <button class="tab-button" data-tab="custom" data-i18n="colors.customThemesTab">custom themes</button>
                 </div>
             </div>
         </div>
@@ -66,23 +66,23 @@
             <div class="config-section">
                 <div class="colors-grid">
                     <div class="color-group">
-                        <h3>text colors</h3>
+                        <h3 data-i18n="colors.textColors">text colors</h3>
                         <div class="color-item">
-                            <label for="dark-text-primary">primary:</label>
+                            <label for="dark-text-primary" data-i18n="colors.primary">primary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-text-primary" data-theme="dark" data-prop="textPrimary">
                                 <input type="text" class="color-text-input" id="dark-text-primary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="dark-text-secondary">secondary:</label>
+                            <label for="dark-text-secondary" data-i18n="colors.secondary">secondary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-text-secondary" data-theme="dark" data-prop="textSecondary">
                                 <input type="text" class="color-text-input" id="dark-text-secondary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="dark-text-tertiary">tertiary:</label>
+                            <label for="dark-text-tertiary" data-i18n="colors.tertiary">tertiary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-text-tertiary" data-theme="dark" data-prop="textTertiary">
                                 <input type="text" class="color-text-input" id="dark-text-tertiary-text" maxlength="25">
@@ -91,30 +91,30 @@
                     </div>
 
                     <div class="color-group">
-                        <h3>background colors</h3>
+                        <h3 data-i18n="colors.backgroundColors">background colors</h3>
                         <div class="color-item">
-                            <label for="dark-background-primary">primary:</label>
+                            <label for="dark-background-primary" data-i18n="colors.primary">primary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-background-primary" data-theme="dark" data-prop="backgroundPrimary">
                                 <input type="text" class="color-text-input" id="dark-background-primary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="dark-background-secondary">secondary:</label>
+                            <label for="dark-background-secondary" data-i18n="colors.secondary">secondary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-background-secondary" data-theme="dark" data-prop="backgroundSecondary">
                                 <input type="text" class="color-text-input" id="dark-background-secondary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="dark-background-dots">dots:</label>
+                            <label for="dark-background-dots" data-i18n="colors.dots">dots:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-background-dots" data-theme="dark" data-prop="backgroundDots">
                                 <input type="text" class="color-text-input" id="dark-background-dots-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="dark-background-modal">modal:</label>
+                            <label for="dark-background-modal" data-i18n="colors.modal">modal:</label>
                             <div class="color-input-wrapper">
                                 <input type="text" class="color-text-input-full" id="dark-background-modal" data-theme="dark" data-prop="backgroundModal" maxlength="30" placeholder="rgba(0, 0, 0, 0.8)">
                             </div>
@@ -122,16 +122,16 @@
                     </div>
 
                     <div class="color-group">
-                        <h3>border colors</h3>
+                        <h3 data-i18n="colors.borderColors">border colors</h3>
                         <div class="color-item">
-                            <label for="dark-border-primary">primary:</label>
+                            <label for="dark-border-primary" data-i18n="colors.primary">primary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-border-primary" data-theme="dark" data-prop="borderPrimary">
                                 <input type="text" class="color-text-input" id="dark-border-primary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="dark-border-secondary">secondary:</label>
+                            <label for="dark-border-secondary" data-i18n="colors.secondary">secondary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-border-secondary" data-theme="dark" data-prop="borderSecondary">
                                 <input type="text" class="color-text-input" id="dark-border-secondary-text" maxlength="25">
@@ -140,23 +140,23 @@
                     </div>
 
                     <div class="color-group">
-                        <h3>accent colors</h3>
+                        <h3 data-i18n="colors.accentColors">accent colors</h3>
                         <div class="color-item">
-                            <label for="dark-accent-success">success:</label>
+                            <label for="dark-accent-success" data-i18n="colors.success">success:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-accent-success" data-theme="dark" data-prop="accentSuccess">
                                 <input type="text" class="color-text-input" id="dark-accent-success-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="dark-accent-warning">warning:</label>
+                            <label for="dark-accent-warning" data-i18n="colors.warning">warning:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-accent-warning" data-theme="dark" data-prop="accentWarning">
                                 <input type="text" class="color-text-input" id="dark-accent-warning-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="dark-accent-error">error:</label>
+                            <label for="dark-accent-error" data-i18n="colors.error">error:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="dark-accent-error" data-theme="dark" data-prop="accentError">
                                 <input type="text" class="color-text-input" id="dark-accent-error-text" maxlength="25">
@@ -171,23 +171,23 @@
             <div class="config-section">
                 <div class="colors-grid">
                     <div class="color-group">
-                        <h3>text colors</h3>
+                        <h3 data-i18n="colors.textColors">text colors</h3>
                         <div class="color-item">
-                            <label for="light-text-primary">primary:</label>
+                            <label for="light-text-primary" data-i18n="colors.primary">primary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-text-primary" data-theme="light" data-prop="textPrimary">
                                 <input type="text" class="color-text-input" id="light-text-primary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="light-text-secondary">secondary:</label>
+                            <label for="light-text-secondary" data-i18n="colors.secondary">secondary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-text-secondary" data-theme="light" data-prop="textSecondary">
                                 <input type="text" class="color-text-input" id="light-text-secondary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="light-text-tertiary">tertiary:</label>
+                            <label for="light-text-tertiary" data-i18n="colors.tertiary">tertiary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-text-tertiary" data-theme="light" data-prop="textTertiary">
                                 <input type="text" class="color-text-input" id="light-text-tertiary-text" maxlength="25">
@@ -196,30 +196,30 @@
                     </div>
 
                     <div class="color-group">
-                        <h3>background colors</h3>
+                        <h3 data-i18n="colors.backgroundColors">background colors</h3>
                         <div class="color-item">
-                            <label for="light-background-primary">primary:</label>
+                            <label for="light-background-primary" data-i18n="colors.primary">primary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-background-primary" data-theme="light" data-prop="backgroundPrimary">
                                 <input type="text" class="color-text-input" id="light-background-primary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="light-background-secondary">secondary:</label>
+                            <label for="light-background-secondary" data-i18n="colors.secondary">secondary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-background-secondary" data-theme="light" data-prop="backgroundSecondary">
                                 <input type="text" class="color-text-input" id="light-background-secondary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="light-background-dots">dots:</label>
+                            <label for="light-background-dots" data-i18n="colors.dots">dots:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-background-dots" data-theme="light" data-prop="backgroundDots">
                                 <input type="text" class="color-text-input" id="light-background-dots-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="light-background-modal">modal:</label>
+                            <label for="light-background-modal" data-i18n="colors.modal">modal:</label>
                             <div class="color-input-wrapper">
                                 <input type="text" class="color-text-input-full" id="light-background-modal" data-theme="light" data-prop="backgroundModal" maxlength="30" placeholder="rgba(255, 255, 255, 0.9)">
                             </div>
@@ -227,16 +227,16 @@
                     </div>
 
                     <div class="color-group">
-                        <h3>border colors</h3>
+                        <h3 data-i18n="colors.borderColors">border colors</h3>
                         <div class="color-item">
-                            <label for="light-border-primary">primary:</label>
+                            <label for="light-border-primary" data-i18n="colors.primary">primary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-border-primary" data-theme="light" data-prop="borderPrimary">
                                 <input type="text" class="color-text-input" id="light-border-primary-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="light-border-secondary">secondary:</label>
+                            <label for="light-border-secondary" data-i18n="colors.secondary">secondary:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-border-secondary" data-theme="light" data-prop="borderSecondary">
                                 <input type="text" class="color-text-input" id="light-border-secondary-text" maxlength="25">
@@ -245,23 +245,23 @@
                     </div>
 
                     <div class="color-group">
-                        <h3>accent colors</h3>
+                        <h3 data-i18n="colors.accentColors">accent colors</h3>
                         <div class="color-item">
-                            <label for="light-accent-success">success:</label>
+                            <label for="light-accent-success" data-i18n="colors.success">success:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-accent-success" data-theme="light" data-prop="accentSuccess">
                                 <input type="text" class="color-text-input" id="light-accent-success-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="light-accent-warning">warning:</label>
+                            <label for="light-accent-warning" data-i18n="colors.warning">warning:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-accent-warning" data-theme="light" data-prop="accentWarning">
                                 <input type="text" class="color-text-input" id="light-accent-warning-text" maxlength="25">
                             </div>
                         </div>
                         <div class="color-item">
-                            <label for="light-accent-error">error:</label>
+                            <label for="light-accent-error" data-i18n="colors.error">error:</label>
                             <div class="color-input-wrapper">
                                 <input type="color" id="light-accent-error" data-theme="light" data-prop="accentError">
                                 <input type="text" class="color-text-input" id="light-accent-error-text" maxlength="25">
@@ -275,41 +275,41 @@
             <div class="tab-content" data-tab-content="custom">
             <div class="config-section">
                 <div class="page-selector-wrapper">
-                    <label for="custom-theme-selector">Select Custom Theme:</label>
+                    <label for="custom-theme-selector" data-i18n="colors.selectCustomThemeLabel">Select Custom Theme:</label>
                     <select id="custom-theme-selector" class="page-selector">
-                        <option value="">Select a custom theme</option>
+                        <option value="" data-i18n="colors.selectCustomTheme">Select a custom theme</option>
                     </select>
                 </div>
 
                 <div class="custom-themes-main-grid">
                     <div class="custom-themes-list-section">
-                        <h3>Manage Custom Themes</h3>
+                        <h3 data-i18n="colors.manageCustomThemes">Manage Custom Themes</h3>
                         <div id="custom-themes-list" class="categories-list js-list">
                             <!-- Custom themes will be rendered here -->
                         </div>
-                        <button id="add-custom-theme-btn" class="btn btn-primary">Add Custom Theme</button>
+                        <button id="add-custom-theme-btn" class="btn btn-primary" data-i18n="colors.addCustomTheme">Add Custom Theme</button>
                     </div>
 
                     <div id="custom-theme-colors-section" class="custom-theme-colors-section" style="display: none;">
                         <div class="colors-grid">
                             <div class="color-group">
-                                <h3>text colors</h3>
+                                <h3 data-i18n="colors.textColors">text colors</h3>
                                 <div class="color-item">
-                                    <label for="custom-text-primary">primary:</label>
+                                    <label for="custom-text-primary" data-i18n="colors.primary">primary:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-text-primary" data-theme="custom" data-prop="textPrimary">
                                         <input type="text" class="color-text-input" id="custom-text-primary-text" maxlength="25">
                                     </div>
                                 </div>
                                 <div class="color-item">
-                                    <label for="custom-text-secondary">secondary:</label>
+                                    <label for="custom-text-secondary" data-i18n="colors.secondary">secondary:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-text-secondary" data-theme="custom" data-prop="textSecondary">
                                         <input type="text" class="color-text-input" id="custom-text-secondary-text" maxlength="25">
                                     </div>
                                 </div>
                                 <div class="color-item">
-                                    <label for="custom-text-tertiary">tertiary:</label>
+                                    <label for="custom-text-tertiary" data-i18n="colors.tertiary">tertiary:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-text-tertiary" data-theme="custom" data-prop="textTertiary">
                                         <input type="text" class="color-text-input" id="custom-text-tertiary-text" maxlength="25">
@@ -318,30 +318,30 @@
                             </div>
 
                             <div class="color-group">
-                                <h3>background colors</h3>
+                                <h3 data-i18n="colors.backgroundColors">background colors</h3>
                                 <div class="color-item">
-                                    <label for="custom-background-primary">primary:</label>
+                                    <label for="custom-background-primary" data-i18n="colors.primary">primary:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-background-primary" data-theme="custom" data-prop="backgroundPrimary">
                                         <input type="text" class="color-text-input" id="custom-background-primary-text" maxlength="25">
                                     </div>
                                 </div>
                                 <div class="color-item">
-                                    <label for="custom-background-secondary">secondary:</label>
+                                    <label for="custom-background-secondary" data-i18n="colors.secondary">secondary:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-background-secondary" data-theme="custom" data-prop="backgroundSecondary">
                                         <input type="text" class="color-text-input" id="custom-background-secondary-text" maxlength="25">
                                     </div>
                                 </div>
                                 <div class="color-item">
-                                    <label for="custom-background-dots">dots:</label>
+                                    <label for="custom-background-dots" data-i18n="colors.dots">dots:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-background-dots" data-theme="custom" data-prop="backgroundDots">
                                         <input type="text" class="color-text-input" id="custom-background-dots-text" maxlength="25">
                                     </div>
                                 </div>
                                 <div class="color-item">
-                                    <label for="custom-background-modal">modal:</label>
+                                    <label for="custom-background-modal" data-i18n="colors.modal">modal:</label>
                                     <div class="color-input-wrapper">
                                         <input type="text" class="color-text-input-full" id="custom-background-modal" data-theme="custom" data-prop="backgroundModal" maxlength="30" placeholder="rgba(0, 0, 0, 0.8)">
                                     </div>
@@ -349,16 +349,16 @@
                             </div>
 
                             <div class="color-group">
-                                <h3>border colors</h3>
+                                <h3 data-i18n="colors.borderColors">border colors</h3>
                                 <div class="color-item">
-                                    <label for="custom-border-primary">primary:</label>
+                                    <label for="custom-border-primary" data-i18n="colors.primary">primary:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-border-primary" data-theme="custom" data-prop="borderPrimary">
                                         <input type="text" class="color-text-input" id="custom-border-primary-text" maxlength="25">
                                     </div>
                                 </div>
                                 <div class="color-item">
-                                    <label for="custom-border-secondary">secondary:</label>
+                                    <label for="custom-border-secondary" data-i18n="colors.secondary">secondary:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-border-secondary" data-theme="custom" data-prop="borderSecondary">
                                         <input type="text" class="color-text-input" id="custom-border-secondary-text" maxlength="25">
@@ -367,23 +367,23 @@
                             </div>
 
                             <div class="color-group">
-                                <h3>accent colors</h3>
+                                <h3 data-i18n="colors.accentColors">accent colors</h3>
                                 <div class="color-item">
-                                    <label for="custom-accent-success">success:</label>
+                                    <label for="custom-accent-success" data-i18n="colors.success">success:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-accent-success" data-theme="custom" data-prop="accentSuccess">
                                         <input type="text" class="color-text-input" id="custom-accent-success-text" maxlength="25">
                                     </div>
                                 </div>
                                 <div class="color-item">
-                                    <label for="custom-accent-warning">warning:</label>
+                                    <label for="custom-accent-warning" data-i18n="colors.warning">warning:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-accent-warning" data-theme="custom" data-prop="accentWarning">
                                         <input type="text" class="color-text-input" id="custom-accent-warning-text" maxlength="25">
                                     </div>
                                 </div>
                                 <div class="color-item">
-                                    <label for="custom-accent-error">error:</label>
+                                    <label for="custom-accent-error" data-i18n="colors.error">error:</label>
                                     <div class="color-input-wrapper">
                                         <input type="color" id="custom-accent-error" data-theme="custom" data-prop="accentError">
                                         <input type="text" class="color-text-input" id="custom-accent-error-text" maxlength="25">
@@ -407,16 +407,22 @@
     <script src="/static/js/modal.js"></script>
     <!-- Custom select component (used by config pages) -->
     <script src="/static/js/select.js"></script>
+    <script src="/static/js/config/config-language.js"></script>
     <script src="/static/js/config/config-custom-themes.js"></script>
     <script src="/static/js/colors.js"></script>
 
     <script>
         // Ensure custom selects are initialized on this page (if the function exists)
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             if (typeof initCustomSelects === 'function') {
                 // Initialize selects excluding any that opt-out
                 try { initCustomSelects(); } catch (e) { console.error('initCustomSelects error', e); }
             }
+
+            // Initialize language
+            const language = document.documentElement.getAttribute('data-lang') || 'en';
+            const configLanguage = new ConfigLanguage();
+            await configLanguage.init(language);
         });
     </script>
 </body>

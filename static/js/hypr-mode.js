@@ -5,16 +5,19 @@
  */
 
 class HyprMode {
-    constructor() {
+    constructor(language = null) {
         this.enabled = false;
+        this.language = language;
     }
 
     /**
      * Initialize HyprMode with settings
      * @param {boolean} enabled - Whether HyprMode is enabled
+     * @param {Object} language - Language translation object
      */
-    init(enabled) {
+    init(enabled, language = null) {
         this.enabled = enabled;
+        this.language = language || this.language;
     }
 
     /**
@@ -101,7 +104,7 @@ class HyprMode {
                     <!DOCTYPE html>
                     <html>
                     <head>
-                        <title>Closing...</title>
+                        <title>${this.language ? this.language.t('dashboard.closingTitle') : 'Closing...'}</title>
                         <style>
                             body {
                                 display: flex;
@@ -116,14 +119,16 @@ class HyprMode {
                         </style>
                     </head>
                     <body>
-                        <div>You can close this window now</div>
+                        <div>${this.language ? this.language.t('dashboard.closingMessage') : 'You can close this window now'}</div>
                         <script>
                             // Try to close immediately
                             window.close();
                             // If still open after 500ms, show message
                             setTimeout(function() {
                                 if (!window.closed) {
-                                    document.body.innerHTML = '<div style="text-align: center;"><h2>Please close this window</h2><p>(Ctrl+W or Cmd+W)</p></div>';
+                                    const pleaseCloseText = this.language ? this.language.t('dashboard.pleaseCloseWindow') : 'Please close this window';
+                                    const shortcutHint = this.language ? this.language.t('dashboard.closeShortcutHint') : '(Ctrl+W or Cmd+W)';
+                                    document.body.innerHTML = '<div style="text-align: center;"><h2>' + pleaseCloseText + '</h2><p>' + shortcutHint + '</p></div>';
                                 }
                             }, 500);
                         </script>

@@ -4,8 +4,8 @@
  */
 
 class ConfigBookmarks {
-    constructor(onUpdate) {
-        this.onUpdate = onUpdate; // Callback when bookmarks are updated
+    constructor(t) {
+        this.t = t; // Translation function
         this.bookmarkReorder = null;
     }
 
@@ -49,20 +49,20 @@ class ConfigBookmarks {
 
         div.innerHTML = `
             <span class="drag-handle js-drag-handle" title="Drag to reorder">⠿</span>
-            <input type="text" id="bookmark-name-${index}" name="bookmark-name-${index}" value="${bookmark.name}" placeholder="Bookmark name" data-bookmark-key="${index}" data-field="name">
-            <input type="url" id="bookmark-url-${index}" name="bookmark-url-${index}" value="${bookmark.url}" placeholder="https://example.com" data-bookmark-key="${index}" data-field="url">
-            <input type="text" id="bookmark-shortcut-${index}" name="bookmark-shortcut-${index}" value="${bookmark.shortcut || ''}" placeholder="Keys (Y, YS, YC)" maxlength="5" data-bookmark-key="${index}" data-field="shortcut">
+            <input type="text" id="bookmark-name-${index}" name="bookmark-name-${index}" value="${bookmark.name}" placeholder="${this.t('config.bookmarkNamePlaceholder')}" data-bookmark-key="${index}" data-field="name">
+            <input type="url" id="bookmark-url-${index}" name="bookmark-url-${index}" value="${bookmark.url}" placeholder="${this.t('config.bookmarkUrlPlaceholder')}" data-bookmark-key="${index}" data-field="url">
+            <input type="text" id="bookmark-shortcut-${index}" name="bookmark-shortcut-${index}" value="${bookmark.shortcut || ''}" placeholder="${this.t('config.bookmarkShortcutPlaceholder')}" maxlength="5" data-bookmark-key="${index}" data-field="shortcut">
             <select id="bookmark-category-${index}" name="bookmark-category-${index}" data-bookmark-key="${index}" data-field="category">
-                <option value="">No category</option>
+                <option value="">${this.t('config.noCategory')}</option>
                 ${categoryOptions}
             </select>
             <div class="bookmark-status-toggle">
                 <label class="checkbox-label">
                     <input type="checkbox" id="bookmark-checkStatus-${index}" name="bookmark-checkStatus-${index}" ${bookmark.checkStatus ? 'checked' : ''} data-bookmark-key="${index}" data-field="checkStatus">
-                    <span class="checkbox-text">status</span>
+                    <span class="checkbox-text">${this.t('config.status')}</span>
                 </label>
             </div>
-            <button type="button" class="btn btn-danger" onclick="configManager.removeBookmark(${index})">Remove</button>
+            <button type="button" class="btn btn-danger" onclick="configManager.removeBookmark(${index})">${this.t('config.remove')}</button>
         `;
 
         // Store reference to the actual bookmark object
@@ -141,7 +141,7 @@ class ConfigBookmarks {
      */
     add(bookmarks) {
         const newBookmark = {
-            name: `New Bookmark ${bookmarks.length + 1}`,
+            name: `${this.t('config.newBookmarkPrefix')} ${bookmarks.length + 1}`,
             url: 'https://example.com',
             shortcut: '',
             category: '',
@@ -159,10 +159,10 @@ class ConfigBookmarks {
      */
     async remove(bookmarks, index) {
         const confirmed = await window.AppModal.danger({
-            title: 'Remove Bookmark',
-            message: 'Are you sure you want to remove this bookmark? This action cannot be undone.',
-            confirmText: 'Remove',
-            cancelText: 'Cancel'
+            title: this.t('config.removeBookmarkTitle'),
+            message: this.t('config.removeBookmarkMessage'),
+            confirmText: this.t('config.remove'),
+            cancelText: this.t('config.cancel')
         });
         
         if (!confirmed) {

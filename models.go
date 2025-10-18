@@ -60,6 +60,7 @@ type Settings struct {
 	ShowPageNamesInTabs bool   `json:"showPageNamesInTabs"` // Show page names in tabs instead of numbers
 	EnableCustomFavicon bool   `json:"enableCustomFavicon"` // Enable custom favicon
 	CustomFaviconPath   string `json:"customFaviconPath"`   // Path to custom favicon file
+	Language            string `json:"language"`            // Language code, e.g., "en" or "es"
 }
 
 type ColorTheme struct {
@@ -179,6 +180,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			GlobalShortcuts:    true,
 			HyprMode:           false,
 			AnimationsEnabled:  true, // Default to animations enabled
+			Language:           "en",
 		}
 		data, _ := json.MarshalIndent(defaultSettings, "", "  ")
 		os.WriteFile(fs.settingsFile, data, 0644)
@@ -200,7 +202,7 @@ func (fs *FileStore) ensureDataDir() {
 // getDefaultNewPageCategories returns the default categories for a newly created page
 func getDefaultNewPageCategories() []Category {
 	return []Category{
-		{ID: "others", Name: "Others"},
+		{ID: "others", Name: "dashboard.others"},
 	}
 }
 

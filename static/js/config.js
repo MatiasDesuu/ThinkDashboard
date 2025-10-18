@@ -9,10 +9,11 @@ class ConfigManager {
         this.storage = new ConfigStorage();
         this.data = new ConfigData(this.storage);
         this.ui = new ConfigUI();
-        this.pages = new ConfigPages();
-        this.categories = new ConfigCategories();
-        this.bookmarks = new ConfigBookmarks();
-        this.settings = new ConfigSettings();
+        this.language = new ConfigLanguage();
+        this.pages = new ConfigPages(this.language.t.bind(this.language));
+        this.categories = new ConfigCategories(this.language.t.bind(this.language));
+        this.bookmarks = new ConfigBookmarks(this.language.t.bind(this.language));
+        this.settings = new ConfigSettings(this.language);
 
         // Data
         this.pagesData = [];
@@ -35,7 +36,8 @@ class ConfigManager {
             showPing: false,
             globalShortcuts: true,
             hyprMode: false,
-            showPageNamesInTabs: false
+            showPageNamesInTabs: false,
+            language: 'en'
         };
         this.deviceSpecific = false;
 
@@ -44,8 +46,15 @@ class ConfigManager {
 
     async init() {
         await this.loadData();
+        await this.language.init(this.settingsData.language);
         this.setupDOM();
         await this.setupEventListeners();
+        this.language.setupLanguageSelector();
+        
+        // Set language for global modal
+        if (window.AppModal) {
+            window.AppModal.setLanguage(this.language);
+        }
         this.renderConfig();
         this.initReordering();
         
@@ -76,7 +85,7 @@ class ConfigManager {
             await this.loadPageBookmarks(this.currentPageId);
         } catch (error) {
             console.error('Error loading data:', error);
-            this.ui.showNotification('Error loading configuration', 'error');
+            this.ui.showNotification(this.language.t('config.errorLoadingConfig'), 'error');
         }
     }
 
@@ -84,7 +93,7 @@ class ConfigManager {
         try {
             this.currentPageId = pageId;
             this.bookmarksData = await this.data.loadBookmarksByPage(pageId);
-            this.bookmarksPageCategories = await this.data.loadCategoriesByPage(pageId);
+            this.bookmarksPageCategories = (await this.data.loadCategoriesByPage(pageId)).map(cat => ({ ...cat, name: this.language.t(cat.name) || cat.name }));
             
             this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
             this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
@@ -92,21 +101,21 @@ class ConfigManager {
             });
         } catch (error) {
             console.error('Error loading page bookmarks:', error);
-            this.ui.showNotification('Error loading bookmarks for page', 'error');
+            this.ui.showNotification(this.language.t('config.errorLoadingBookmarks'), 'error');
         }
     }
 
     async loadPageCategories(pageId) {
         try {
             this.currentCategoriesPageId = parseInt(pageId);
-            this.categoriesData = await this.data.loadCategoriesByPage(pageId);
+            this.categoriesData = (await this.data.loadCategoriesByPage(pageId)).map(cat => ({ ...cat, name: this.language.t(cat.name) || cat.name }));
             this.categories.render(this.categoriesData, this.generateId.bind(this));
             this.categories.initReorder(this.categoriesData, (newCategories) => {
                 this.categoriesData = newCategories;
             });
         } catch (error) {
             console.error('Error loading categories for page:', error);
-            this.ui.showNotification('Error loading categories for page', 'error');
+            this.ui.showNotification(this.language.t('config.errorLoadingCategories'), 'error');
         }
     }
 
@@ -137,6 +146,8 @@ class ConfigManager {
             }
         });
 
+
+
         const deviceSpecificCheckbox = document.getElementById('device-specific-checkbox');
         if (deviceSpecificCheckbox) {
             deviceSpecificCheckbox.checked = this.deviceSpecific;
@@ -145,8 +156,8 @@ class ConfigManager {
                 this.storage.setDeviceSpecificFlag(this.deviceSpecific);
                 
                 const message = this.deviceSpecific 
-                    ? 'Device-specific settings enabled. Settings will now be stored locally.'
-                    : 'Device-specific settings disabled. Current values will be saved to global settings when you click Save.';
+                    ? this.language.t('config.deviceSpecificEnabled')
+                    : this.language.t('config.deviceSpecificDisabled');
                 
                 if (this.deviceSpecific) {
                     this.storage.saveDeviceSettings(this.settingsData);
@@ -278,7 +289,7 @@ class ConfigManager {
     async addPage() {
         const newPage = this.pages.add(this.pagesData, this.generateId.bind(this));
         
-        const defaultCategories = [{ id: 'others', name: 'Others' }];
+        const defaultCategories = [{ id: 'others', name: 'dashboard.others' }];
         try {
             await this.data.saveCategoriesByPage(defaultCategories, newPage.id);
             await this.data.saveBookmarks([], newPage.id);
@@ -339,15 +350,15 @@ class ConfigManager {
         if (!page) return;
         
         if (page.id === 1) {
-            this.ui.showNotification('Cannot remove the main page', 'error');
+            this.ui.showNotification(this.language.t('config.cannotRemoveMainPage'), 'error');
             return;
         }
         
         const confirmed = await window.AppModal.danger({
-            title: 'Remove Page',
-            message: `Are you sure you want to remove the page "${page.name}"? All bookmarks in this page will be deleted. This action cannot be undone.`,
-            confirmText: 'Remove',
-            cancelText: 'Cancel'
+            title: this.language.t('config.removePageTitle'),
+            message: this.language.t('config.removePageMessage').replace('{pageName}', page.name),
+            confirmText: this.language.t('config.remove'),
+            cancelText: this.language.t('config.cancel')
         });
         
         if (!confirmed) return;
@@ -389,10 +400,10 @@ class ConfigManager {
                 });
             }
             
-            this.ui.showNotification('Page deleted successfully', 'success');
+            this.ui.showNotification(this.language.t('config.pageDeleted'), 'success');
         } catch (error) {
             console.error('Error deleting page:', error);
-            this.ui.showNotification('Error deleting page', 'error');
+            this.ui.showNotification(this.language.t('config.errorDeletingPage'), 'error');
         }
     }
 
@@ -414,7 +425,7 @@ class ConfigManager {
             this.categories.initReorder(this.categoriesData, (newCategories) => {
                 this.categoriesData = newCategories;
             });
-            this.ui.showNotification('Category removed and cleared from bookmarks', 'success');
+            this.ui.showNotification(this.language.t('config.categoryRemoved'), 'success');
         }
     }
 
@@ -453,7 +464,14 @@ class ConfigManager {
             if (this.currentCategoriesPageId) {
                 const categoriesForSelectedPage = this.getCategoriesFromDOM();
                 if (categoriesForSelectedPage && categoriesForSelectedPage.length >= 0) {
-                    await this.data.saveCategoriesByPage(categoriesForSelectedPage, this.currentCategoriesPageId);
+                    // Normalize default category name back to key
+                    const normalizedCategories = categoriesForSelectedPage.map(cat => {
+                        if (cat.name === this.language.t('dashboard.others')) {
+                            return { ...cat, name: 'dashboard.others' };
+                        }
+                        return cat;
+                    });
+                    await this.data.saveCategoriesByPage(normalizedCategories, this.currentCategoriesPageId);
                 }
             }
             
@@ -466,19 +484,19 @@ class ConfigManager {
             }
 
             this.originalPagesData = JSON.parse(JSON.stringify(this.pagesData));
-            this.ui.showNotification('Configuration saved successfully!', 'success');
+            this.ui.showNotification(this.language.t('config.configSaved'), 'success');
         } catch (error) {
             console.error('Error saving configuration:', error);
-            this.ui.showNotification('Error saving configuration', 'error');
+            this.ui.showNotification(this.language.t('config.errorSavingConfig'), 'error');
         }
     }
 
     async resetToDefaults() {
         const confirmed = await window.AppModal.danger({
-            title: 'Reset Settings',
-            message: 'Are you sure you want to reset all settings to defaults? This will remove all your bookmarks and categories. This action cannot be undone.',
-            confirmText: 'Reset',
-            cancelText: 'Cancel'
+            title: this.language.t('config.resetSettingsTitle'),
+            message: this.language.t('config.resetSettingsMessage'),
+            confirmText: this.language.t('config.reset'),
+            cancelText: this.language.t('config.cancel')
         });
         
         if (!confirmed) return;
@@ -515,7 +533,7 @@ class ConfigManager {
         this.setupDOM();
         this.renderConfig();
         this.initReordering();
-        this.ui.showNotification('Settings reset to defaults', 'success');
+        this.ui.showNotification(this.language.t('config.settingsReset'), 'success');
     }
 
     generateId(text) {

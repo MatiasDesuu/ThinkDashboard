@@ -19,18 +19,21 @@ class Dashboard {
             showStatus: false,
             showPing: false,
             globalShortcuts: true,
-            hyprMode: false
+            hyprMode: false,
+            language: 'en'
         };
         this.searchComponent = null;
         this.statusMonitor = null;
         this.statusMonitorInitialized = false;
         this.keyboardNavigation = null;
         this.swipeNavigation = null;
+        this.language = new ConfigLanguage();
         this.init();
     }
 
     async init() {
         await this.loadData();
+        await this.language.init(this.settings.language);
         this.setupDOM();
         this.initializeSearchComponent();
         this.initializeStatusMonitor();
@@ -120,7 +123,7 @@ class Dashboard {
             ]);
             
             this.bookmarks = await bookmarksRes.json();
-            this.categories = await categoriesRes.json();
+            this.categories = (await categoriesRes.json()).map(cat => ({ ...cat, name: this.language.t(cat.name) || cat.name }));
             this.currentPageId = pageId;
             
             // Update URL hash
@@ -194,7 +197,7 @@ class Dashboard {
     updatePageTitle(pageName) {
         const titleElement = document.querySelector('.title');
         if (titleElement) {
-            titleElement.textContent = pageName || 'dashboard';
+            titleElement.textContent = pageName || this.language.t('dashboard.defaultPageTitle');
         }
     }
 
@@ -308,7 +311,7 @@ class Dashboard {
         const bookmarksForSearch = this.settings.globalShortcuts ? this.allBookmarks : this.bookmarks;
         
         if (window.SearchComponent) {
-            this.searchComponent = new window.SearchComponent(bookmarksForSearch, this.settings);
+            this.searchComponent = new window.SearchComponent(bookmarksForSearch, this.settings, this.language);
         } else {
             console.warn('SearchComponent not found. Make sure search.js is loaded.');
         }
@@ -319,7 +322,7 @@ class Dashboard {
         if (this.searchComponent) {
             // Use all bookmarks if global shortcuts is enabled, otherwise just current page
             const bookmarksForSearch = this.settings.globalShortcuts ? this.allBookmarks : this.bookmarks;
-            this.searchComponent.updateData(bookmarksForSearch, this.settings);
+            this.searchComponent.updateData(bookmarksForSearch, this.settings, this.language);
         }
     }
 
@@ -355,7 +358,7 @@ class Dashboard {
     initializeHyprMode() {
         // Initialize HyprMode component
         if (window.hyprMode) {
-            window.hyprMode.init(this.settings.hyprMode || false);
+            window.hyprMode.init(this.settings.hyprMode || false, this.language);
         } else {
             console.warn('HyprMode not found. Make sure hypr-mode.js is loaded.');
         }
@@ -471,7 +474,7 @@ class Dashboard {
         // Handle bookmarks without category
         const uncategorizedBookmarks = groupedBookmarks[''] || [];
         if (uncategorizedBookmarks.length > 0) {
-            const uncategorizedCategory = { id: '', name: 'Other' };
+            const uncategorizedCategory = { id: '', name: this.language.t('dashboard.uncategorized') };
             const categoryElement = this.createCategoryElement(uncategorizedCategory, uncategorizedBookmarks);
             container.appendChild(categoryElement);
         }
@@ -581,7 +584,7 @@ class Dashboard {
             if (!titleWrapper) {
                 titleWrapper = document.createElement('div');
                 titleWrapper.className = 'title-wrapper';
-                titleWrapper.innerHTML = '<h1 class="title">dashboard</h1>';
+                titleWrapper.innerHTML = `<h1 class="title">${this.language.t('dashboard.defaultPageTitle')}</h1>`;
 
                 const titleContainer = document.querySelector('.dashboard-section.section-title .container');
                 if (titleContainer) {
@@ -653,7 +656,7 @@ class Dashboard {
             if (!configLink) {
                 configLink = document.createElement('div');
                 configLink.className = 'config-link';
-                configLink.innerHTML = '<a href="/config">config</a>';
+                configLink.innerHTML = `<a href="/config">${this.language.t('dashboard.config')}</a>`;
 
                 // Add to header at the end (use safe header container)
                 const header = this.getHeaderContainer();
@@ -676,10 +679,10 @@ class Dashboard {
                 searchButton = document.createElement('button');
                 searchButton.id = 'search-button';
                 searchButton.className = 'search-button';
-                searchButton.setAttribute('aria-label', 'Open search');
+                searchButton.setAttribute('aria-label', this.language.t('dashboard.searchAriaLabel'));
                 searchButton.innerHTML = `
-                    <span class="search-button-icon">></span>
-                    <span class="search-button-text">search</span>
+                    <span class="search-button-icon">${this.language.t('dashboard.searchPrefix')}</span>
+                    <span class="search-button-text">${this.language.t('dashboard.searchButton')}</span>
                 `;
                 
                 // Add click handler

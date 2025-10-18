@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{.Theme}}" data-font-size="{{.FontSize}}" data-show-background-dots="{{.ShowBackgroundDots}}">
+<html lang="en" data-theme="{{.Theme}}" data-font-size="{{.FontSize}}" data-show-background-dots="{{.ShowBackgroundDots}}" data-lang="{{.Language}}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +33,7 @@
             <div class="header-top">
                 {{if .ShowDate}}<div id="date-element" class="date"></div>{{end}}
                 <div id="status-loading-indicator" class="status-loading-indicator">
-                    <span class="status-loading-text">checking status</span>
+                    <span class="status-loading-text" data-i18n="dashboard.checkingStatus">checking status</span>
                     <span class="status-loading-dots"></span>
                 </div>
                 <div class="header-actions">
@@ -41,7 +41,7 @@
                         <!-- Pages will be loaded here -->
                     </div>
                     {{if .ShowConfigButton}}<div class="config-link">
-                        <a href="/config">config</a>
+                        <a href="/config" data-i18n="dashboard.config">config</a>
                     </div>{{end}}
                 </div>
             </div>
@@ -68,9 +68,9 @@
     <div id="shortcut-search" class="shortcut-search">
         <div class="search-container">
             <div class="search-prompt">
-                <span class="search-prefix">></span>
+                <span class="search-prefix" data-i18n="dashboard.searchPrefix">></span>
                 <span id="search-query" class="search-query"></span>
-                <span class="search-cursor">_</span>
+                <span class="search-cursor" data-i18n="dashboard.searchCursor">_</span>
             </div>
             <input type="text" id="search-input-mobile" class="search-input-mobile" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
             <div id="search-matches" class="search-matches"></div>
@@ -78,12 +78,13 @@
     </div>
 
     <!-- Search Button -->
-    {{if .ShowSearchButton}}<button id="search-button" class="search-button" aria-label="Open search">
-        <span class="search-button-icon">></span>
-        <span class="search-button-text">search</span>
+    {{if .ShowSearchButton}}<button id="search-button" class="search-button" data-i18n="dashboard.searchAriaLabel" aria-label="Open search">
+        <span class="search-button-icon" data-i18n="dashboard.searchPrefix">></span>
+        <span class="search-button-text" data-i18n="dashboard.searchButton">search</span>
     </button>{{end}}
 
     <script src="/static/js/modal.js"></script>
+    <script src="/static/js/config/config-language.js"></script>
     <script src="/static/js/search-commands.js"></script>
     <script src="/static/js/fuzzy-search.js"></script>
     <script src="/static/js/search.js"></script>
@@ -92,5 +93,13 @@
     <script src="/static/js/swipe-navigation.js"></script>
     <script src="/static/js/hypr-mode.js"></script>
     <script src="/static/js/dashboard.js"></script>
+    <script>
+        // Load translations
+        document.addEventListener('DOMContentLoaded', async () => {
+            const language = new ConfigLanguage();
+            const lang = document.documentElement.getAttribute('data-lang') || 'en';
+            await language.loadTranslations(lang);
+        });
+    </script>
 </body>
 </html>
