@@ -28,6 +28,7 @@ COPY --from=builder /app/main .
 # Copy static and template files (for development/debugging if needed)
 COPY --from=builder /app/static ./static
 COPY --from=builder /app/templates ./templates
+COPY --from=builder /app/locales ./locales
 
 # Create data directory
 RUN mkdir -p /app/data
