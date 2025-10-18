@@ -40,12 +40,13 @@ class ConfigLanguage {
      * @returns {string} Translated text or key if not found
      */
     t(key) {
+        if (typeof key !== 'string') return String(key);
         const keys = key.split('.');
         let value = this.translations;
         for (const k of keys) {
             value = value?.[k];
         }
-        return value || key;
+        return typeof value === 'string' ? value : key;
     }
 
     /**

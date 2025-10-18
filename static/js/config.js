@@ -96,7 +96,7 @@ class ConfigManager {
         try {
             this.currentPageId = pageId;
             this.bookmarksData = await this.data.loadBookmarksByPage(pageId);
-            this.bookmarksPageCategories = (await this.data.loadCategoriesByPage(pageId)).map(cat => ({ ...cat, name: this.language.t(cat.name) || cat.name }));
+            this.bookmarksPageCategories = (await this.data.loadCategoriesByPage(pageId)).map(cat => ({ ...cat }));
             
             this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
             this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
@@ -111,7 +111,7 @@ class ConfigManager {
     async loadPageCategories(pageId) {
         try {
             this.currentCategoriesPageId = parseInt(pageId);
-            this.categoriesData = (await this.data.loadCategoriesByPage(pageId)).map(cat => ({ ...cat, name: this.language.t(cat.name) || cat.name }));
+            this.categoriesData = (await this.data.loadCategoriesByPage(pageId)).map(cat => ({ ...cat }));
             this.categories.render(this.categoriesData, this.generateId.bind(this));
             this.categories.initReorder(this.categoriesData, (newCategories) => {
                 this.categoriesData = newCategories;
@@ -292,7 +292,7 @@ class ConfigManager {
     async addPage() {
         const newPage = this.pages.add(this.pagesData, this.generateId.bind(this));
         
-        const defaultCategories = [{ id: 'others', name: 'dashboard.others' }];
+        const defaultCategories = [{ id: 'others', name: this.language.t('dashboard.others') }];
         try {
             await this.data.saveCategoriesByPage(defaultCategories, newPage.id);
             await this.data.saveBookmarks([], newPage.id);
@@ -467,14 +467,7 @@ class ConfigManager {
             if (this.currentCategoriesPageId) {
                 const categoriesForSelectedPage = this.getCategoriesFromDOM();
                 if (categoriesForSelectedPage && categoriesForSelectedPage.length >= 0) {
-                    // Normalize default category name back to key
-                    const normalizedCategories = categoriesForSelectedPage.map(cat => {
-                        if (cat.name === this.language.t('dashboard.others')) {
-                            return { ...cat, name: 'dashboard.others' };
-                        }
-                        return cat;
-                    });
-                    await this.data.saveCategoriesByPage(normalizedCategories, this.currentCategoriesPageId);
+                    await this.data.saveCategoriesByPage(categoriesForSelectedPage, this.currentCategoriesPageId);
                 }
             }
             
