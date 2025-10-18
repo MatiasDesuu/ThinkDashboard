@@ -80,6 +80,9 @@ class ConfigManager {
             this.pagesData = pages;
             this.originalPagesData = JSON.parse(JSON.stringify(pages));
             this.settingsData = { ...this.settingsData, ...settings };
+            if (!this.settingsData.language || this.settingsData.language === "") {
+                this.settingsData.language = 'en';
+            }
             this.currentPageId = settings.currentPage || 1;
             
             await this.loadPageBookmarks(this.currentPageId);
