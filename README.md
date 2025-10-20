@@ -2,7 +2,7 @@
 
 A lightweight, self-hosted bookmark dashboard built with Go and vanilla JavaScript.
 
-## Features
+## ✨ Features
 
 - **Minimalist Design**: Clean, text-based interface
 - **Keyboard Shortcuts**: Assign keys shortcuts to quickly open bookmarks
@@ -11,20 +11,21 @@ A lightweight, self-hosted bookmark dashboard built with Go and vanilla JavaScri
 - **Theme customization**: Full theme customization support with possibility to create infinite variants
 - **Responsive Design**: Works on desktop and mobile devices
 
-## Screenshots
+## 🖼️ Screenshots
 
 | ![1](screenshots/1.png) | ![2](screenshots/2.png) |
 |--------------------------|--------------------------|
-| ![3](screenshots/3.png) | ![5](screenshots/5.png) |
+| ![3](screenshots/3.png) | ![4](screenshots/4.png) |
 
 <p align="center">
   📱Mobile view<br>
-  <img src="screenshots/4.png" width="25%">
+  <img src="screenshots/5.png" width="25%">
+  <img src="screenshots/6.png" width="25%">
 </p>
 
 
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Using Docker Compose
 
@@ -72,22 +73,22 @@ go run .
 
 4. Open your browser and navigate to `http://localhost:8080`
 
-## Configuration
+## ⚙️ Configuration
 
 Access the configuration page by navigating to `/config` or clicking the "config" link in the top-right corner of the dashboard.
 *You can also access it by typing `config` in the Search bar.*
 
-## Color Customization
+## 🎨 Color Customization
 
 Access the color customization page by navigating to `/colors` or clicking the "customize colors" in the config page.
 *You can also access it by typing `colors` in the Search bar.*
 
 
-## Keyboard Shortcuts
+## ⌨️ Keyboard Shortcuts
 
 Assign keys shortcuts to your bookmarks for quick access. Simply press the assigned keys on the dashboard to open the bookmark.
 
-## Data Storage
+## 💾 Data Storage
 
 Configuration data is stored in JSON files in the `data/` directory:
 - `bookmarks-X.json`: Your bookmarks (each page will have the corresponded number, bookmarks-1.json, bookmarks-2.json, etc.)
@@ -96,6 +97,6 @@ Configuration data is stored in JSON files in the `data/` directory:
 - `settings.json`: Application settings
 
 
-## License
+## ⚖️ License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
