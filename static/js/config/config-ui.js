@@ -16,45 +16,71 @@ class ConfigUI {
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
 
+        // Function to switch to a specific tab
+        const switchToTab = (targetTab) => {
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to target button and corresponding content
+            const targetButton = document.querySelector(`.tab-button[data-tab="${targetTab}"]`);
+            const targetContent = document.querySelector(`[data-tab-content="${targetTab}"]`);
+            if (targetButton) {
+                targetButton.classList.add('active');
+            }
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+            
+            // Update URL hash
+            window.location.hash = `#${targetTab}`;
+            
+            // Reset page selectors to first page when switching to bookmarks or categories tabs
+            if (typeof configManager !== 'undefined') {
+                if (targetTab === 'bookmarks') {
+                    const firstPageId = configManager.pagesData.length > 0 ? configManager.pagesData[0].id : 1;
+                    const pageSelector = document.getElementById('page-selector');
+                    if (pageSelector && pageSelector.value != firstPageId) {
+                        configManager.currentPageId = firstPageId;
+                        pageSelector.value = firstPageId;
+                        configManager.loadPageBookmarks(firstPageId);
+                        // Refresh custom select display
+                        configManager.refreshCustomSelects();
+                    }
+                } else if (targetTab === 'categories') {
+                    const firstPageId = configManager.pagesData.length > 0 ? configManager.pagesData[0].id : 1;
+                    const categoriesSelector = document.getElementById('categories-page-selector');
+                    if (categoriesSelector && categoriesSelector.value != firstPageId) {
+                        configManager.currentCategoriesPageId = firstPageId;
+                        categoriesSelector.value = firstPageId;
+                        configManager.loadPageCategories(firstPageId);
+                        // Refresh custom select display
+                        configManager.refreshCustomSelects();
+                    }
+                }
+            }
+        };
+
+    // Check initial hash and switch to corresponding tab
+    const initialHash = window.location.hash.substring(1);
+    const validTabs = ['general', 'pages', 'categories', 'bookmarks'];
+    if (validTabs.includes(initialHash)) {
+        switchToTab(initialHash);
+    } else {
+        // If no hash, switch to default tab (general)
+        switchToTab('general');
+    }        // Add hash change listener
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1);
+            if (validTabs.includes(hash)) {
+                switchToTab(hash);
+            }
+        });
+
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const targetTab = button.getAttribute('data-tab');
-                
-                // Remove active class from all buttons and contents
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
-                
-                // Add active class to clicked button and corresponding content
-                button.classList.add('active');
-                const targetContent = document.querySelector(`[data-tab-content="${targetTab}"]`);
-                if (targetContent) {
-                    targetContent.classList.add('active');
-                }
-                
-                // Reset page selectors to first page when switching to bookmarks or categories tabs
-                if (typeof configManager !== 'undefined') {
-                    if (targetTab === 'bookmarks') {
-                        const firstPageId = configManager.pagesData.length > 0 ? configManager.pagesData[0].id : 1;
-                        const pageSelector = document.getElementById('page-selector');
-                        if (pageSelector && pageSelector.value != firstPageId) {
-                            configManager.currentPageId = firstPageId;
-                            pageSelector.value = firstPageId;
-                            configManager.loadPageBookmarks(firstPageId);
-                            // Refresh custom select display
-                            configManager.refreshCustomSelects();
-                        }
-                    } else if (targetTab === 'categories') {
-                        const firstPageId = configManager.pagesData.length > 0 ? configManager.pagesData[0].id : 1;
-                        const categoriesSelector = document.getElementById('categories-page-selector');
-                        if (categoriesSelector && categoriesSelector.value != firstPageId) {
-                            configManager.currentCategoriesPageId = firstPageId;
-                            categoriesSelector.value = firstPageId;
-                            configManager.loadPageCategories(firstPageId);
-                            // Refresh custom select display
-                            configManager.refreshCustomSelects();
-                        }
-                    }
-                }
+                switchToTab(targetTab);
             });
         });
     }

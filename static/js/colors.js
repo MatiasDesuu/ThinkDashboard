@@ -41,49 +41,77 @@ function initTabs() {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
 
+    // Function to switch to a specific tab
+    const switchToTab = (targetTab) => {
+        // Remove active class from all buttons and contents
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to target button and corresponding content
+        const targetButton = document.querySelector(`.tab-button[data-tab="${targetTab}"]`);
+        const targetContent = document.querySelector(`[data-tab-content="${targetTab}"]`);
+        if (targetButton) {
+            targetButton.classList.add('active');
+        }
+        if (targetContent) {
+            targetContent.classList.add('active');
+        }
+        
+        // Update URL hash
+        window.location.hash = `#${targetTab}`;
+        
+        // Automatically switch theme for preview when selecting dark or light tab
+        if (targetTab === 'dark' || targetTab === 'light') {
+            switchToTheme(targetTab);
+        } else if (targetTab === 'custom') {
+            // Reset custom theme selector when entering custom tab
+            const selector = document.getElementById('custom-theme-selector');
+            if (selector) {
+                selector.value = '';
+                // Refresh custom select component if it exists
+                try {
+                    const instance = selector.__customSelectInstance;
+                    if (instance && typeof instance.refresh === 'function') {
+                        instance.refresh();
+                    }
+                } catch (e) {
+                    // ignore
+                }
+            }
+            if (customThemesManager) {
+                customThemesManager.currentSelectedTheme = null;
+                customThemesManager.hideThemeColors();
+            }
+            // Remove preview when entering custom tab without selection
+            const previewStyle = document.getElementById('color-preview-style');
+            if (previewStyle) {
+                previewStyle.remove();
+            }
+        }
+    };
+
+    // Check initial hash and switch to corresponding tab
+    const initialHash = window.location.hash.substring(1);
+    const validTabs = ['dark', 'light', 'custom'];
+    if (validTabs.includes(initialHash)) {
+        switchToTab(initialHash);
+    } else {
+        // If no hash, switch to default tab (dark)
+        switchToTab('dark');
+    }
+
+    // Add hash change listener
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.substring(1);
+        if (validTabs.includes(hash)) {
+            switchToTab(hash);
+        }
+    });
+
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             const targetTab = button.getAttribute('data-tab');
-            
-            // Remove active class from all buttons and contents
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-            
-            // Add active class to clicked button and corresponding content
-            button.classList.add('active');
-            const targetContent = document.querySelector(`[data-tab-content="${targetTab}"]`);
-            if (targetContent) {
-                targetContent.classList.add('active');
-            }
-
-            // Automatically switch theme for preview when selecting dark or light tab
-            if (targetTab === 'dark' || targetTab === 'light') {
-                switchToTheme(targetTab);
-            } else if (targetTab === 'custom') {
-                // Reset custom theme selector when entering custom tab
-                const selector = document.getElementById('custom-theme-selector');
-                if (selector) {
-                    selector.value = '';
-                    // Refresh custom select component if it exists
-                    try {
-                        const instance = selector.__customSelectInstance;
-                        if (instance && typeof instance.refresh === 'function') {
-                            instance.refresh();
-                        }
-                    } catch (e) {
-                        // ignore
-                    }
-                }
-                if (customThemesManager) {
-                    customThemesManager.currentSelectedTheme = null;
-                    customThemesManager.hideThemeColors();
-                }
-                // Remove preview when entering custom tab without selection
-                const previewStyle = document.getElementById('color-preview-style');
-                if (previewStyle) {
-                    previewStyle.remove();
-                }
-            }
+            switchToTab(targetTab);
         });
     });
 }
