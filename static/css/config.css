@@ -44,7 +44,6 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: var(--background-primary);
 }
 
 .config-section.section-content {
@@ -74,6 +73,7 @@ body {
     padding: 0;
     margin-bottom: 0;
     border: 1px solid var(--border-primary);
+    background: var(--background-primary);
 }
 
 .tab-button {
