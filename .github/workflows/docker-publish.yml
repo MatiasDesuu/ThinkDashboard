@@ -47,7 +47,7 @@ jobs:
             ghcr.io/matiasdesuu/thinkdashboard:${{ github.event.inputs.version }}
           cache-from: type=registry,ref=ghcr.io/matiasdesuu/thinkdashboard:latest
           cache-to: type=inline
-          # platforms: linux/amd64,linux/arm64  # descomenta si querés multi-arch
+          platforms: linux/amd64,linux/arm64
 
       - name: List Docker images after build
         run: docker images
