@@ -587,7 +587,6 @@ body {
 }
 
 .btn-danger {
-    padding: 0.375rem 0.5rem;
     font-size: var(--font-size-controls);
     border: 1px solid var(--accent-error);
     color: var(--accent-error);
@@ -596,6 +595,7 @@ body {
 .btn-danger:hover {
     background-color: var(--accent-error);
     color: var(--background-primary);
+    transform: translateX(2px);
 }
 
 /* Notification */

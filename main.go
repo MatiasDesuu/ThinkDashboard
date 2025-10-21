@@ -48,6 +48,8 @@ func main() {
 	r.HandleFunc("/api/colors/reset", handlers.ResetColors).Methods("POST")
 	r.HandleFunc("/api/colors/custom-themes", handlers.GetCustomThemesList).Methods("GET")
 	r.HandleFunc("/api/theme.css", handlers.CustomThemeCSS).Methods("GET")
+	r.HandleFunc("/api/backup", handlers.Backup).Methods("GET")
+	r.HandleFunc("/api/import", handlers.Import).Methods("POST")
 	r.HandleFunc("/api/ping", handlers.PingURL).Methods("GET")
 
 	// Data files (for uploaded favicons, etc.)

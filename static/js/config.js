@@ -13,6 +13,7 @@ class ConfigManager {
         this.pages = new ConfigPages(this.language.t.bind(this.language));
         this.categories = new ConfigCategories(this.language.t.bind(this.language));
         this.bookmarks = new ConfigBookmarks(this.language.t.bind(this.language));
+        this.backup = new ConfigBackup(this.language.t.bind(this.language));
         this.settings = new ConfigSettings(this.language);
 
         // Data

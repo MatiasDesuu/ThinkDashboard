@@ -51,6 +51,11 @@
     color: var(--text-primary);
 }
 
+.danger {
+    color: var(--accent-error);
+    font-weight: var(--font-weight-bold);
+}
+
 .modal-actions {
     display: flex;
     flex-direction: row;
@@ -63,7 +68,7 @@
     padding: 0.5rem 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    border: none;
+    border: 1px solid var(--border-primary);
     background: transparent;
     text-align: center;
     display: flex;
@@ -104,12 +109,14 @@
 /* Danger button styles (red) */
 .modal-button.danger {
     font-weight: var(--font-weight-bold);
+    border: 1px solid var(--accent-error);
     color: var(--accent-error);
 }
 
 .modal-button.danger:hover,
 .modal-button.danger.selected {
-    color: var(--accent-error);
+    background-color: var(--accent-error);
+    color: var(--background-primary);
     transform: translateX(4px);
 }
 

@@ -49,6 +49,7 @@ class Modal {
         const {
             title = this.language ? this.language.t('dashboard.confirmTitle') : 'Confirm',
             message = this.language ? this.language.t('dashboard.confirmMessage') : 'Are you sure?',
+            htmlMessage = null,
             confirmText = this.language ? this.language.t('dashboard.confirmTitle') : 'Confirm',
             cancelText = this.language ? this.language.t('dashboard.cancel') : 'Cancel',
             confirmClass = '',
@@ -59,7 +60,11 @@ class Modal {
 
         // Set content
         document.getElementById('modal-title').textContent = title;
-        document.getElementById('modal-text').textContent = message;
+        if (htmlMessage !== null) {
+            document.getElementById('modal-text').innerHTML = htmlMessage;
+        } else {
+            document.getElementById('modal-text').textContent = message;
+        }
 
         // Clear and set actions
         const actionsContainer = document.getElementById('modal-actions');

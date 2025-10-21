@@ -1,6 +1,7 @@
 package main
 
 import (
+	"archive/zip"
 	"bytes"
 	"crypto/tls"
 	"embed"
@@ -666,4 +667,114 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
+}
+
+func (h *Handlers) Backup(w http.ResponseWriter, r *http.Request) {
+	// Create a buffer to write our archive to
+	buf := new(bytes.Buffer)
+
+	// Create a new zip archive
+	zipWriter := zip.NewWriter(buf)
+
+	// Walk through the data directory
+	dataDir := "data"
+	err := filepath.Walk(dataDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// Skip directories
+		if info.IsDir() {
+			return nil
+		}
+
+		// Create a relative path for the zip entry
+		relPath, err := filepath.Rel(dataDir, path)
+		if err != nil {
+			return err
+		}
+
+		// Create zip file entry
+		zipFile, err := zipWriter.Create(relPath)
+		if err != nil {
+			return err
+		}
+
+		// Open the file
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		// Copy file content to zip
+		_, err = io.Copy(zipFile, file)
+		return err
+	})
+
+	if err != nil {
+		http.Error(w, "Failed to create backup", http.StatusInternalServerError)
+		return
+	}
+
+	// Close the zip writer
+	err = zipWriter.Close()
+	if err != nil {
+		http.Error(w, "Failed to finalize backup", http.StatusInternalServerError)
+		return
+	}
+
+	// Set headers for file download
+	w.Header().Set("Content-Type", "application/zip")
+	w.Header().Set("Content-Disposition", "attachment; filename=thinkdashboard-backup.zip")
+	w.Header().Set("Content-Length", strconv.Itoa(buf.Len()))
+
+	// Write the zip content to response
+	w.Write(buf.Bytes())
+}
+
+func (h *Handlers) Import(w http.ResponseWriter, r *http.Request) {
+	// Parse multipart form
+	err := r.ParseMultipartForm(32 << 20) // 32MB max
+	if err != nil {
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		return
+	}
+
+	files := r.MultipartForm.File["files"]
+	if len(files) == 0 {
+		http.Error(w, "No files provided", http.StatusBadRequest)
+		return
+	}
+
+	// Process each file
+	for _, fileHeader := range files {
+		file, err := fileHeader.Open()
+		if err != nil {
+			http.Error(w, "Failed to open file", http.StatusInternalServerError)
+			return
+		}
+		defer file.Close()
+
+		// Read file content
+		content, err := io.ReadAll(file)
+		if err != nil {
+			http.Error(w, "Failed to read file", http.StatusInternalServerError)
+			return
+		}
+
+		// Determine destination path
+		filename := fileHeader.Filename
+		destPath := filepath.Join("data", filename)
+
+		// Write file to data directory
+		err = os.WriteFile(destPath, content, 0644)
+		if err != nil {
+			http.Error(w, "Failed to write file", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Import successful"))
 }

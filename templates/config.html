@@ -47,7 +47,7 @@
             <div class="config-controls-wrapper">
                 <div class="config-actions-top">
                     <button id="save-btn" class="btn btn-success" data-i18n="config.saveChanges">Save Changes</button>
-                    <button id="reset-btn" class="btn btn-secondary" data-i18n="config.resetToDefaults">Reset to Defaults</button>
+                    <button id="reset-btn" class="btn btn-danger" data-i18n="config.resetToDefaults">Reset to Defaults</button>
                 </div>
 
                 <div class="tabs">
@@ -55,6 +55,7 @@
                     <button class="tab-button" data-tab="pages" data-i18n="config.pagesTab">pages</button>
                     <button class="tab-button" data-tab="categories" data-i18n="config.categoriesTab">categories</button>
                     <button class="tab-button" data-tab="bookmarks" data-i18n="config.bookmarksTab">bookmarks</button>
+                    <button class="tab-button" data-tab="backups" data-i18n="config.backupsTab">backups</button>
                 </div>
             </div>
         </div>
@@ -263,6 +264,22 @@
             </div>
             </div>
 
+            <div class="tab-content" data-tab-content="backups">
+            <div class="config-section">
+                <div class="form-group">
+                    <label data-i18n="config.backupDescription">Export your data</label>
+                    <button type="button" id="backup-info-btn" class="info-button">ℹ</button>
+                    <button id="backup-btn" class="btn btn-primary" data-i18n="config.createBackup">Create Backup</button>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="config.importDescription">Import your data</label>
+                    <button type="button" id="import-info-btn" class="info-button">ℹ</button>
+                    <input type="file" id="import-file" accept=".zip" style="display: none;">
+                    <button id="import-btn" class="btn btn-danger" data-i18n="config.selectImportFile">Select Import File</button>
+                </div>
+            </div>
+            </div>
+
             </main>
         </div>
     </div>
@@ -276,6 +293,7 @@
     <script src="/static/js/select.js"></script>
     <script src="/static/js/reorder.js"></script>
     <script src="/static/js/hypr-mode.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- Config modules (must be loaded before main config.js) -->
     <script src="/static/js/config/config-ui.js"></script>
     <script src="/static/js/config/config-storage.js"></script>
@@ -283,6 +301,7 @@
     <script src="/static/js/config/config-pages.js"></script>
     <script src="/static/js/config/config-categories.js"></script>
     <script src="/static/js/config/config-bookmarks.js"></script>
+    <script src="/static/js/config/config-backup.js"></script>
     <script src="/static/js/config/config-settings.js"></script>
     <script src="/static/js/config/config-language.js"></script>
     <!-- Main config orchestrator -->
