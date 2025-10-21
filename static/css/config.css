@@ -64,6 +64,7 @@ body {
     justify-content: flex-start;
     padding: 1rem 0;
     margin-bottom: 0;
+    background: var(--background-primary);
 }
 
 /* Tabs */
