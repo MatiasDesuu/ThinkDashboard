@@ -114,7 +114,7 @@ class HyprMode {
                                 margin: 0;
                                 background: #1a1a1a;
                                 color: #fff;
-                                font-family: monospace;
+                                font-family: var(--font-family-main);
                             }
                         </style>
                     </head>

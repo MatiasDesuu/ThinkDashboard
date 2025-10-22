@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{.Theme}}" data-font-size="{{.FontSize}}" data-show-background-dots="{{.ShowBackgroundDots}}">
+<html lang="en" data-theme="{{.Theme}}" data-font-size="{{.FontSize}}" data-show-background-dots="{{.ShowBackgroundDots}}" data-enable-custom-font="{{.EnableCustomFont}}" data-custom-font-path="{{.CustomFontPath}}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -175,7 +175,20 @@
                     <div class="checkbox-tree-item checkbox-tree-child">
                         <span class="tree-symbol">└──</span>
                         <label for="custom-favicon-input" data-i18n="config.uploadFaviconLabel">Upload favicon:</label>
-                        <input type="file" id="custom-favicon-input" accept="image/x-icon,image/png,image/jpeg,image/gif">
+                        <label for="custom-favicon-input" class="btn btn-secondary file-input-btn">Choose File</label>
+                        <input type="file" id="custom-favicon-input" accept="image/x-icon,image/png,image/jpeg,image/gif" style="display: none;">
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="enable-custom-font-checkbox">
+                            <span class="checkbox-text">Enable custom font</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item checkbox-tree-child">
+                        <span class="tree-symbol">└──</span>
+                        <label for="custom-font-input">Upload font:</label>
+                        <label for="custom-font-input" class="btn btn-secondary file-input-btn">Choose File</label>
+                        <input type="file" id="custom-font-input" accept=".woff,.woff2,.ttf,.otf" style="display: none;">
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
@@ -302,6 +315,7 @@
     <script src="/static/js/config/config-categories.js"></script>
     <script src="/static/js/config/config-bookmarks.js"></script>
     <script src="/static/js/config/config-backup.js"></script>
+    <script src="/static/js/config/config-font.js"></script>
     <script src="/static/js/config/config-settings.js"></script>
     <script src="/static/js/config/config-language.js"></script>
     <!-- Main config orchestrator -->

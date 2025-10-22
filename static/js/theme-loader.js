@@ -170,6 +170,22 @@
     const fontSize = getFontSize();
     applyTheme(theme, showBackgroundDots, fontSize);
     
+    // Apply custom font
+    document.addEventListener('DOMContentLoaded', function() {
+        const enableCustomFont = document.documentElement.getAttribute('data-enable-custom-font') === 'true';
+        const customFontPath = document.documentElement.getAttribute('data-custom-font-path');
+        if (enableCustomFont && customFontPath) {
+            const fontName = 'CustomFont';
+            const fontFace = new FontFace(fontName, `url(${customFontPath}?t=${Date.now()})`);
+            fontFace.load().then(function(loadedFace) {
+                document.fonts.add(loadedFace);
+                document.documentElement.style.setProperty('--font-family-main', `'${fontName}', monospace`);
+            }).catch(function(error) {
+                console.error('Error loading custom font:', error);
+            });
+        }
+    });
+    
     // Export functions for use by other scripts (e.g., config.js)
     window.ThemeLoader = {
         getTheme: getTheme,

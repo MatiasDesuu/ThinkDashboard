@@ -44,16 +44,19 @@
 }
 
 .search-prefix {
+    font-family: var(--font-family-main);
     margin-right: 0.5rem;
     color: var(--accent-success);
 }
 
 .search-query {
+    font-family: var(--font-family-main);
     color: var(--text-primary);
     white-space: pre;
 }
 
 .search-cursor {
+    font-family: var(--font-family-main);
     animation: blink 1s infinite;
     margin-left: 0.25rem;
     color: var(--text-primary);
@@ -167,6 +170,7 @@
     background: var(--background-modal);
     color: var(--text-primary);
     font-size: var(--font-size-controls);
+    font-family: var(--font-family-main);
     font-weight: var(--font-weight-semibold);
     cursor: pointer;
     

@@ -2,7 +2,8 @@
 
 /* Global font for the entire app */
 :root {
-    font-family: 'Source Code Pro', monospace;
+    --font-family-main: 'Source Code Pro', monospace;
+    font-family: var(--font-family-main);
 }
 
 /* Font Size Variables - Default (Medium/m - Level 3) */

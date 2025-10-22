@@ -83,6 +83,7 @@ body {
     background: transparent;
     color: var(--text-tertiary);
     font-size: var(--font-size-controls);
+    font-family: var(--font-family-main);
     font-weight: var(--font-weight-semibold);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -436,7 +437,7 @@ body {
     font-size: var(--font-size-controls);
     cursor: pointer;
     border-radius: 0;
-    font-family: 'Source Code Pro', monospace;
+    font-family: var(--font-family-main);
     line-height: 0;
     align-items: center;
     justify-content: center;
@@ -600,6 +601,13 @@ body {
     transform: translateX(2px);
 }
 
+/* File input button styling */
+.file-input-btn {
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
 /* Notification */
 .notification {
     position: fixed;
@@ -680,7 +688,7 @@ body {
     border: 1px solid var(--border-primary);
     background: var(--background-primary);
     color: var(--text-primary);
-    font-family: var(--font-family-mono);
+    font-family: var(--font-family-main);
     font-size: var(--font-size-controls);
     cursor: pointer;
     transition: all 0.2s ease;

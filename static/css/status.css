@@ -133,6 +133,7 @@
     margin-left: 0.5rem;
     padding: 0.25rem 0.5rem;
     font-size: var(--font-size-controls);
+    font-family: var(--font-family-main);
     border: 1px solid var(--border-primary);
     border-radius: 4px;
     cursor: pointer;
@@ -150,7 +151,7 @@
 /* Status Loading Indicator */
 .status-loading-indicator {
     display: none; /* Hidden by default */
-    font-family: 'Source Code Pro', monospace;
+    font-family: var(--font-family-main);
     font-size: var(--font-size-controls);
     font-weight: var(--font-weight-bold);
     color: var(--accent-warning);
@@ -166,6 +167,7 @@
 }
 
 .status-loading-text {
+    font-family: var(--font-family-main);
     letter-spacing: 0.05em;
 }
 

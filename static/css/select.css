@@ -21,6 +21,7 @@
     background: var(--background-primary);
     color: var(--text-primary);
     font-size: var(--font-size-text);
+    font-family: var(--font-family-main);
     cursor: pointer;
     user-select: none;
     transition: border-color 0.3s ease;
@@ -70,6 +71,7 @@
 .custom-select-option {
     padding: 0.5rem 0.75rem;
     font-size: var(--font-size-text);
+    font-family: var(--font-family-main);
     cursor: pointer;
     transition: background-color 0.15s ease;
     user-select: none;

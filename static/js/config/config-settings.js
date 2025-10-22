@@ -280,6 +280,57 @@ class ConfigSettings {
             this.toggleCustomFaviconInput(settings.enableCustomFavicon);
         }
 
+        // Enable custom font checkbox
+        const enableCustomFontCheckbox = document.getElementById('enable-custom-font-checkbox');
+        if (enableCustomFontCheckbox) {
+            enableCustomFontCheckbox.checked = settings.enableCustomFont;
+            enableCustomFontCheckbox.addEventListener('change', async (e) => {
+                settings.enableCustomFont = e.target.checked;
+                this.toggleCustomFontInput(e.target.checked);
+                if (e.target.checked && settings.customFontPath) {
+                    // Apply the font if enabled and path exists
+                    if (window.ConfigFont) {
+                        window.ConfigFont.applyFont(settings.customFontPath);
+                    }
+                } else if (!e.target.checked) {
+                    // Reset to default font
+                    if (window.ConfigFont) {
+                        window.ConfigFont.resetFont();
+                    }
+                }
+                await this.saveSettingsToServer(settings);
+            });
+        }
+
+        // Custom font input
+        const customFontInput = document.getElementById('custom-font-input');
+        if (customFontInput) {
+            customFontInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const result = await window.ConfigFont.uploadFont(file);
+                        settings.customFontPath = result;
+                        // Auto-enable checkbox when user uploads a file
+                        if (!settings.enableCustomFont) {
+                            settings.enableCustomFont = true;
+                            const checkbox = document.getElementById('enable-custom-font-checkbox');
+                            if (checkbox) checkbox.checked = true;
+                            this.toggleCustomFontInput(true);
+                        }
+                        // Apply the font immediately
+                        window.ConfigFont.applyFont(settings.customFontPath);
+                        // Always save to server regardless of device-specific settings
+                        await this.saveSettingsToServer(settings);
+                    } catch (error) {
+                        console.error('Error uploading font:', error);
+                    }
+                }
+            });
+            // Initial visibility
+            this.toggleCustomFontInput(settings.enableCustomFont);
+        }
+
         // Show page in title checkbox
         const showPageInTitleCheckbox = document.getElementById('show-page-in-title-checkbox');
         if (showPageInTitleCheckbox) {
@@ -540,6 +591,34 @@ class ConfigSettings {
     toggleCustomFaviconInput(enabled) {
         // Find the checkbox
         const checkbox = document.getElementById('enable-custom-favicon-checkbox');
+        if (!checkbox) return;
+        
+        // Find the parent item
+        const parentItem = checkbox.closest('.checkbox-tree-item');
+        if (!parentItem) return;
+        
+        // Find all sibling items after this one that are checkbox-tree-child
+        const siblings = Array.from(parentItem.parentNode.children);
+        const startIndex = siblings.indexOf(parentItem);
+        
+        for (let i = startIndex + 1; i < siblings.length; i++) {
+            const sibling = siblings[i];
+            if (sibling.classList.contains('checkbox-tree-child')) {
+                sibling.style.display = enabled ? 'block' : 'none';
+            } else {
+                // Stop at the first non-child item (assuming they are grouped)
+                break;
+            }
+        }
+    }
+
+    /**
+     * Toggle visibility of custom font input based on checkbox state
+     * @param {boolean} enabled - Whether custom font is enabled
+     */
+    toggleCustomFontInput(enabled) {
+        // Find the checkbox
+        const checkbox = document.getElementById('enable-custom-font-checkbox');
         if (!checkbox) return;
         
         // Find the parent item

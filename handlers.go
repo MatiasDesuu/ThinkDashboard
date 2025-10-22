@@ -13,6 +13,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -51,6 +52,8 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		CustomTitle         string
 		EnableCustomFavicon bool
 		CustomFaviconPath   string
+		EnableCustomFont    bool
+		CustomFontPath      string
 		Language            string
 	}{
 		Theme:               settings.Theme,
@@ -64,6 +67,8 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		CustomTitle:         settings.CustomTitle,
 		EnableCustomFavicon: settings.EnableCustomFavicon,
 		CustomFaviconPath:   settings.CustomFaviconPath,
+		EnableCustomFont:    settings.EnableCustomFont,
+		CustomFontPath:      settings.CustomFontPath,
 		Language:            settings.Language,
 	}
 
@@ -96,6 +101,8 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 		ShowConfigButton    bool
 		EnableCustomFavicon bool
 		CustomFaviconPath   string
+		EnableCustomFont    bool
+		CustomFontPath      string
 		Language            string
 	}{
 		Theme:               settings.Theme,
@@ -106,6 +113,8 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 		ShowConfigButton:    settings.ShowConfigButton,
 		EnableCustomFavicon: settings.EnableCustomFavicon,
 		CustomFaviconPath:   settings.CustomFaviconPath,
+		EnableCustomFont:    settings.EnableCustomFont,
+		CustomFontPath:      settings.CustomFontPath,
 		Language:            settings.Language,
 	}
 
@@ -369,6 +378,93 @@ func (h *Handlers) UploadFavicon(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "success", "path": settings.CustomFaviconPath})
 }
 
+func (h *Handlers) UploadFont(w http.ResponseWriter, r *http.Request) {
+	// Parse multipart form
+	err := r.ParseMultipartForm(10 << 20) // 10 MB max
+	if err != nil {
+		http.Error(w, "Unable to parse form", http.StatusBadRequest)
+		return
+	}
+
+	file, header, err := r.FormFile("font")
+	if err != nil {
+		http.Error(w, "Error retrieving file", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	// Validate file type (should be font)
+	contentType := header.Header.Get("Content-Type")
+	filename := header.Filename
+	ext := strings.ToLower(filepath.Ext(filename))
+
+	validTypes := map[string]bool{
+		"font/woff":              true,
+		"font/woff2":             true,
+		"font/ttf":               true,
+		"font/otf":               true,
+		"application/font-woff":  true,
+		"application/font-woff2": true,
+		"application/x-font-ttf": true,
+		"application/x-font-otf": true,
+		"application/font-sfnt":  true,
+	}
+
+	isValidType := validTypes[contentType]
+	isValidExt := ext == ".woff" || ext == ".woff2" || ext == ".ttf" || ext == ".otf"
+
+	if !isValidType && !isValidExt {
+		http.Error(w, "Invalid file type. Only woff, woff2, ttf, otf allowed", http.StatusBadRequest)
+		return
+	}
+
+	// Create data directory if it doesn't exist
+	dataDir := "data"
+	if _, err := os.Stat(dataDir); os.IsNotExist(err) {
+		os.MkdirAll(dataDir, 0755)
+	}
+
+	// Determine file extension
+	switch contentType {
+	case "font/woff", "application/font-woff":
+		ext = ".woff"
+	case "font/woff2", "application/font-woff2":
+		ext = ".woff2"
+	case "font/ttf", "application/x-font-ttf", "application/font-sfnt":
+		ext = ".ttf"
+	case "font/otf", "application/x-font-otf":
+		ext = ".otf"
+	default:
+		// Use extension from filename if content type not recognized
+		if ext == "" {
+			ext = filepath.Ext(header.Filename)
+		}
+	}
+
+	// Save file as font with appropriate extension
+	fontPath := filepath.Join(dataDir, "font"+ext)
+	dst, err := os.Create(fontPath)
+	if err != nil {
+		http.Error(w, "Unable to save file", http.StatusInternalServerError)
+		return
+	}
+	defer dst.Close()
+
+	_, err = io.Copy(dst, file)
+	if err != nil {
+		http.Error(w, "Unable to save file", http.StatusInternalServerError)
+		return
+	}
+
+	// Update settings with the new font path
+	settings := h.store.GetSettings()
+	settings.CustomFontPath = "/data/font" + ext
+	h.store.SaveSettings(settings)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success", "path": settings.CustomFontPath})
+}
+
 func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFS(h.files, "templates/colors.html")
 	if err != nil {
@@ -382,11 +478,15 @@ func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
 		Theme              string
 		FontSize           string
 		ShowBackgroundDots bool
+		EnableCustomFont   bool
+		CustomFontPath     string
 		Language           string
 	}{
 		Theme:              settings.Theme,
 		FontSize:           settings.FontSize,
 		ShowBackgroundDots: settings.ShowBackgroundDots,
+		EnableCustomFont:   settings.EnableCustomFont,
+		CustomFontPath:     settings.CustomFontPath,
 		Language:           settings.Language,
 	}
 

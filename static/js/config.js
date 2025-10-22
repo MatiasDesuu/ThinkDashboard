@@ -38,6 +38,10 @@ class ConfigManager {
             globalShortcuts: true,
             hyprMode: false,
             showPageNamesInTabs: false,
+            enableCustomFavicon: false,
+            customFaviconPath: '',
+            enableCustomFont: false,
+            customFontPath: '',
             language: 'en'
         };
         this.deviceSpecific = false;
@@ -475,7 +479,13 @@ class ConfigManager {
             await this.data.savePages(this.pagesData);
             
             if (this.deviceSpecific) {
-                this.storage.saveDeviceSettings(this.settingsData);
+                // Don't save global settings in localStorage
+                const settingsToSave = { ...this.settingsData };
+                delete settingsToSave.enableCustomFavicon;
+                delete settingsToSave.customFaviconPath;
+                delete settingsToSave.enableCustomFont;
+                delete settingsToSave.customFontPath;
+                this.storage.saveDeviceSettings(settingsToSave);
             } else {
                 await this.data.saveSettings(this.settingsData);
             }

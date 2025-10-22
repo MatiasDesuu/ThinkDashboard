@@ -60,6 +60,8 @@ type Settings struct {
 	ShowPageNamesInTabs bool   `json:"showPageNamesInTabs"` // Show page names in tabs instead of numbers
 	EnableCustomFavicon bool   `json:"enableCustomFavicon"` // Enable custom favicon
 	CustomFaviconPath   string `json:"customFaviconPath"`   // Path to custom favicon file
+	EnableCustomFont    bool   `json:"enableCustomFont"`    // Enable custom font
+	CustomFontPath      string `json:"customFontPath"`      // Path to custom font file
 	Language            string `json:"language"`            // Language code, e.g., "en" or "es"
 }
 

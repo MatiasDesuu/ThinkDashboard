@@ -35,6 +35,9 @@ class ConfigData {
                 // Always use favicon settings from server, regardless of device-specific
                 settings.enableCustomFavicon = serverSettings.enableCustomFavicon;
                 settings.customFaviconPath = serverSettings.customFaviconPath;
+                // Always use font settings from server, regardless of device-specific
+                settings.enableCustomFont = serverSettings.enableCustomFont;
+                settings.customFontPath = serverSettings.customFontPath;
             } else {
                 settings = serverSettings;
             }

@@ -20,6 +20,8 @@ class Dashboard {
             showPing: false,
             globalShortcuts: true,
             hyprMode: false,
+            enableCustomFavicon: false,
+            customFaviconPath: '',
             language: 'en'
         };
         this.searchComponent = null;
@@ -140,7 +142,7 @@ class Dashboard {
             
             // Update document title with page name if enabled
             this.updateDocumentTitle();
-            
+
             // Update search component and render
             if (this.searchComponent) {
                 this.updateSearchComponent();

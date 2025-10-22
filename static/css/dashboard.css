@@ -74,6 +74,7 @@ body {
 
 .date {
     font-size: var(--font-size-date);
+    font-family: var(--font-family-main);
     font-weight: var(--font-weight-black);
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -82,6 +83,7 @@ body {
 
 .title {
     font-size: var(--font-size-title);
+    font-family: var(--font-family-main);
     font-weight: var(--font-weight-black);
     opacity: 0.8;
     user-select: none;
@@ -104,6 +106,7 @@ body {
 .page-nav-btn {
     padding: 0.4rem 0.6rem;
     font-size: var(--font-size-controls);
+    font-family: var(--font-family-main);
     font-weight: var(--font-weight-semibold);
     background: transparent;
     border: none;
@@ -147,6 +150,7 @@ body {
 .config-link a {
     text-decoration: none;
     font-size: var(--font-size-controls);
+    font-family: var(--font-family-main);
     font-weight: var(--font-weight-semibold);
     transition: color 0.3s ease;
     color: var(--text-secondary);
