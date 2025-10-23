@@ -533,7 +533,7 @@
     }
     
     .dashboard-grid {
-        gap: 1rem;
+        gap: 0rem;
     }
     
     .category {
@@ -770,5 +770,18 @@
     
     .tab-button:last-child {
         border-bottom: none;
+    }
+
+    /* Fix for theme and language selectors in config general tab */
+    .form-group:has(#theme-select),
+    .form-group:has(#language-select) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .form-group:has(#theme-select) label,
+    .form-group:has(#language-select) label {
+        min-width: auto;
     }
 }
