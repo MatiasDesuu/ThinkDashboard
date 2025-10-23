@@ -119,7 +119,6 @@ class DragReorder {
         this.selected.classList.add('is-draggable');
         this.disablePageScroll();
     }
-
     touchMove(e) {
         e.preventDefault();
         const touch = e.touches[0];

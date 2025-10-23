@@ -26,7 +26,7 @@
         }
     </style>
 </head>
-<body class="{{.Theme}} font-size-{{.FontSize}} loading" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}">
+<body class="{{.Theme}} font-size-{{.FontSize}} loading" data-theme="{{.Theme}}" data-show-background-dots="{{.ShowBackgroundDots}}" data-show-title="{{.ShowTitle}}">
     <!-- Container 1: Date, tabs, config button -->
     <div class="dashboard-section section-controls">
         <div class="container">
@@ -49,13 +49,13 @@
     </div>
 
     <!-- Container 2: Title -->
-    {{if .ShowTitle}}<div class="dashboard-section section-title">
+    <div class="dashboard-section section-title">
         <div class="container">
             <div class="title-wrapper">
                 <h1 class="title"></h1>
             </div>
         </div>
-    </div>{{end}}
+    </div>
 
     <!-- Container 3: Bookmarks -->
     <div class="dashboard-section section-content">

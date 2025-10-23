@@ -579,35 +579,13 @@ class Dashboard {
     }
 
     updateTitleVisibility() {
-        let titleWrapper = document.querySelector('.title-wrapper');
-
-        if (this.settings.showTitle) {
-            // Show title - create if it doesn't exist
-            if (!titleWrapper) {
-                titleWrapper = document.createElement('div');
-                titleWrapper.className = 'title-wrapper';
-                titleWrapper.innerHTML = `<h1 class="title">${this.language.t('dashboard.defaultPageTitle')}</h1>`;
-
-                const titleContainer = document.querySelector('.dashboard-section.section-title .container');
-                if (titleContainer) {
-                    titleContainer.appendChild(titleWrapper);
-                } else {
-                    const header = this.getHeaderContainer();
-                    const dateElement = document.getElementById('date-element');
-                    if (dateElement && dateElement.parentNode === header) {
-                        header.insertBefore(titleWrapper, dateElement.nextSibling);
-                    } else if (header.firstChild) {
-                        header.insertBefore(titleWrapper, header.firstChild);
-                    } else {
-                        header.appendChild(titleWrapper);
-                    }
-                }
-            }
-        } else {
-            // Hide title - remove if it exists
-            if (titleWrapper) {
-                titleWrapper.remove();
-            }
+        // Update the data attribute for CSS visibility control
+        document.body.setAttribute('data-show-title', this.settings.showTitle);
+        
+        // Update the title text if showing
+        const titleElement = document.querySelector('.title');
+        if (titleElement && this.settings.showTitle) {
+            titleElement.textContent = this.pages.length > 0 ? this.pages[0].name : this.language.t('dashboard.defaultPageTitle');
         }
     }
 
