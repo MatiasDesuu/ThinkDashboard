@@ -184,6 +184,9 @@ class SwipeNavigation {
     switchToPage(page) {
         if (!page) return;
 
+        // Reset scroll to top of the page
+        window.scrollTo(0, 0);
+
         // Update navigation buttons
         const container = document.getElementById('page-navigation');
         if (container) {
