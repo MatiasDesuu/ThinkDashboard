@@ -42,7 +42,8 @@ class ConfigManager {
             customFaviconPath: '',
             enableCustomFont: false,
             customFontPath: '',
-            language: 'en'
+            language: 'en',
+            interleaveMode: false
         };
         this.deviceSpecific = false;
 
@@ -87,6 +88,9 @@ class ConfigManager {
             this.settingsData = { ...this.settingsData, ...settings };
             if (!this.settingsData.language || this.settingsData.language === "") {
                 this.settingsData.language = 'en';
+            }
+            if (typeof this.settingsData.interleaveMode === 'undefined') {
+                this.settingsData.interleaveMode = false;
             }
             this.currentPageId = settings.currentPage || 1;
             
@@ -234,6 +238,10 @@ class ConfigManager {
 
         this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
         this.refreshCustomSelects();
+        
+        // Set checkbox states
+        const interleaveModeCheckbox = document.getElementById('interleave-mode-checkbox');
+        if (interleaveModeCheckbox) interleaveModeCheckbox.checked = this.settingsData.interleaveMode;
     }
 
     refreshCustomSelects() {
@@ -536,6 +544,7 @@ class ConfigManager {
         document.getElementById('show-date-checkbox').checked = this.settingsData.showDate;
         document.getElementById('show-config-button-checkbox').checked = this.settingsData.showConfigButton;
         document.getElementById('show-search-button-checkbox').checked = this.settingsData.showSearchButton;
+        document.getElementById('interleave-mode-checkbox').checked = false;
 
         this.setupDOM();
         this.renderConfig();

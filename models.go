@@ -63,6 +63,7 @@ type Settings struct {
 	EnableCustomFont    bool   `json:"enableCustomFont"`    // Enable custom font
 	CustomFontPath      string `json:"customFontPath"`      // Path to custom font file
 	Language            string `json:"language"`            // Language code, e.g., "en" or "es"
+	InterleaveMode      bool   `json:"interleaveMode"`      // Interleave mode for search (/ for shortcuts, direct input for fuzzy)
 }
 
 type ColorTheme struct {
@@ -555,6 +556,7 @@ func (fs *FileStore) GetSettings() Settings {
 			HyprMode:           false,
 			AnimationsEnabled:  true,
 			Language:           "en",
+			InterleaveMode:     false,
 		}
 	}
 

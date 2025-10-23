@@ -22,7 +22,8 @@ class Dashboard {
             hyprMode: false,
             enableCustomFavicon: false,
             customFaviconPath: '',
-            language: 'en'
+            language: 'en',
+            interleaveMode: false
         };
         this.searchComponent = null;
         this.statusMonitor = null;

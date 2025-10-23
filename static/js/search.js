@@ -16,6 +16,8 @@ class SearchComponent {
 
         this.fuzzySearchComponent = new window.FuzzySearchComponent(this.bookmarks, (bookmark) => this.openBookmark(bookmark));
 
+        this.interleaveMode = settings.interleaveMode || false;
+
         this.init();
     }
 
@@ -30,6 +32,7 @@ class SearchComponent {
         this.language = language || this.language;
         this.commandsComponent.setLanguage(this.language);
         this.fuzzySearchComponent.updateBookmarks(bookmarks);
+        this.interleaveMode = settings.interleaveMode || false;
         this.buildShortcutsMap();
     }
 
@@ -186,8 +189,14 @@ class SearchComponent {
                 return;
             }
         } else {
-            if (!/^[A-Z:/]$/.test(key)) {
-                return;
+            if (this.interleaveMode) {
+                if (!/^[A-Z0-9/]$/.test(key)) {
+                    return;
+                }
+            } else {
+                if (!/^[A-Z:/]$/.test(key)) {
+                    return;
+                }
             }
         }
 
@@ -199,19 +208,24 @@ class SearchComponent {
         this.currentQuery += key;
         
         // Check for exact match first
-        const exactMatch = this.shortcuts.get(this.currentQuery.toLowerCase());
-        if (exactMatch) {
-            // If it's a single character or no other shortcuts start with this query
-            const hasLongerMatches = Array.from(this.shortcuts.keys()).some(shortcut => 
-                shortcut !== this.currentQuery.toLowerCase() && 
-                shortcut.startsWith(this.currentQuery.toLowerCase())
-            );
-            
-            if (!hasLongerMatches) {
-                // Open immediately if no longer matches exist
-                this.openBookmark(exactMatch);
-                this.resetQuery();
-                return;
+        const query = this.currentQuery.startsWith('/') ? this.currentQuery.slice(1) : this.currentQuery;
+        const isShortcutMode = (this.currentQuery.startsWith('/') && this.interleaveMode) || (!this.currentQuery.startsWith('/') && !this.interleaveMode);
+        
+        if (isShortcutMode) {
+            const exactMatch = this.shortcuts.get(query.toLowerCase());
+            if (exactMatch) {
+                // If it's a single character or no other shortcuts start with this query
+                const hasLongerMatches = Array.from(this.shortcuts.keys()).some(shortcut => 
+                    shortcut !== query.toLowerCase() && 
+                    shortcut.startsWith(query.toLowerCase())
+                );
+                
+                if (!hasLongerMatches) {
+                    // Open immediately if no longer matches exist
+                    this.openBookmark(exactMatch);
+                    this.resetQuery();
+                    return;
+                }
             }
         }
         
@@ -237,37 +251,42 @@ class SearchComponent {
         if (this.currentQuery.startsWith(':')) {
             // Handle commands
             this.searchMatches = this.commandsComponent.handleCommand(this.currentQuery);
-        } else if (this.currentQuery.startsWith('/')) {
-            // Handle fuzzy search
-            this.searchMatches = this.fuzzySearchComponent.handleFuzzy(this.currentQuery.slice(1));
         } else {
-            // Handle bookmark shortcuts
-            this.shortcuts.forEach((bookmark, shortcut) => {
-                if (shortcut.startsWith(this.currentQuery.toLowerCase())) {
-                    this.searchMatches.push({ shortcut, bookmark, type: 'bookmark' });
+            const query = this.currentQuery.startsWith('/') ? this.currentQuery.slice(1) : this.currentQuery;
+            const isShortcutMode = (this.currentQuery.startsWith('/') && this.interleaveMode) || (!this.currentQuery.startsWith('/') && !this.interleaveMode);
+            
+            if (isShortcutMode) {
+                // Handle bookmark shortcuts
+                this.shortcuts.forEach((bookmark, shortcut) => {
+                    if (shortcut.startsWith(query.toLowerCase())) {
+                        this.searchMatches.push({ shortcut, bookmark, type: 'bookmark' });
+                    }
+                });
+
+                // Check if 'config' matches the current query
+                if ('config'.startsWith(query.toLowerCase()) && query.length > 0) {
+                    this.searchMatches.push({ 
+                        shortcut: 'config', 
+                        bookmark: { name: this.language ? this.language.t('dashboard.configuration') : 'Configuration', url: '/config' }, 
+                        type: 'config' 
+                    });
                 }
-            });
 
-            // Check if 'config' matches the current query
-            if ('config'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
-                this.searchMatches.push({ 
-                    shortcut: 'config', 
-                    bookmark: { name: this.language ? this.language.t('dashboard.configuration') : 'Configuration', url: '/config' }, 
-                    type: 'config' 
-                });
+                // Check if 'colors' matches the current query
+                if ('colors'.startsWith(query.toLowerCase()) && query.length > 0) {
+                    this.searchMatches.push({ 
+                        shortcut: 'colors', 
+                        bookmark: { name: this.language ? this.language.t('dashboard.colorCustomization') : 'Color Customization', url: '/colors' }, 
+                        type: 'colors' 
+                    });
+                }
+
+                // Sort matches by shortcut length (shorter first)
+                this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
+            } else {
+                // Handle fuzzy search
+                this.searchMatches = this.fuzzySearchComponent.handleFuzzy(query);
             }
-
-            // Check if 'colors' matches the current query
-            if ('colors'.startsWith(this.currentQuery.toLowerCase()) && this.currentQuery.length > 0) {
-                this.searchMatches.push({ 
-                    shortcut: 'colors', 
-                    bookmark: { name: this.language ? this.language.t('dashboard.colorCustomization') : 'Color Customization', url: '/colors' }, 
-                    type: 'colors' 
-                });
-            }
-
-            // Sort matches by shortcut length (shorter first)
-            this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
         }
 
         // Always show search interface, even with no matches

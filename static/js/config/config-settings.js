@@ -173,7 +173,21 @@ class ConfigSettings {
                 if (window.AppModal) {
                     window.AppModal.alert({
                         title: this.t('config.hyprModeInfoTitle'),
-                        message: this.t('config.hyprModeInfoMessage'),
+                        htmlMessage: this.t('config.hyprModeInfoMessage').replace(/\n/g, '<br>'),
+                        confirmText: this.t('config.gotIt')
+                    });
+                }
+            });
+        }
+
+        // Interleave mode info button
+        const interleaveModeInfoBtn = document.getElementById('interleave-mode-info-btn');
+        if (interleaveModeInfoBtn) {
+            interleaveModeInfoBtn.addEventListener('click', () => {
+                if (window.AppModal) {
+                    window.AppModal.alert({
+                        title: this.t('config.interleaveModeInfoTitle'),
+                        htmlMessage: this.t('config.interleaveModeInfoMessage').replace(/\n/g, '<br>'),
                         confirmText: this.t('config.gotIt')
                     });
                 }
@@ -448,6 +462,7 @@ class ConfigSettings {
         const showPageNamesInTabsCheckbox = document.getElementById('show-page-names-in-tabs-checkbox');
         const enableCustomFaviconCheckbox = document.getElementById('enable-custom-favicon-checkbox');
         const languageSelect = document.getElementById('language-select');
+        const interleaveModeCheckbox = document.getElementById('interleave-mode-checkbox');
 
         if (themeSelect) settings.theme = themeSelect.value;
         if (columnsInput) settings.columnsPerRow = parseInt(columnsInput.value);
@@ -468,6 +483,7 @@ class ConfigSettings {
         if (showPageNamesInTabsCheckbox) settings.showPageNamesInTabs = showPageNamesInTabsCheckbox.checked;
         if (enableCustomFaviconCheckbox) settings.enableCustomFavicon = enableCustomFaviconCheckbox.checked;
         if (languageSelect) settings.language = languageSelect.value;
+        if (interleaveModeCheckbox) settings.interleaveMode = interleaveModeCheckbox.checked;
     }
 
     /**
@@ -666,7 +682,8 @@ class ConfigSettings {
             showPageNamesInTabs: false,
             enableCustomFavicon: false,
             customFaviconPath: '',
-            language: 'en'
+            language: 'en',
+            interleaveMode: false
         };
     }
 
