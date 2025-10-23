@@ -57,8 +57,8 @@ class ConfigKeyboard {
     handleKeyPress(e) {
         const key = e.key.toLowerCase();
 
-        // Handle number keys 1-4 for tab navigation
-        if (key >= '1' && key <= '4') {
+        // Handle number keys 1-5 for tab navigation
+        if (key >= '1' && key <= '5') {
             const tabIndex = parseInt(key) - 1;
             
             if (tabIndex < this.tabButtons.length) {
