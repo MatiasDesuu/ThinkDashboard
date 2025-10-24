@@ -105,12 +105,77 @@
                 </div>
                 
                 <div class="checkbox-tree">
+                    <h3 class="section-title" data-i18n="config.dashboardSection">Dashboard</h3>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="new-tab-checkbox">
                             <span class="checkbox-text" data-i18n="config.openLinksInNewTab">Open links in new tab</span>
                         </label>
                     </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-date-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showDate">Show date</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-title-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showDashboardTitle">Show dashboard title</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-config-button-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showConfigButton">Show config button</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-page-names-in-tabs-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showPageNamesInTabs">Show page names in tabs</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-page-tabs-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showPageTabs">Show page tabs</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-search-button-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showSearchButton">Show search button</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="global-shortcuts-checkbox">
+                            <span class="checkbox-text" data-i18n="config.globalShortcuts">Use shortcuts from all pages</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-status-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showBookmarkStatus">Show bookmark status (online/offline)</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item checkbox-tree-child">
+                        <span class="tree-symbol">└──</span>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-ping-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showPingTimes">Show ping times (ms)</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item checkbox-tree-child">
+                        <span class="tree-symbol">└──</span>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-status-loading-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showStatusLoading">Show status loading indicator</span>
+                        </label>
+                    </div>
+
+                                        <h3 class="section-title" data-i18n="config.advancedSection">General</h3>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
                             <input type="checkbox" id="hypr-mode-checkbox">
@@ -122,12 +187,6 @@
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-background-dots-checkbox">
                             <span class="checkbox-text" data-i18n="config.showBackgroundDots">Show background dots</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-tree-item">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="show-title-checkbox">
-                            <span class="checkbox-text" data-i18n="config.showDashboardTitle">Show dashboard title</span>
                         </label>
                     </div>
                     <div class="checkbox-tree-item">
@@ -157,24 +216,6 @@
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="show-config-button-checkbox">
-                            <span class="checkbox-text" data-i18n="config.showConfigButton">Show config button</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-tree-item">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="show-page-names-in-tabs-checkbox">
-                            <span class="checkbox-text" data-i18n="config.showPageNamesInTabs">Show page names in tabs</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-tree-item">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="show-page-tabs-checkbox">
-                            <span class="checkbox-text">Show page tabs</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-tree-item">
-                        <label class="checkbox-label">
                             <input type="checkbox" id="enable-custom-favicon-checkbox">
                             <span class="checkbox-text" data-i18n="config.enableCustomFavicon">Enable custom favicon</span>
                         </label>
@@ -199,12 +240,6 @@
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="show-search-button-checkbox">
-                            <span class="checkbox-text" data-i18n="config.showSearchButton">Show search button</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-tree-item">
-                        <label class="checkbox-label">
                             <input type="checkbox" id="animations-enabled-checkbox">
                             <span class="checkbox-text" data-i18n="config.enableAnimations">Enable animations</span>
                         </label>
@@ -213,32 +248,6 @@
                         <label class="checkbox-label">
                             <input type="checkbox" id="device-specific-checkbox">
                             <span class="checkbox-text" data-i18n="config.deviceSpecificSettings">Use device-specific settings</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-tree-item">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="global-shortcuts-checkbox">
-                            <span class="checkbox-text" data-i18n="config.globalShortcuts">Use shortcuts from all pages</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-tree-item">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="show-status-checkbox">
-                            <span class="checkbox-text" data-i18n="config.showBookmarkStatus">Show bookmark status (online/offline)</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-tree-item checkbox-tree-child">
-                        <span class="tree-symbol">└──</span>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="show-ping-checkbox">
-                            <span class="checkbox-text" data-i18n="config.showPingTimes">Show ping times (ms)</span>
-                        </label>
-                    </div>
-                    <div class="checkbox-tree-item checkbox-tree-child">
-                        <span class="tree-symbol">└──</span>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="show-status-loading-checkbox">
-                            <span class="checkbox-text" data-i18n="config.showStatusLoading">Show status loading indicator</span>
                         </label>
                     </div>
                 </div>

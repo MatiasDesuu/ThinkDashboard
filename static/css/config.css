@@ -379,6 +379,27 @@ body {
     opacity: 1;
 }
 
+/* Section titles */
+.section-title {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    text-transform: lowercase;
+    border: none;
+    padding: 0;
+}
+
+.section-title::before {
+    content: '// ';
+}
+
+.section-title:not(:first-of-type) {
+    margin-top: 1rem;
+}
+
 .checkbox-label input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
