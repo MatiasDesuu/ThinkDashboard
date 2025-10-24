@@ -1,0 +1,256 @@
+/* ThinkDashboard Extension Styles - TUI Terminal Style */
+
+:root {
+  /* Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #9CA3AF;
+  --text-tertiary: #6B7280;
+  --background-primary: #000000;
+  --background-secondary: #1F2937;
+  --background-modal: #1F2937;
+  --border-primary: #4B5563;
+  --border-secondary: #374151;
+  --accent-success: #00FF9C;
+  --accent-warning: #FFD600;
+  --accent-error: #FF0055;
+
+  /* Font */
+  --font-family-main: 'Courier New', monospace;
+  --font-size-text: 14px;
+  --font-size-title: 18px;
+  --font-weight-normal: 400;
+  --font-weight-black: 900;
+
+  /* Spacing */
+  --border-width: 1px;
+  --border-radius: 0px;
+  --padding-small: 5px;
+  --padding-medium: 10px;
+  --padding-large: 15px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-main);
+}
+
+body {
+  width: 350px;
+  min-height: 400px;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-text);
+  border: var(--border-width) solid var(--border-primary);
+}
+
+.container {
+  padding: var(--padding-medium);
+}
+
+.message {
+  display: none;
+  padding: var(--padding-small);
+  margin: 0 var(--padding-medium) var(--padding-medium) var(--padding-medium);
+  border: var(--border-width) solid var(--border-primary);
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  font-size: var(--font-size-text);
+  text-align: center;
+}
+
+.message.error {
+  border-color: var(--accent-error);
+  color: var(--accent-error);
+}
+
+.message.success {
+  border-color: var(--accent-success);
+  color: var(--accent-success);
+}
+
+.message.info {
+  border-color: var(--accent-warning);
+  color: var(--accent-warning);
+}
+
+.confirmation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.confirmation.hidden {
+  display: none;
+}
+
+.confirmation p {
+  background-color: var(--background-secondary);
+  border: var(--border-width) solid var(--border-primary);
+  color: var(--text-primary);
+  padding: var(--padding-medium);
+  margin: var(--padding-small);
+  text-align: center;
+  width: calc(100% - 2 * var(--padding-small));
+  max-width: 350px;
+}
+
+.highlight {
+  color: var(--accent-warning);
+  font-weight: bold;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: var(--padding-small);
+  width: calc(100% - 2 * var(--padding-small));
+  max-width: 350px;
+  margin: var(--padding-small);
+}
+
+.confirmation-buttons button {
+  flex: 1;
+  padding: var(--padding-small) var(--padding-medium);
+  background-color: var(--background-secondary);
+  border: var(--border-width) solid var(--border-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: var(--font-size-text);
+}
+
+.confirmation-buttons button:hover {
+  background-color: var(--accent-success);
+  color: var(--background-primary);
+}
+
+.tabs {
+  display: flex;
+  border-bottom: var(--border-width) solid var(--border-secondary);
+  margin-bottom: var(--padding-medium);
+}
+
+.tab-button {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: var(--padding-small) var(--padding-medium);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-button.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-success);
+}
+
+.tab-button:hover {
+  color: var(--text-primary);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+h2 {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-black);
+  margin-bottom: var(--padding-medium);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: var(--padding-small);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-normal);
+}
+
+.input-with-button {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--padding-medium);
+}
+
+.input-with-button input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.input-with-button button {
+  margin-left: var(--padding-small);
+  padding: var(--padding-small);
+  width: auto;
+  min-width: 30px;
+  font-size: var(--font-size-text);
+  cursor: pointer;
+  background-color: var(--background-secondary);
+  border: var(--border-width) solid var(--border-primary);
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.input-with-button button:hover {
+  background-color: var(--accent-warning);
+  color: var(--background-primary);
+}
+
+input, select {
+  margin-bottom: var(--padding-medium);
+  padding: var(--padding-small);
+  background-color: var(--background-secondary);
+  border: var(--border-width) solid var(--border-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-text);
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent-success);
+}
+
+button {
+  padding: var(--padding-small) var(--padding-medium);
+  background-color: var(--background-secondary);
+  border: var(--border-width) solid var(--border-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: var(--font-size-text);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background-color: var(--accent-success);
+  color: var(--background-primary);
+}
+
+.button-group {
+  display: flex;
+  gap: var(--padding-small);
+}
+
+.button-group button {
+  flex: 1;
+}

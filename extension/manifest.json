@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "ThinkDashboard Bookmark Saver",
+  "version": "1.0",
+  "description": "Save bookmarks directly to ThinkDashboard pages",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Save to ThinkDashboard"
+  },
+  "icons": {
+    "256": "icons/icon256.png"
+  }
+}

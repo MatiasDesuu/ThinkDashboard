@@ -94,6 +94,7 @@ type Store interface {
 	GetBookmarksByPage(pageID int) []Bookmark
 	GetAllBookmarks() []Bookmark
 	SaveBookmarksByPage(pageID int, bookmarks []Bookmark)
+	AddBookmarkToPage(pageID int, bookmark Bookmark)
 	// Categories - per page only
 	GetCategoriesByPage(pageID int) []Category
 	SaveCategoriesByPage(pageID int, categories []Category)
@@ -263,6 +264,41 @@ func (fs *FileStore) SaveBookmarksByPage(pageID int, bookmarks []Bookmark) {
 
 	// Update only bookmarks, preserve page metadata and categories
 	pageWithBookmarks.Bookmarks = bookmarks
+	newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
+	os.WriteFile(filePath, newData, 0644)
+}
+
+func (fs *FileStore) AddBookmarkToPage(pageID int, bookmark Bookmark) {
+	fs.mutex.Lock()
+	defer fs.mutex.Unlock()
+
+	fs.ensureDataDir()
+
+	// Read the existing page data
+	filePath := fmt.Sprintf("%s/bookmarks-%d.json", fs.dataDir, pageID)
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		// If file doesn't exist, create new page with this ID and default categories
+		pageWithBookmarks := PageWithBookmarks{
+			Page: Page{
+				ID:   pageID,
+				Name: fmt.Sprintf("Page %d", pageID),
+			},
+			Categories: getDefaultNewPageCategories(),
+			Bookmarks:  []Bookmark{bookmark},
+		}
+		newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
+		os.WriteFile(filePath, newData, 0644)
+		return
+	}
+
+	var pageWithBookmarks PageWithBookmarks
+	if err := json.Unmarshal(data, &pageWithBookmarks); err != nil {
+		return
+	}
+
+	// Add the new bookmark to existing bookmarks
+	pageWithBookmarks.Bookmarks = append(pageWithBookmarks.Bookmarks, bookmark)
 	newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
 	os.WriteFile(filePath, newData, 0644)
 }

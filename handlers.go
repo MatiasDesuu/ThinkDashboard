@@ -133,7 +133,17 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
+func (h *Handlers) setCORSHeaders(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+}
+
 func (h *Handlers) GetBookmarks(w http.ResponseWriter, r *http.Request) {
+	h.setCORSHeaders(w)
+	if r.Method == "OPTIONS" {
+		return
+	}
 	pageIDStr := r.URL.Query().Get("page")
 	all := r.URL.Query().Get("all")
 	var bookmarks []Bookmark
@@ -159,6 +169,10 @@ func (h *Handlers) GetBookmarks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) SaveBookmarks(w http.ResponseWriter, r *http.Request) {
+	h.setCORSHeaders(w)
+	if r.Method == "OPTIONS" {
+		return
+	}
 	pageIDStr := r.URL.Query().Get("page")
 	if pageIDStr == "" {
 		http.Error(w, "Page ID is required", http.StatusBadRequest)
@@ -178,6 +192,26 @@ func (h *Handlers) SaveBookmarks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.store.SaveBookmarksByPage(pageID, bookmarks)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+}
+
+func (h *Handlers) AddBookmark(w http.ResponseWriter, r *http.Request) {
+	h.setCORSHeaders(w)
+	if r.Method == "OPTIONS" {
+		return
+	}
+	var request struct {
+		Page     int      `json:"page"`
+		Bookmark Bookmark `json:"bookmark"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	h.store.AddBookmarkToPage(request.Page, request.Bookmark)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
@@ -228,6 +262,10 @@ func (h *Handlers) SaveCategories(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) GetPages(w http.ResponseWriter, r *http.Request) {
+	h.setCORSHeaders(w)
+	if r.Method == "OPTIONS" {
+		return
+	}
 	pages := h.store.GetPages()
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(pages)

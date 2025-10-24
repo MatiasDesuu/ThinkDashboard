@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinkDashboard Bookmark Saver</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <div id="confirmation" class="confirmation hidden">
+            <p id="confirmation-text"></p>
+            <div class="confirmation-buttons">
+                <button id="confirm-yes">Yes</button>
+                <button id="confirm-no">No</button>
+            </div>
+        </div>
+        <div class="tabs">
+            <button class="tab-button active" data-tab="save">Save</button>
+            <button class="tab-button" data-tab="settings">Settings</button>
+        </div>
+        <div id="save-tab" class="tab-content active">
+            <h2>Save Bookmark</h2>
+            <form id="save-form">
+                <label for="bookmark-name">Name:</label>
+                <input type="text" id="bookmark-name" required>
+                
+                <label for="bookmark-url">URL:</label>
+                <input type="url" id="bookmark-url" required>
+                
+                <label for="page-select">Page:</label>
+                <select id="page-select"></select>
+                
+                <label for="category-select">Category:</label>
+                <select id="category-select"></select>
+                
+                <button type="submit">Save Bookmark</button>
+            </form>
+        </div>
+        <div id="settings-tab" class="tab-content">
+            <h2>Settings</h2>
+            <form id="settings-form">
+                <label for="server-url">ThinkDashboard URL:</label>
+                <div class="input-with-button">
+                    <input type="url" id="server-url" placeholder="http://localhost:8080" required>
+                    <button type="button" id="reload-pages-btn" title="Reload Pages">⟳</button>
+                </div>
+                <label for="default-page">Default Page:</label>
+                <select id="default-page"></select>
+                
+                <label for="default-category">Default Category:</label>
+                <select id="default-category"></select>
+                
+                <div class="button-group">
+                    <button type="submit">Save Settings</button>
+                    <button type="button" id="reset-settings-btn">Reset Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="message" class="message"></div>
+    <script src="popup.js"></script>
+</body>
+</html>
