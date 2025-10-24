@@ -43,7 +43,8 @@ class ConfigManager {
             enableCustomFont: false,
             customFontPath: '',
             language: 'en',
-            interleaveMode: false
+            interleaveMode: false,
+            showPageTabs: true
         };
         this.deviceSpecific = false;
 
@@ -91,6 +92,9 @@ class ConfigManager {
             }
             if (typeof this.settingsData.interleaveMode === 'undefined') {
                 this.settingsData.interleaveMode = false;
+            }
+            if (typeof this.settingsData.showPageTabs === 'undefined') {
+                this.settingsData.showPageTabs = true;
             }
             this.currentPageId = settings.currentPage || 1;
             
@@ -545,6 +549,7 @@ class ConfigManager {
         document.getElementById('show-config-button-checkbox').checked = this.settingsData.showConfigButton;
         document.getElementById('show-search-button-checkbox').checked = this.settingsData.showSearchButton;
         document.getElementById('interleave-mode-checkbox').checked = false;
+        document.getElementById('show-page-tabs-checkbox').checked = this.settingsData.showPageTabs;
 
         this.setupDOM();
         this.renderConfig();

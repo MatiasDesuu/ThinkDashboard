@@ -381,6 +381,15 @@ class ConfigSettings {
             });
         }
 
+        // Show page tabs checkbox
+        const showPageTabsCheckbox = document.getElementById('show-page-tabs-checkbox');
+        if (showPageTabsCheckbox) {
+            showPageTabsCheckbox.checked = settings.showPageTabs;
+            showPageTabsCheckbox.addEventListener('change', (e) => {
+                settings.showPageTabs = e.target.checked;
+            });
+        }
+
         // Show search button checkbox
         const showSearchButtonCheckbox = document.getElementById('show-search-button-checkbox');
         if (showSearchButtonCheckbox) {
@@ -481,6 +490,8 @@ class ConfigSettings {
         if (customTitleInput) settings.customTitle = customTitleInput.value;
         if (showPageInTitleCheckbox) settings.showPageInTitle = showPageInTitleCheckbox.checked;
         if (showPageNamesInTabsCheckbox) settings.showPageNamesInTabs = showPageNamesInTabsCheckbox.checked;
+        const showPageTabsCheckbox = document.getElementById('show-page-tabs-checkbox');
+        if (showPageTabsCheckbox) settings.showPageTabs = showPageTabsCheckbox.checked;
         if (enableCustomFaviconCheckbox) settings.enableCustomFavicon = enableCustomFaviconCheckbox.checked;
         if (languageSelect) settings.language = languageSelect.value;
         if (interleaveModeCheckbox) settings.interleaveMode = interleaveModeCheckbox.checked;
@@ -683,7 +694,8 @@ class ConfigSettings {
             enableCustomFavicon: false,
             customFaviconPath: '',
             language: 'en',
-            interleaveMode: false
+            interleaveMode: false,
+            showPageTabs: true
         };
     }
 

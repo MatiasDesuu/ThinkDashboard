@@ -64,6 +64,7 @@ type Settings struct {
 	CustomFontPath      string `json:"customFontPath"`      // Path to custom font file
 	Language            string `json:"language"`            // Language code, e.g., "en" or "es"
 	InterleaveMode      bool   `json:"interleaveMode"`      // Interleave mode for search (/ for shortcuts, direct input for fuzzy)
+	ShowPageTabs        bool   `json:"showPageTabs"`        // Show page navigation tabs
 }
 
 type ColorTheme struct {
@@ -184,6 +185,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			HyprMode:           false,
 			AnimationsEnabled:  true, // Default to animations enabled
 			Language:           "en",
+			ShowPageTabs:       true,
 		}
 		data, _ := json.MarshalIndent(defaultSettings, "", "  ")
 		os.WriteFile(fs.settingsFile, data, 0644)
@@ -557,11 +559,20 @@ func (fs *FileStore) GetSettings() Settings {
 			AnimationsEnabled:  true,
 			Language:           "en",
 			InterleaveMode:     false,
+			ShowPageTabs:       true,
 		}
 	}
 
 	var settings Settings
 	json.Unmarshal(data, &settings)
+
+	// Check if showPageTabs was present in the JSON, if not, default to true
+	var raw map[string]interface{}
+	json.Unmarshal(data, &raw)
+	if _, exists := raw["showPageTabs"]; !exists {
+		settings.ShowPageTabs = true
+	}
+
 	// Normalize legacy fontSize values (one-time migration)
 	switch settings.FontSize {
 	case "small":

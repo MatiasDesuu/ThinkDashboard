@@ -55,6 +55,7 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		EnableCustomFont    bool
 		CustomFontPath      string
 		Language            string
+		ShowPageTabs        bool
 	}{
 		Theme:               settings.Theme,
 		FontSize:            settings.FontSize,
@@ -70,6 +71,7 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		EnableCustomFont:    settings.EnableCustomFont,
 		CustomFontPath:      settings.CustomFontPath,
 		Language:            settings.Language,
+		ShowPageTabs:        settings.ShowPageTabs,
 	}
 
 	var buf bytes.Buffer
@@ -104,6 +106,7 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 		EnableCustomFont    bool
 		CustomFontPath      string
 		Language            string
+		ShowPageTabs        bool
 	}{
 		Theme:               settings.Theme,
 		FontSize:            settings.FontSize,
@@ -116,6 +119,7 @@ func (h *Handlers) Config(w http.ResponseWriter, r *http.Request) {
 		EnableCustomFont:    settings.EnableCustomFont,
 		CustomFontPath:      settings.CustomFontPath,
 		Language:            settings.Language,
+		ShowPageTabs:        settings.ShowPageTabs,
 	}
 
 	var buf bytes.Buffer

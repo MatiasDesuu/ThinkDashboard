@@ -23,7 +23,8 @@ class Dashboard {
             enableCustomFavicon: false,
             customFaviconPath: '',
             language: 'en',
-            interleaveMode: false
+            interleaveMode: false,
+            showPageTabs: true
         };
         this.searchComponent = null;
         this.statusMonitor = null;
@@ -292,6 +293,9 @@ class Dashboard {
 
         // Control search button visibility dynamically
         this.updateSearchButtonVisibility();
+
+        // Control page tabs visibility dynamically
+        this.updatePageTabsVisibility();
 
         // Apply columns setting
         const grid = document.getElementById('dashboard-layout');
@@ -681,6 +685,13 @@ class Dashboard {
             if (searchButton) {
                 searchButton.remove();
             }
+        }
+    }
+
+    updatePageTabsVisibility() {
+        const pageNavigation = document.getElementById('page-navigation');
+        if (pageNavigation) {
+            pageNavigation.style.display = this.settings.showPageTabs ? 'block' : 'none';
         }
     }
 
