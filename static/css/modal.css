@@ -125,3 +125,44 @@
 .modal-button.danger .modal-button-prefix {
     color: var(--accent-error);
 }
+
+/* Modal select styling */
+.modal-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-primary);
+    background: var(--background-primary);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-controls);
+    margin-top: 0.5rem;
+}
+
+/* Modal page list styling */
+.modal-page-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.modal-page-btn {
+    padding: 0.5rem;
+    border: 1px solid var(--border-primary);
+    background: var(--background-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: var(--font-size-controls);
+    transition: background-color 0.3s ease;
+}
+
+.modal-page-btn:hover:not(.current) {
+    background-color: var(--background-secondary);
+}
+
+.modal-page-btn.current {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

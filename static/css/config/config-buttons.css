@@ -46,6 +46,11 @@
     transform: translateX(2px);
 }
 
+.btn-small {
+    padding: 0.375rem 0.5rem;
+    font-size: var(--font-size-text);
+}
+
 /* File input button styling */
 .file-input-btn {
     display: inline-block;

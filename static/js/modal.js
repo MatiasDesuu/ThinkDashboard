@@ -99,6 +99,10 @@ class Modal {
         // Show modal
         this.modal.classList.add('show');
         
+        // Prevent body scroll
+        this.previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        
         // Focus on confirm button for keyboard navigation
         setTimeout(() => {
             confirmButton.focus();
@@ -109,6 +113,8 @@ class Modal {
         if (this.modal) {
             this.modal.classList.remove('show');
         }
+        // Restore body scroll
+        document.body.style.overflow = this.previousOverflow || '';
     }
 
     // Convenience methods for common modal types

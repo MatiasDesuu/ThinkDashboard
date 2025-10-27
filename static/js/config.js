@@ -107,7 +107,7 @@ class ConfigManager {
 
     async loadPageBookmarks(pageId) {
         try {
-            this.currentPageId = pageId;
+            this.currentPageId = parseInt(pageId);
             this.bookmarksData = await this.data.loadBookmarksByPage(pageId);
             this.bookmarksPageCategories = (await this.data.loadCategoriesByPage(pageId)).map(cat => ({ ...cat }));
             
@@ -456,6 +456,80 @@ class ConfigManager {
             this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
                 this.bookmarksData = newBookmarks;
             });
+        }
+    }
+
+    async moveBookmark(index) {
+        const bookmark = this.bookmarksData[index];
+        if (!bookmark) return;
+
+        // Create page options
+        const pageOptions = this.pagesData
+            .map(page => {
+                const isCurrent = page.id === this.currentPageId;
+                return `<button class="modal-page-btn ${isCurrent ? 'current' : ''}" ${isCurrent ? 'disabled' : `onclick="window.tempMoveBookmark(${index}, ${page.id})"`}>${page.name}${isCurrent ? ' (current)' : ''}</button>`;
+            })
+            .join('');
+
+        const html = `
+            <p>${this.language.t('config.moveBookmarkMessage')}</p>
+            <div class="modal-page-list">
+                ${pageOptions}
+            </div>
+        `;
+
+        // Define temp function
+        window.tempMoveBookmark = async (idx, pid) => {
+            await this.doMoveBookmark(idx, pid);
+            AppModal.hide();
+        };
+
+        await window.AppModal.confirm({
+            title: this.language.t('config.moveBookmarkTitle'),
+            htmlMessage: html,
+            confirmText: this.language.t('config.cancel'),
+            showCancel: false,
+            onConfirm: () => {}
+        });
+
+        // Clean up
+        delete window.tempMoveBookmark;
+    }
+
+    async doMoveBookmark(index, newPageId) {
+        const bookmark = this.bookmarksData[index];
+        if (!bookmark) return;
+
+        if (newPageId === this.currentPageId) {
+            this.ui.showNotification(this.language.t('config.bookmarkAlreadyHere'), 'info');
+            return;
+        }
+
+        try {
+            // Remove from current page
+            this.bookmarksData.splice(index, 1);
+
+            // Load bookmarks from new page
+            const newPageBookmarks = await this.data.loadBookmarksByPage(newPageId);
+
+            // Add bookmark with category cleared
+            const movedBookmark = { ...bookmark, category: '' };
+            newPageBookmarks.push(movedBookmark);
+
+            // Save both pages
+            await this.data.saveBookmarks(this.bookmarksData, this.currentPageId);
+            await this.data.saveBookmarks(newPageBookmarks, newPageId);
+
+            // Re-render current page
+            this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
+            this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
+                this.bookmarksData = newBookmarks;
+            });
+
+            this.ui.showNotification(this.language.t('config.bookmarkMoved'), 'success');
+        } catch (error) {
+            console.error('Error moving bookmark:', error);
+            this.ui.showNotification(this.language.t('config.errorMovingBookmark'), 'error');
         }
     }
 
