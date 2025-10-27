@@ -41,6 +41,7 @@
     "categoriesTab": "kategorie",
     "bookmarksTab": "zakładki",
     "backupsTab": "kopie zapasowe",
+    "aboutTab": "pomoc",
     "themeLabel": "Motyw:",
     "languageLabel": "Język:",
     "columnsLabel": "Kolumn w rzędzie:",
@@ -139,6 +140,21 @@
     "hyprModeInfoTitle": "Informacje o trybie HyprMode",
     "hyprModeInfoMessage": "Tryb HyprMode jest przeznaczony do używania gdy ThinkDashboard jest zainstalowany jako Progressive Web App (PWA). Po włączeniu, kliknięcie zakładek otworzy je w nowej karcie przeglądarki, a następnie automatycznie zamknie okno PWA, naśladując zachowanie tradycyjnego launchera aplikacji.",
     "gotIt": "Rozumiem"
+},
+"help": {
+    "title": "Pomoc i skróty",
+    "introduction": "Witaj w ThinkDashboard! Oto główne funkcje i skróty, które pomogą Ci efektywnie nawigować i korzystać z aplikacji.",
+    "pageNavigation": "Nawigacja stron: Użyj klawiszy numerycznych <code>1</code>, <code>2</code>, <code>3</code> itp. aby przełączać się między stronami na pulpicie.",
+    "touchNavigation": "Nawigacja dotykowa: Na urządzeniach mobilnych lub dotykowych, przesuń palcem w lewo lub prawo aby zmienić strony.",
+    "arrowNavigation": "Nawigacja strzałkami: Naciśnij <code>Shift + Strzałka w lewo</code> lub <code>Shift + Strzałka w prawo</code> aby nawigować między stronami.",
+    "keyboardNavigation": "Nawigacja klawiaturą: Użyj klawiszy strzałek aby nawigować między zakładkami na pulpicie. Naciśnij <code>Enter</code> lub <code>Spację</code> aby otworzyć wybraną zakładkę.",
+    "shortcutsLauncher": "Skróty zakładek: Naciśnij dowolny klawisz literowy na pulpicie aby rozpocząć wpisywanie skrótu. Na przykład, jeśli masz zakładkę ze skrótem <code>yt</code>, po prostu wpisz <code>yt</code> a aplikacja otworzy ją automatycznie.",
+    "fuzzySearch": "Wyszukiwanie rozmyte: Naciśnij <code>/</code> aby wyszukać zakładki po nazwie. Zacznij pisać a znajdzie dopasowania w trakcie pisania.",
+    "searchMode": "Tryb wyszukiwania: Możesz przełączać zachowanie wyszukiwania. Domyślnie, pisanie uruchamia skróty a <code>/</code> uruchamia wyszukiwanie rozmyte. Możesz to przełączyć w <a href=\"#general\"><code>config#general</code></a>.",
+    "commands": "Polecenia: Wpisz <code>:</code> a następnie polecenie aby kontrolować aplikację. Dostępne polecenia obejmują <code>theme</code> (przełącz motyw), <code>columns</code> (zmień kolumny), <code>fontsize</code> (zmień rozmiar czcionki), i więcej w przyszłości.",
+    "dataStorage": "Przechowywanie danych: Wszystkie dane aplikacji są zapisane w katalogu <code>/data</code>. Obejmuje to pliki JSON dla settings (ustawienia pulpitu), pages (kolejność stron), i colors (niestandardowe motywy), jak również przesłane favicon, czcionki, i indywidualne strony zakładek (bookmarks-1.json, bookmarks-2.json, itp.).",
+    "deviceSpecificSettings": "Ustawienia specyficzne dla urządzenia: Po włączeniu, ustawienia pulpitu są zapisane lokalnie w przeglądarce zamiast na serwerze. Oznacza to, że ustawienia są specyficzne dla tego urządzenia/przeglądarki i nie będą synchronizowane między różnymi urządzeniami.",
+    "feedback": "Znalazłeś błąd lub masz opinię? Odwiedź nasze <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>repozytorium GitHub</code></a> aby zgłosić problemy lub zasugerować ulepszenia."
 },
 "colors": {
     "pageTitle": "Dostosowanie kolorów",

@@ -1,0 +1,25 @@
+/* Code styling for help section */
+code {
+    background-color: var(--background-secondary);
+    color: var(--text-primary);
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-family: var(--font-family-mono);
+    font-size: 0.875em;
+    border: 1px solid var(--border-primary);
+}
+
+/* Link styling for help section */
+.tab-content a {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
+/* Help section list spacing */
+.tab-content ul li {
+    margin-bottom: 0.75rem;
+}
+
+.tab-content ul {
+    padding-left: 1.5rem;
+}

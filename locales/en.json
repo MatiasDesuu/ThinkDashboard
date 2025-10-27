@@ -41,6 +41,7 @@
     "categoriesTab": "categories",
     "bookmarksTab": "bookmarks",
     "backupsTab": "backups",
+    "aboutTab": "help",
     "themeLabel": "Theme:",
     "languageLabel": "Language:",
     "columnsLabel": "Columns per row:",
@@ -139,6 +140,21 @@
     "hyprModeInfoTitle": "HyprMode Information",
     "hyprModeInfoMessage": "HyprMode is designed for when ThinkDashboard is installed as a Progressive Web App (PWA). When enabled, clicking on bookmarks will open them in a new browser tab and then automatically close the PWA window, mimicking the behavior of a traditional app launcher.",
     "gotIt": "Got it"
+},
+"help": {
+    "title": "Help & Shortcuts",
+    "introduction": "Welcome to ThinkDashboard! Here are the main features and shortcuts to help you navigate and use the app efficiently.",
+    "shortcutsLauncher": "Bookmark Shortcuts: Press any letter key on the dashboard to start typing a shortcut. For example, if you have a bookmark with shortcut <code>yt</code>, just type <code>yt</code> and the app will open it automatically.",
+    "fuzzySearch": "Fuzzy Search: Press <code>/</code> to search for bookmarks by name. Start typing and it will find matches as you go.",
+    "commands": "Commands: Type <code>:</code> followed by a command to control the app. Available commands include: <code>theme</code> (switch theme), <code>columns</code> (change columns), <code>fontsize</code> (change font size), and more to come.",
+    "pageNavigation": "Page Navigation: Use number keys <code>1</code>, <code>2</code>, <code>3</code>, etc. to switch between pages on the dashboard.",
+    "touchNavigation": "Touch Navigation: On mobile or touch devices, swipe left or right to change pages.",
+    "arrowNavigation": "Arrow Navigation: Press <code>Shift + Left Arrow</code> or <code>Shift + Right Arrow</code> to navigate between pages.",
+    "keyboardNavigation": "Keyboard Navigation: Use arrow keys to navigate between bookmarks on the dashboard. Press <code>Enter</code> or <code>Space</code> to open the selected bookmark.",
+    "searchMode": "Search Mode: You can switch the search behavior. By default, typing starts shortcuts and <code>/</code> starts fuzzy search. You can toggle this in <a href=\"#general\"><code>config#general</code></a>.",
+    "dataStorage": "Data Storage: All app data is saved in the <code>/data</code> directory. This includes JSON files for settings (your dashboard settings), pages (pages order), and colors (custom themes), as well as uploaded favicon, fonts, and individual bookmark pages (bookmarks-1.json, bookmarks-2.json, etc.).",
+    "deviceSpecificSettings": "Device-Specific Settings: When enabled, your dashboard settings are saved locally in your browser instead of on the server. This means settings are specific to this device/browser and won't sync across different devices.",
+    "feedback": "Found a bug or have feedback? Visit the <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>GitHub repository</code></a> to report issues or suggest improvements."
 },
 "colors": {
     "pageTitle": "Color Customization",

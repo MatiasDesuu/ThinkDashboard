@@ -41,6 +41,7 @@
     "categoriesTab": "categorías",
     "bookmarksTab": "marcadores",
     "backupsTab": "copias de seguridad",
+    "aboutTab": "ayuda",
     "themeLabel": "Tema:",
     "languageLabel": "Idioma:",
     "columnsLabel": "Columnas por fila:",
@@ -139,6 +140,21 @@
     "hyprModeInfoTitle": "Información del Modo Hypr",
     "hyprModeInfoMessage": "El Modo Hypr está diseñado para cuando ThinkDashboard se instala como una Aplicación Web Progresiva (PWA). Cuando está habilitado, hacer clic en marcadores los abrirá en una nueva pestaña del navegador y luego cerrará automáticamente la ventana PWA, imitando el comportamiento de un lanzador de aplicaciones tradicional.",
     "gotIt": "Entendido"
+},
+"help": {
+    "title": "Ayuda y Atajos",
+    "introduction": "¡Bienvenido a ThinkDashboard! Aquí están las principales características y atajos para ayudarte a navegar y usar la app de manera eficiente.",
+    "shortcutsLauncher": "Atajos de Marcadores: Presiona cualquier tecla de letra en el tablero para comenzar a escribir un atajo. Por ejemplo, si tienes un marcador con atajo <code>yt</code>, solo escribe <code>yt</code> y la app lo abrirá automáticamente.",
+    "fuzzySearch": "Búsqueda Difusa: Presiona <code>/</code> para buscar marcadores por nombre. Comienza a escribir y encontrará coincidencias a medida que avanzas.",
+    "commands": "Comandos: Escribe <code>:</code> seguido de un comando para controlar la app. Los comandos disponibles incluyen: <code>theme</code> (cambiar tema), <code>columns</code> (cambiar columnas), <code>fontsize</code> (cambiar tamaño de fuente), y más por venir.",
+    "pageNavigation": "Navegación de Páginas: Usa las teclas numéricas <code>1</code>, <code>2</code>, <code>3</code>, etc. para cambiar entre páginas en el tablero.",
+    "touchNavigation": "Navegación Táctil: En dispositivos móviles o táctiles, desliza hacia la izquierda o derecha para cambiar páginas.",
+    "arrowNavigation": "Navegación con Flechas: Presiona <code>Shift + Flecha Izquierda</code> o <code>Shift + Flecha Derecha</code> para navegar entre páginas.",
+    "keyboardNavigation": "Navegación por Teclado: Usa las teclas de flecha para navegar entre marcadores en el tablero. Presiona <code>Enter</code> o <code>Espacio</code> para abrir el marcador seleccionado.",
+    "searchMode": "Modo de Búsqueda: Puedes cambiar el comportamiento de la búsqueda. Por defecto, escribir inicia atajos y <code>/</code> inicia búsqueda difusa. Puedes alternar esto en <a href=\"#general\"><code>config#general</code></a>.",
+    "dataStorage": "Almacenamiento de Datos: Todos los datos de la app se guardan en el directorio <code>/data</code>. Esto incluye archivos JSON para settings (tus configuraciones del dashboard), pages (orden de páginas), y colors (temas personalizados), así como favicon subidos, fuentes, y páginas individuales de marcadores (bookmarks-1.json, bookmarks-2.json, etc.).",
+    "deviceSpecificSettings": "Configuraciones Específicas del Dispositivo: Cuando está habilitado, tus configuraciones del dashboard se guardan localmente en tu navegador en lugar del servidor. Esto significa que las configuraciones son específicas para este dispositivo/navegador y no se sincronizarán entre diferentes dispositivos.",
+    "feedback": "¿Encontraste un bug o tienes comentarios? Visita el <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>repositorio de GitHub</code></a> para reportar problemas o sugerir mejoras."
 },
 "colors": {
     "pageTitle": "Personalización de Colores",

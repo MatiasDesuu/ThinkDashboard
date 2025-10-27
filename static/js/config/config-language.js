@@ -61,7 +61,7 @@ class ConfigLanguage {
             if (element.hasAttribute('aria-label')) {
                 element.setAttribute('aria-label', translation);
             } else {
-                element.textContent = translation;
+                element.innerHTML = translation;
             }
         });
 

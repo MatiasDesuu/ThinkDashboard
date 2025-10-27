@@ -1,0 +1,33 @@
+/* Notification */
+.notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 0.75rem 1rem;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-semibold);
+    border: 1px solid;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.notification.success {
+    background-color: var(--background-secondary);
+    color: var(--accent-success);
+    border-color: var(--accent-success);
+}
+
+.notification.error {
+    background-color: var(--background-secondary);
+    color: var(--accent-error);
+    border-color: var(--accent-error);
+}

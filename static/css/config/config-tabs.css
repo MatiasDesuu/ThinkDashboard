@@ -1,0 +1,72 @@
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    margin-bottom: 0;
+    border: 1px solid var(--border-primary);
+    background: var(--background-primary);
+}
+
+.tab-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: var(--font-size-controls);
+    font-family: var(--font-family-main);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+}
+
+.tab-button::before {
+    content: '[';
+    margin-right: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.tab-button::after {
+    content: ']';
+    margin-left: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.tab-button:hover {
+    color: var(--text-secondary);
+}
+
+.tab-button.active {
+    color: var(--text-primary);
+}
+
+.tab-button.active::before,
+.tab-button.active::after {
+    opacity: 1;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

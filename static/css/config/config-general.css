@@ -1,0 +1,123 @@
+/* Configuration Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: var(--font-size-text);
+}
+
+/* Config Sections - Same system as dashboard */
+.config-section {
+    padding: 0;
+    max-width: 80%;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Optional: Set a reasonable max width for ultra-wide screens */
+@media (min-width: 1920px) {
+    .config-section {
+        max-width: 70%;
+    }
+}
+
+@media (min-width: 2560px) {
+    .config-section {
+        max-width: 60%;
+    }
+}
+
+.config-section.section-header {
+    padding-top: 2rem;
+    padding-bottom: 0;
+}
+
+.config-section.section-controls {
+    padding-top: 0;
+    padding-bottom: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.config-section.section-content {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Config Actions Top */
+.config-actions-top {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    padding: 1rem 0;
+    margin-bottom: 0;
+    background: var(--background-primary);
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-black);
+    opacity: 0.8;
+}
+
+.back-link {
+    text-decoration: none;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-semibold);
+    transition: color 0.3s ease;
+    color: var(--text-secondary);
+}
+
+.back-link:hover {
+    color: var(--text-primary);
+}
+
+/* Config Main */
+.config-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* Config sections inside tabs - these should take full width of their parent */
+.tab-content .config-section,
+.config-main .config-section {
+    border: none;
+    padding: 0;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+}
+
+.config-section h2 {
+    font-size: var(--font-size-category);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+    color: var(--text-tertiary);
+}
+
+.config-section h2::before {
+    content: '// ';
+}

@@ -1,0 +1,54 @@
+/* Buttons */
+.btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid;
+    background: transparent;
+    font-family: inherit;
+    font-size: var(--font-size-controls);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0;
+}
+
+.btn-primary,
+.btn-success {
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+}
+
+.btn-primary:hover,
+.btn-success:hover {
+    background-color: var(--background-secondary);
+    transform: translateX(2px);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+    color: var(--text-primary);
+    background-color: var(--background-secondary);
+}
+
+.btn-danger {
+    font-size: var(--font-size-controls);
+    border: 1px solid var(--accent-error);
+    color: var(--accent-error);
+}
+
+.btn-danger:hover {
+    background-color: var(--accent-error);
+    color: var(--background-primary);
+    transform: translateX(2px);
+}
+
+/* File input button styling */
+.file-input-btn {
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}

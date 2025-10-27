@@ -41,6 +41,7 @@
     "categoriesTab": "カテゴリ",
     "bookmarksTab": "ブックマーク",
     "backupsTab": "バックアップ",
+    "aboutTab": "ヘルプ",
     "themeLabel": "テーマ:",
     "languageLabel": "言語:",
     "columnsLabel": "行ごとの列数:",
@@ -139,6 +140,21 @@
     "hyprModeInfoTitle": "HyprMode 情報",
     "hyprModeInfoMessage": "HyprMode は ThinkDashboard が Progressive Web App (PWA) としてインストールされている場合に設計されています。有効にすると、ブックマークをクリックすると新しいブラウザタブで開き、PWA ウィンドウを自動的に閉じます。これにより、従来のアプリランチャーの動作を模倣します。",
     "gotIt": "了解"
+},
+"help": {
+    "title": "ヘルプとショートカット",
+    "introduction": "ThinkDashboardへようこそ！ アプリを効率的に操作するための主な機能とショートカットをご紹介します。",
+    "pageNavigation": "ページナビゲーション: 数字キー <code>1</code>、<code>2</code>、<code>3</code> などを使用してダッシュボードのページを切り替えます。",
+    "touchNavigation": "タッチナビゲーション: モバイルデバイスやタッチデバイスでは、左右にスワイプしてページを変更します。",
+    "arrowNavigation": "矢印ナビゲーション: <code>Shift + 左矢印キー</code> または <code>Shift + 右矢印キー</code> を押してページ間を移動します。",
+    "keyboardNavigation": "キーボードナビゲーション: 矢印キーを使用してダッシュボード上のブックマーク間を移動します。<code>Enter</code> または <code>Space</code> を押して選択したブックマークを開きます。",
+    "shortcutsLauncher": "ブックマークショートカット: ダッシュボードで任意の文字キーを押してショートカットの入力を開始します。例えば、ショートカット <code>yt</code> のブックマークがある場合、<code>yt</code> と入力するだけでアプリが自動的に開きます。",
+    "fuzzySearch": "ファジー検索: <code>/</code> を押して名前でブックマークを検索します。入力を開始すると、入力に合わせて一致するものを検索します。",
+    "searchMode": "検索モード: 検索動作を切り替えることができます。デフォルトでは、入力するとショートカットが開始され、<code>/</code> でファジー検索が開始されます。これを <a href=\"#general\"><code>config#general</code></a> で切り替えることができます。",
+    "commands": "コマンド: <code>:</code> に続けてコマンドを入力してアプリを制御します。利用可能なコマンドには <code>theme</code> (テーマ切り替え)、<code>columns</code> (列変更)、<code>fontsize</code> (フォントサイズ変更) などがあります。さらに追加予定です。",
+    "dataStorage": "データストレージ: すべてのアプリデータは <code>/data</code> ディレクトリに保存されます。これには settings (ダッシュボード設定)、pages (ページ順序)、colors (カスタムテーマ) の JSON ファイル、アップロードされた favicon、フォント、個別のブックマークページ (bookmarks-1.json、bookmarks-2.json など) が含まれます。",
+    "deviceSpecificSettings": "デバイス固有設定: 有効にすると、ダッシュボード設定はサーバーではなくブラウザにローカルに保存されます。つまり、設定はこのデバイス/ブラウザに固有であり、異なるデバイス間で同期されません。",
+    "feedback": "バグを見つけたか、フィードバックがありますか？ <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>GitHub リポジトリ</code></a> にアクセスして問題を報告したり改善を提案したりしてください。"
 },
 "colors": {
     "pageTitle": "色のカスタマイズ",
