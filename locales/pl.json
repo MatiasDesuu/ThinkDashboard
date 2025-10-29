@@ -163,7 +163,12 @@
     "commands": "Polecenia: Wpisz <code>:</code> a następnie polecenie aby kontrolować aplikację. Dostępne polecenia obejmują <code>theme</code> (przełącz motyw), <code>columns</code> (zmień kolumny), <code>fontsize</code> (zmień rozmiar czcionki), i więcej w przyszłości.",
     "dataStorage": "Przechowywanie danych: Wszystkie dane aplikacji są zapisane w katalogu <code>/data</code>. Obejmuje to pliki JSON dla settings (ustawienia pulpitu), pages (kolejność stron), i colors (niestandardowe motywy), jak również przesłane favicon, czcionki, i indywidualne strony zakładek (bookmarks-1.json, bookmarks-2.json, itp.).",
     "deviceSpecificSettings": "Ustawienia specyficzne dla urządzenia: Po włączeniu, ustawienia pulpitu są zapisane lokalnie w przeglądarce zamiast na serwerze. Oznacza to, że ustawienia są specyficzne dla tego urządzenia/przeglądarki i nie będą synchronizowane między różnymi urządzeniami.",
-    "feedback": "Znalazłeś błąd lub masz opinię? Odwiedź nasze <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>repozytorium GitHub</code></a> aby zgłosić problemy lub zasugerować ulepszenia."
+    "feedback": "Znalazłeś błąd lub masz opinię? Odwiedź nasze <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>repozytorium GitHub</code></a> aby zgłosić problemy lub zasugerować ulepszenia.",
+    "chromeExtension": "Rozszerzenie Chrome",
+    "extensionIntro": "ThinkDashboard zawiera rozszerzenie Chrome, które pozwala szybko dodawać zakładki z dowolnej strony internetowej bezpośrednio do pulpitu.",
+    "extensionInstall": "Aby zainstalować rozszerzenie: Sklonuj <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>repozytorium GitHub</code></a> na swój lokalny komputer lub pobierz najnowszą wersję z <a href=\"https://github.com/MatiasDesuu/ThinkDashboard/archive/refs/heads/main.zip\" target=\"_blank\"><code>tutaj</code></a>. Następnie przejdź do ustawień rozszerzeń Chrome (chrome://extensions/), włącz \"Tryb programisty\", i kliknij \"Załaduj rozpakowane\". Wybierz folder <code>extension</code> ze sklonowanego lub pobranego repozytorium.",
+    "extensionConfig": "Konfiguracja: Po zainstalowaniu, otwórz rozszerzenie i przejdź do zakładki Settings. Wprowadź swój URL ThinkDashboard, ustaw Default Page, gdzie będą zapisywane zakładki, i wybierz kategorię w tej stronie.",
+    "extensionUsage": "Użycie: Kliknij ikonę rozszerzenia, opcjonalnie zmień nazwę, URL, stronę i kategorię, następnie kliknij Save Bookmark."
 },
 "colors": {
     "pageTitle": "Dostosowanie kolorów",

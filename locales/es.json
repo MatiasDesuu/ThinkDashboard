@@ -163,7 +163,12 @@
     "searchMode": "Modo de Búsqueda: Puedes cambiar el comportamiento de la búsqueda. Por defecto, escribir inicia atajos y <code>/</code> inicia búsqueda difusa. Puedes alternar esto en <a href=\"#general\"><code>config#general</code></a>.",
     "dataStorage": "Almacenamiento de Datos: Todos los datos de la app se guardan en el directorio <code>/data</code>. Esto incluye archivos JSON para settings (tus configuraciones del dashboard), pages (orden de páginas), y colors (temas personalizados), así como favicon subidos, fuentes, y páginas individuales de marcadores (bookmarks-1.json, bookmarks-2.json, etc.).",
     "deviceSpecificSettings": "Configuraciones Específicas del Dispositivo: Cuando está habilitado, tus configuraciones del dashboard se guardan localmente en tu navegador en lugar del servidor. Esto significa que las configuraciones son específicas para este dispositivo/navegador y no se sincronizarán entre diferentes dispositivos.",
-    "feedback": "¿Encontraste un bug o tienes comentarios? Visita el <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>repositorio de GitHub</code></a> para reportar problemas o sugerir mejoras."
+    "feedback": "¿Encontraste un bug o tienes comentarios? Visita el <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>repositorio de GitHub</code></a> para reportar problemas o sugerir mejoras.",
+    "chromeExtension": "Extensión de Chrome",
+    "extensionIntro": "ThinkDashboard incluye una extensión de Chrome que te permite agregar rápidamente marcadores desde cualquier página web directamente a tu dashboard.",
+    "extensionInstall": "Para instalar la extensión: Clona el <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>repositorio de GitHub</code></a> en tu máquina local, o descarga la última versión desde <a href=\"https://github.com/MatiasDesuu/ThinkDashboard/archive/refs/heads/main.zip\" target=\"_blank\"><code>aquí</code></a>. Luego ve a la configuración de extensiones de Chrome (chrome://extensions/), habilita \"Modo desarrollador\", y haz clic en \"Cargar desempaquetada\". Selecciona la carpeta <code>extension</code> del repositorio clonado o descargado.",
+    "extensionConfig": "Configuración: Una vez instalada, abre la extensión y ve a la pestaña de Settings. Ingresa tu URL de ThinkDashboard, configura la Default Page donde se guardarán los marcadores, y elige la categoría dentro de esa página.",
+    "extensionUsage": "Uso: Haz clic en el ícono de la extensión, modifica opcionalmente el nombre, URL, página y categoría, luego haz clic en Save Bookmark."
 },
 "colors": {
     "pageTitle": "Personalización de Colores",

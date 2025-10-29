@@ -18,6 +18,7 @@ code {
 /* Help section list spacing */
 .tab-content ul li {
     margin-bottom: 0.75rem;
+    line-height: 1.6;
 }
 
 .tab-content ul {
