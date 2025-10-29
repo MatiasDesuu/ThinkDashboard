@@ -53,6 +53,7 @@ func main() {
 	r.HandleFunc("/api/backup", handlers.Backup).Methods("GET")
 	r.HandleFunc("/api/import", handlers.Import).Methods("POST")
 	r.HandleFunc("/api/ping", handlers.PingURL).Methods("GET")
+	r.HandleFunc("/health", handlers.Health).Methods("GET")
 
 	// Data files (for uploaded favicons, etc.)
 	r.PathPrefix("/data/").Handler(http.StripPrefix("/data/", http.FileServer(http.Dir("data/"))))

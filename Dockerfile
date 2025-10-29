@@ -18,7 +18,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 # Final stage
 FROM alpine:latest
 
-RUN apk --no-cache add ca-certificates tzdata
+RUN apk --no-cache add ca-certificates tzdata curl
 
 WORKDIR /app
 
@@ -41,3 +41,7 @@ ENV PORT=8080
 
 # Command to run
 CMD ["./main"]
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+CMD curl -f http://localhost:8080/health || exit 1
