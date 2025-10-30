@@ -101,6 +101,7 @@
     "fuzzySuggestionsStartWith": "クエリで始まる提案のみを表示",
     "fuzzySuggestionsInfoTitle": "ファジー提案情報",
     "fuzzySuggestionsInfoMessage": "有効にすると、ショートカット検索で入力した文字が名前のどこかに含まれる追加のブックマーク提案を表示します。\n\n例:\n• 'ho'と入力すると'HomePage'、'PhotoShop'などのブックマークが表示されます\n• 既存のショートカット一致と共に動作します\n• 下のサブオプションでさらにフィルタリングできます",
+    "keepSearchOpenWhenEmpty": "空のときに検索を開いたままにする",
     "errorLoadingConfig": "設定の読み込みエラー",
     "errorLoadingBookmarks": "ページのブックマーク読み込みエラー",
     "errorLoadingCategories": "ページのカテゴリ読み込みエラー",

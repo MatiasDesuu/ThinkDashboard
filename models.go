@@ -67,6 +67,7 @@ type Settings struct {
 	ShowPageTabs              bool   `json:"showPageTabs"`              // Show page navigation tabs
 	EnableFuzzySuggestions    bool   `json:"enableFuzzySuggestions"`    // Enable fuzzy suggestions in shortcut search
 	FuzzySuggestionsStartWith bool   `json:"fuzzySuggestionsStartWith"` // Fuzzy suggestions start with query instead of contains
+	KeepSearchOpenWhenEmpty   bool   `json:"keepSearchOpenWhenEmpty"`   // Keep search interface open when query is empty
 }
 
 type ColorTheme struct {
@@ -600,6 +601,7 @@ func (fs *FileStore) GetSettings() Settings {
 			ShowPageTabs:              true,
 			EnableFuzzySuggestions:    false,
 			FuzzySuggestionsStartWith: false,
+			KeepSearchOpenWhenEmpty:   false,
 		}
 	}
 

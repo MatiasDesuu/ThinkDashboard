@@ -39,7 +39,7 @@
     align-items: center;
     font-size: var(--font-size-bookmark);
     font-weight: var(--font-weight-semibold);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     justify-content: flex-start;
 }
 

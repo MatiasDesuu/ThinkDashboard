@@ -101,6 +101,7 @@
     "fuzzySuggestionsStartWith": "Only show suggestions that start with the query",
     "fuzzySuggestionsInfoTitle": "Fuzzy Suggestions Information",
     "fuzzySuggestionsInfoMessage": "When enabled, shows additional bookmark suggestions in shortcut search that contain the typed letters anywhere in their name.\n\nFor example:\n• Typing 'ho' will show bookmarks like 'HomePage', 'PhotoShop', etc.\n• Works alongside existing shortcut matches\n• Can be further filtered with the sub-option below",
+    "keepSearchOpenWhenEmpty": "Keep search open when empty",
     "errorLoadingConfig": "Error loading configuration",
     "errorLoadingBookmarks": "Error loading bookmarks for page",
     "errorLoadingCategories": "Error loading categories for page",

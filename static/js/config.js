@@ -46,7 +46,8 @@ class ConfigManager {
             interleaveMode: false,
             showPageTabs: true,
             enableFuzzySuggestions: false,
-            fuzzySuggestionsStartWith: false
+            fuzzySuggestionsStartWith: false,
+            keepSearchOpenWhenEmpty: false
         };
         this.deviceSpecific = false;
 

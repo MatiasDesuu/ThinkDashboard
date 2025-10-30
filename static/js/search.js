@@ -236,7 +236,7 @@ class SearchComponent {
     removeLastChar() {
         if (this.currentQuery.length > 0) {
             this.currentQuery = this.currentQuery.slice(0, -1);
-            if (this.currentQuery.length === 0) {
+            if (this.currentQuery.length === 0 && !this.settings.keepSearchOpenWhenEmpty) {
                 this.closeSearch();
             } else {
                 this.updateSearch();
@@ -256,50 +256,55 @@ class SearchComponent {
             const isShortcutMode = (this.currentQuery.startsWith('/') && this.interleaveMode) || (!this.currentQuery.startsWith('/') && !this.interleaveMode);
             
             if (isShortcutMode) {
-                // Handle bookmark shortcuts
-                this.shortcuts.forEach((bookmark, shortcut) => {
-                    if (shortcut.startsWith(query.toLowerCase())) {
-                        this.searchMatches.push({ shortcut, bookmark, type: 'bookmark' });
-                    }
-                });
-
-                // Check if 'config' matches the current query
-                if ('config'.startsWith(query.toLowerCase()) && query.length > 0) {
-                    this.searchMatches.push({ 
-                        shortcut: 'config', 
-                        bookmark: { name: this.language ? this.language.t('dashboard.configuration') : 'Configuration', url: '/config' }, 
-                        type: 'config' 
+                // Only search for shortcuts if query is not empty
+                if (query.length > 0) {
+                    // Handle bookmark shortcuts
+                    this.shortcuts.forEach((bookmark, shortcut) => {
+                        if (shortcut.startsWith(query.toLowerCase())) {
+                            this.searchMatches.push({ shortcut, bookmark, type: 'bookmark' });
+                        }
                     });
-                }
 
-                // Check if 'colors' matches the current query
-                if ('colors'.startsWith(query.toLowerCase()) && query.length > 0) {
-                    this.searchMatches.push({ 
-                        shortcut: 'colors', 
-                        bookmark: { name: this.language ? this.language.t('dashboard.colorCustomization') : 'Color Customization', url: '/colors' }, 
-                        type: 'colors' 
-                    });
-                }
-
-                // Sort matches by shortcut length (shorter first)
-                this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
-
-                // Add fuzzy suggestions if enabled
-                if (this.settings.enableFuzzySuggestions) {
-                    let fuzzyMatches = this.fuzzySearchComponent.handleFuzzy(query);
-                    const includedUrls = new Set(this.searchMatches.map(m => m.bookmark.url));
-                    let filteredFuzzy = fuzzyMatches.filter(m => !includedUrls.has(m.bookmark.url));
-                    
-                    // If start with option is enabled, filter further
-                    if (this.settings.fuzzySuggestionsStartWith) {
-                        filteredFuzzy = filteredFuzzy.filter(m => m.bookmark.name.toLowerCase().startsWith(query.toLowerCase()));
+                    // Check if 'config' matches the current query
+                    if ('config'.startsWith(query.toLowerCase())) {
+                        this.searchMatches.push({ 
+                            shortcut: 'config', 
+                            bookmark: { name: this.language ? this.language.t('dashboard.configuration') : 'Configuration', url: '/config' }, 
+                            type: 'config' 
+                        });
                     }
-                    
-                    this.searchMatches.push(...filteredFuzzy);
+
+                    // Check if 'colors' matches the current query
+                    if ('colors'.startsWith(query.toLowerCase())) {
+                        this.searchMatches.push({ 
+                            shortcut: 'colors', 
+                            bookmark: { name: this.language ? this.language.t('dashboard.colorCustomization') : 'Color Customization', url: '/colors' }, 
+                            type: 'colors' 
+                        });
+                    }
+
+                    // Sort matches by shortcut length (shorter first)
+                    this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
+
+                    // Add fuzzy suggestions if enabled
+                    if (this.settings.enableFuzzySuggestions) {
+                        let fuzzyMatches = this.fuzzySearchComponent.handleFuzzy(query);
+                        const includedUrls = new Set(this.searchMatches.map(m => m.bookmark.url));
+                        let filteredFuzzy = fuzzyMatches.filter(m => !includedUrls.has(m.bookmark.url));
+                        
+                        // If start with option is enabled, filter further
+                        if (this.settings.fuzzySuggestionsStartWith) {
+                            filteredFuzzy = filteredFuzzy.filter(m => m.bookmark.name.toLowerCase().startsWith(query.toLowerCase()));
+                        }
+                        
+                        this.searchMatches.push(...filteredFuzzy);
+                    }
                 }
             } else {
-                // Handle fuzzy search
-                this.searchMatches = this.fuzzySearchComponent.handleFuzzy(query);
+                // Handle fuzzy search - only if query is not empty
+                if (query.length > 0) {
+                    this.searchMatches = this.fuzzySearchComponent.handleFuzzy(query);
+                }
             }
         }
 

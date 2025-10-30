@@ -26,7 +26,8 @@ class Dashboard {
             interleaveMode: false,
             showPageTabs: true,
             enableFuzzySuggestions: false,
-            fuzzySuggestionsStartWith: false
+            fuzzySuggestionsStartWith: false,
+            keepSearchOpenWhenEmpty: false
         };
         this.searchComponent = null;
         this.statusMonitor = null;

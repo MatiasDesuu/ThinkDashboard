@@ -481,6 +481,15 @@ class ConfigSettings {
                 settings.fuzzySuggestionsStartWith = e.target.checked;
             });
         }
+
+        // Keep search open when empty checkbox
+        const keepSearchOpenWhenEmptyCheckbox = document.getElementById('keep-search-open-when-empty-checkbox');
+        if (keepSearchOpenWhenEmptyCheckbox) {
+            keepSearchOpenWhenEmptyCheckbox.checked = settings.keepSearchOpenWhenEmpty || false;
+            keepSearchOpenWhenEmptyCheckbox.addEventListener('change', (e) => {
+                settings.keepSearchOpenWhenEmpty = e.target.checked;
+            });
+        }
     }
 
     /**
@@ -510,6 +519,7 @@ class ConfigSettings {
         const interleaveModeCheckbox = document.getElementById('interleave-mode-checkbox');
         const enableFuzzySuggestionsCheckbox = document.getElementById('enable-fuzzy-suggestions-checkbox');
         const fuzzySuggestionsStartWithCheckbox = document.getElementById('fuzzy-suggestions-start-with-checkbox');
+        const keepSearchOpenWhenEmptyCheckbox = document.getElementById('keep-search-open-when-empty-checkbox');
 
         if (themeSelect) settings.theme = themeSelect.value;
         if (columnsInput) settings.columnsPerRow = parseInt(columnsInput.value);
@@ -535,6 +545,7 @@ class ConfigSettings {
         if (interleaveModeCheckbox) settings.interleaveMode = interleaveModeCheckbox.checked;
         if (enableFuzzySuggestionsCheckbox) settings.enableFuzzySuggestions = enableFuzzySuggestionsCheckbox.checked;
         if (fuzzySuggestionsStartWithCheckbox) settings.fuzzySuggestionsStartWith = fuzzySuggestionsStartWithCheckbox.checked;
+        if (keepSearchOpenWhenEmptyCheckbox) settings.keepSearchOpenWhenEmpty = keepSearchOpenWhenEmptyCheckbox.checked;
     }
 
     /**

@@ -101,6 +101,7 @@
     "fuzzySuggestionsStartWith": "Pokaż tylko sugestie zaczynające się od zapytania",
     "fuzzySuggestionsInfoTitle": "Informacje o Rozmytch Sugestiach",
     "fuzzySuggestionsInfoMessage": "Gdy włączone, pokazuje dodatkowe sugestie zakładek w wyszukiwaniu skrótów, które zawierają wpisane litery w dowolnym miejscu nazwy.\n\nNa przykład:\n• Wpisanie 'ho' pokaże zakładki takie jak 'HomePage', 'PhotoShop' itp.\n• Działa obok istniejących dopasowań skrótów\n• Może być dalej filtrowane za pomocą poniższej opcji podrzędnej",
+    "keepSearchOpenWhenEmpty": "Pozostaw wyszukiwanie otwarte, gdy jest puste",
     "errorLoadingConfig": "Błąd ładowania konfiguracji",
     "errorLoadingBookmarks": "Błąd ładowania zakładek dla strony",
     "errorLoadingCategories": "Błąd ładowania kategorii dla strony",

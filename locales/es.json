@@ -101,6 +101,7 @@
     "fuzzySuggestionsStartWith": "Solo mostrar sugerencias que empiecen con la consulta",
     "fuzzySuggestionsInfoTitle": "Información sobre Sugerencias Difusas",
     "fuzzySuggestionsInfoMessage": "Cuando está activado, muestra sugerencias adicionales de marcadores en la búsqueda de atajos que contengan las letras escritas en cualquier parte de su nombre.\n\nPor ejemplo:\n• Escribir 'ho' mostrará marcadores como 'HomePage', 'PhotoShop', etc.\n• Funciona junto con las coincidencias de atajos existentes\n• Puede filtrarse aún más con la sub-opción a continuación",
+    "keepSearchOpenWhenEmpty": "Mantener búsqueda abierta cuando esté vacía",
     "errorLoadingConfig": "Error al cargar configuración",
     "errorLoadingBookmarks": "Error al cargar marcadores para la página",
     "errorLoadingCategories": "Error al cargar categorías para la página",
