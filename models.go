@@ -38,33 +38,35 @@ type PageOrder struct {
 }
 
 type Settings struct {
-	CurrentPage         int    `json:"currentPage"` // Numeric ID of the current page
-	Theme               string `json:"theme"`       // "light" or "dark"
-	OpenInNewTab        bool   `json:"openInNewTab"`
-	ColumnsPerRow       int    `json:"columnsPerRow"`
-	FontSize            string `json:"fontSize"` // "small", "medium", or "large"
-	ShowBackgroundDots  bool   `json:"showBackgroundDots"`
-	ShowTitle           bool   `json:"showTitle"`
-	ShowDate            bool   `json:"showDate"`
-	ShowConfigButton    bool   `json:"showConfigButton"`
-	ShowSearchButton    bool   `json:"showSearchButton"`
-	ShowStatus          bool   `json:"showStatus"`
-	ShowPing            bool   `json:"showPing"`
-	ShowStatusLoading   bool   `json:"showStatusLoading"`
-	GlobalShortcuts     bool   `json:"globalShortcuts"`     // Use shortcuts from all pages
-	HyprMode            bool   `json:"hyprMode"`            // Launcher mode for PWA usage
-	AnimationsEnabled   bool   `json:"animationsEnabled"`   // Enable or disable animations globally
-	EnableCustomTitle   bool   `json:"enableCustomTitle"`   // Enable custom page title
-	CustomTitle         string `json:"customTitle"`         // Custom page title
-	ShowPageInTitle     bool   `json:"showPageInTitle"`     // Show current page name in title
-	ShowPageNamesInTabs bool   `json:"showPageNamesInTabs"` // Show page names in tabs instead of numbers
-	EnableCustomFavicon bool   `json:"enableCustomFavicon"` // Enable custom favicon
-	CustomFaviconPath   string `json:"customFaviconPath"`   // Path to custom favicon file
-	EnableCustomFont    bool   `json:"enableCustomFont"`    // Enable custom font
-	CustomFontPath      string `json:"customFontPath"`      // Path to custom font file
-	Language            string `json:"language"`            // Language code, e.g., "en" or "es"
-	InterleaveMode      bool   `json:"interleaveMode"`      // Interleave mode for search (/ for shortcuts, direct input for fuzzy)
-	ShowPageTabs        bool   `json:"showPageTabs"`        // Show page navigation tabs
+	CurrentPage               int    `json:"currentPage"` // Numeric ID of the current page
+	Theme                     string `json:"theme"`       // "light" or "dark"
+	OpenInNewTab              bool   `json:"openInNewTab"`
+	ColumnsPerRow             int    `json:"columnsPerRow"`
+	FontSize                  string `json:"fontSize"` // "small", "medium", or "large"
+	ShowBackgroundDots        bool   `json:"showBackgroundDots"`
+	ShowTitle                 bool   `json:"showTitle"`
+	ShowDate                  bool   `json:"showDate"`
+	ShowConfigButton          bool   `json:"showConfigButton"`
+	ShowSearchButton          bool   `json:"showSearchButton"`
+	ShowStatus                bool   `json:"showStatus"`
+	ShowPing                  bool   `json:"showPing"`
+	ShowStatusLoading         bool   `json:"showStatusLoading"`
+	GlobalShortcuts           bool   `json:"globalShortcuts"`           // Use shortcuts from all pages
+	HyprMode                  bool   `json:"hyprMode"`                  // Launcher mode for PWA usage
+	AnimationsEnabled         bool   `json:"animationsEnabled"`         // Enable or disable animations globally
+	EnableCustomTitle         bool   `json:"enableCustomTitle"`         // Enable custom page title
+	CustomTitle               string `json:"customTitle"`               // Custom page title
+	ShowPageInTitle           bool   `json:"showPageInTitle"`           // Show current page name in title
+	ShowPageNamesInTabs       bool   `json:"showPageNamesInTabs"`       // Show page names in tabs instead of numbers
+	EnableCustomFavicon       bool   `json:"enableCustomFavicon"`       // Enable custom favicon
+	CustomFaviconPath         string `json:"customFaviconPath"`         // Path to custom favicon file
+	EnableCustomFont          bool   `json:"enableCustomFont"`          // Enable custom font
+	CustomFontPath            string `json:"customFontPath"`            // Path to custom font file
+	Language                  string `json:"language"`                  // Language code, e.g., "en" or "es"
+	InterleaveMode            bool   `json:"interleaveMode"`            // Interleave mode for search (/ for shortcuts, direct input for fuzzy)
+	ShowPageTabs              bool   `json:"showPageTabs"`              // Show page navigation tabs
+	EnableFuzzySuggestions    bool   `json:"enableFuzzySuggestions"`    // Enable fuzzy suggestions in shortcut search
+	FuzzySuggestionsStartWith bool   `json:"fuzzySuggestionsStartWith"` // Fuzzy suggestions start with query instead of contains
 }
 
 type ColorTheme struct {
@@ -578,24 +580,26 @@ func (fs *FileStore) GetSettings() Settings {
 	if err != nil {
 		// Return default settings if file doesn't exist
 		return Settings{
-			CurrentPage:        1,
-			Theme:              "dark",
-			OpenInNewTab:       true,
-			ColumnsPerRow:      3,
-			FontSize:           "m",
-			ShowBackgroundDots: true,
-			ShowTitle:          true,
-			ShowDate:           true,
-			ShowConfigButton:   true,
-			ShowStatus:         false,
-			ShowPing:           false,
-			ShowStatusLoading:  true,
-			GlobalShortcuts:    true,
-			HyprMode:           false,
-			AnimationsEnabled:  true,
-			Language:           "en",
-			InterleaveMode:     false,
-			ShowPageTabs:       true,
+			CurrentPage:               1,
+			Theme:                     "dark",
+			OpenInNewTab:              true,
+			ColumnsPerRow:             3,
+			FontSize:                  "m",
+			ShowBackgroundDots:        true,
+			ShowTitle:                 true,
+			ShowDate:                  true,
+			ShowConfigButton:          true,
+			ShowStatus:                false,
+			ShowPing:                  false,
+			ShowStatusLoading:         true,
+			GlobalShortcuts:           true,
+			HyprMode:                  false,
+			AnimationsEnabled:         true,
+			Language:                  "en",
+			InterleaveMode:            false,
+			ShowPageTabs:              true,
+			EnableFuzzySuggestions:    false,
+			FuzzySuggestionsStartWith: false,
 		}
 	}
 

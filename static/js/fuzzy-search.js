@@ -37,7 +37,8 @@ class FuzzySearchComponent {
             name: bookmark.name,
             shortcut: '',
             action: () => this.openBookmarkCallback(bookmark),
-            type: 'fuzzy'
+            type: 'fuzzy',
+            bookmark: bookmark
         }));
     }
 

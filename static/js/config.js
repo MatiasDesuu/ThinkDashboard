@@ -44,7 +44,9 @@ class ConfigManager {
             customFontPath: '',
             language: 'en',
             interleaveMode: false,
-            showPageTabs: true
+            showPageTabs: true,
+            enableFuzzySuggestions: false,
+            fuzzySuggestionsStartWith: false
         };
         this.deviceSpecific = false;
 

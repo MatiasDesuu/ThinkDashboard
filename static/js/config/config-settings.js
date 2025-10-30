@@ -194,6 +194,20 @@ class ConfigSettings {
             });
         }
 
+        // Fuzzy suggestions info button
+        const fuzzySuggestionsInfoBtn = document.getElementById('fuzzy-suggestions-info-btn');
+        if (fuzzySuggestionsInfoBtn) {
+            fuzzySuggestionsInfoBtn.addEventListener('click', () => {
+                if (window.AppModal) {
+                    window.AppModal.alert({
+                        title: this.t('config.fuzzySuggestionsInfoTitle'),
+                        htmlMessage: this.t('config.fuzzySuggestionsInfoMessage').replace(/\n/g, '<br>'),
+                        confirmText: this.t('config.gotIt')
+                    });
+                }
+            });
+        }
+
         // Show background dots checkbox
         const showBackgroundDotsCheckbox = document.getElementById('show-background-dots-checkbox');
         if (showBackgroundDotsCheckbox) {
@@ -445,6 +459,28 @@ class ConfigSettings {
                 settings.globalShortcuts = e.target.checked;
             });
         }
+
+        // Enable fuzzy suggestions checkbox
+        const enableFuzzySuggestionsCheckbox = document.getElementById('enable-fuzzy-suggestions-checkbox');
+        if (enableFuzzySuggestionsCheckbox) {
+            enableFuzzySuggestionsCheckbox.checked = settings.enableFuzzySuggestions || false;
+            enableFuzzySuggestionsCheckbox.addEventListener('change', (e) => {
+                settings.enableFuzzySuggestions = e.target.checked;
+                this.toggleFuzzySuggestionsStartWith(e.target.checked);
+            });
+        }
+
+        // Initial visibility for fuzzy suggestions start with
+        this.toggleFuzzySuggestionsStartWith(settings.enableFuzzySuggestions || false);
+
+        // Fuzzy suggestions start with checkbox
+        const fuzzySuggestionsStartWithCheckbox = document.getElementById('fuzzy-suggestions-start-with-checkbox');
+        if (fuzzySuggestionsStartWithCheckbox) {
+            fuzzySuggestionsStartWithCheckbox.checked = settings.fuzzySuggestionsStartWith || false;
+            fuzzySuggestionsStartWithCheckbox.addEventListener('change', (e) => {
+                settings.fuzzySuggestionsStartWith = e.target.checked;
+            });
+        }
     }
 
     /**
@@ -472,6 +508,8 @@ class ConfigSettings {
         const enableCustomFaviconCheckbox = document.getElementById('enable-custom-favicon-checkbox');
         const languageSelect = document.getElementById('language-select');
         const interleaveModeCheckbox = document.getElementById('interleave-mode-checkbox');
+        const enableFuzzySuggestionsCheckbox = document.getElementById('enable-fuzzy-suggestions-checkbox');
+        const fuzzySuggestionsStartWithCheckbox = document.getElementById('fuzzy-suggestions-start-with-checkbox');
 
         if (themeSelect) settings.theme = themeSelect.value;
         if (columnsInput) settings.columnsPerRow = parseInt(columnsInput.value);
@@ -495,6 +533,8 @@ class ConfigSettings {
         if (enableCustomFaviconCheckbox) settings.enableCustomFavicon = enableCustomFaviconCheckbox.checked;
         if (languageSelect) settings.language = languageSelect.value;
         if (interleaveModeCheckbox) settings.interleaveMode = interleaveModeCheckbox.checked;
+        if (enableFuzzySuggestionsCheckbox) settings.enableFuzzySuggestions = enableFuzzySuggestionsCheckbox.checked;
+        if (fuzzySuggestionsStartWithCheckbox) settings.fuzzySuggestionsStartWith = fuzzySuggestionsStartWithCheckbox.checked;
     }
 
     /**
@@ -590,6 +630,34 @@ class ConfigSettings {
     toggleCustomTitleInput(enabled) {
         // Find the checkbox
         const checkbox = document.getElementById('enable-custom-title-checkbox');
+        if (!checkbox) return;
+        
+        // Find the parent item
+        const parentItem = checkbox.closest('.checkbox-tree-item');
+        if (!parentItem) return;
+        
+        // Find all sibling items after this one that are checkbox-tree-child
+        const siblings = Array.from(parentItem.parentNode.children);
+        const startIndex = siblings.indexOf(parentItem);
+        
+        for (let i = startIndex + 1; i < siblings.length; i++) {
+            const sibling = siblings[i];
+            if (sibling.classList.contains('checkbox-tree-child')) {
+                sibling.style.display = enabled ? 'block' : 'none';
+            } else {
+                // Stop at the first non-child item (assuming they are grouped)
+                break;
+            }
+        }
+    }
+
+    /**
+     * Toggle fuzzy suggestions start with visibility
+     * @param {boolean} enabled
+     */
+    toggleFuzzySuggestionsStartWith(enabled) {
+        // Find the checkbox
+        const checkbox = document.getElementById('enable-fuzzy-suggestions-checkbox');
         if (!checkbox) return;
         
         // Find the parent item

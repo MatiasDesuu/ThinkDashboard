@@ -283,6 +283,20 @@ class SearchComponent {
 
                 // Sort matches by shortcut length (shorter first)
                 this.searchMatches.sort((a, b) => a.shortcut.length - b.shortcut.length);
+
+                // Add fuzzy suggestions if enabled
+                if (this.settings.enableFuzzySuggestions) {
+                    let fuzzyMatches = this.fuzzySearchComponent.handleFuzzy(query);
+                    const includedUrls = new Set(this.searchMatches.map(m => m.bookmark.url));
+                    let filteredFuzzy = fuzzyMatches.filter(m => !includedUrls.has(m.bookmark.url));
+                    
+                    // If start with option is enabled, filter further
+                    if (this.settings.fuzzySuggestionsStartWith) {
+                        filteredFuzzy = filteredFuzzy.filter(m => m.bookmark.name.toLowerCase().startsWith(query.toLowerCase()));
+                    }
+                    
+                    this.searchMatches.push(...filteredFuzzy);
+                }
             } else {
                 // Handle fuzzy search
                 this.searchMatches = this.fuzzySearchComponent.handleFuzzy(query);

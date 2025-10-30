@@ -24,7 +24,9 @@ class Dashboard {
             customFaviconPath: '',
             language: 'en',
             interleaveMode: false,
-            showPageTabs: true
+            showPageTabs: true,
+            enableFuzzySuggestions: false,
+            fuzzySuggestionsStartWith: false
         };
         this.searchComponent = null;
         this.statusMonitor = null;

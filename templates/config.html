@@ -217,6 +217,20 @@
                     </div>
                     <div class="checkbox-tree-item">
                         <label class="checkbox-label">
+                            <input type="checkbox" id="enable-fuzzy-suggestions-checkbox">
+                            <span class="checkbox-text" data-i18n="config.showFuzzySuggestions">Show fuzzy suggestions in search</span>
+                            <button type="button" id="fuzzy-suggestions-info-btn" class="info-button">ℹ</button>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item checkbox-tree-child">
+                        <span class="tree-symbol">└──</span>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="fuzzy-suggestions-start-with-checkbox">
+                            <span class="checkbox-text" data-i18n="config.fuzzySuggestionsStartWith">Only show suggestions that start with the query</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-tree-item">
+                        <label class="checkbox-label">
                             <input type="checkbox" id="enable-custom-favicon-checkbox">
                             <span class="checkbox-text" data-i18n="config.enableCustomFavicon">Enable custom favicon</span>
                         </label>
