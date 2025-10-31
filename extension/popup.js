@@ -149,7 +149,7 @@ async function loadPages(providedServerUrl) {
     }
 
     try {
-        const response = await fetch(`${serverUrl}/api/pages`);
+        const response = await fetch(new URL('/api/pages', serverUrl));
         if (!response.ok) throw new Error('Failed to fetch pages');
 
         const pages = await response.json();
@@ -220,7 +220,7 @@ async function loadCategoriesForSettings(pageId) {
     }
 
     try {
-        const response = await fetch(`${serverUrl}/api/categories?page=${pageId}`);
+        const response = await fetch(new URL(`/api/categories?page=${pageId}`, serverUrl));
         if (!response.ok) throw new Error('Failed to fetch categories');
 
         const categories = await response.json();
@@ -251,7 +251,7 @@ async function loadCategories(pageId) {
     }
 
     try {
-        const response = await fetch(`${serverUrl}/api/categories?page=${pageId}`);
+        const response = await fetch(new URL(`/api/categories?page=${pageId}`, serverUrl));
         if (!response.ok) throw new Error('Failed to fetch categories');
 
         const categories = await response.json();
@@ -292,7 +292,7 @@ async function saveBookmark(event) {
 
     // Check for duplicate URL
     try {
-        const bookmarksResponse = await fetch(`${serverUrl}/api/bookmarks?page=${pageId}`);
+        const bookmarksResponse = await fetch(new URL(`/api/bookmarks?page=${pageId}`, serverUrl));
         if (bookmarksResponse.ok) {
             const bookmarks = await bookmarksResponse.json();
             const duplicate = bookmarks.find(bookmark => bookmark.url === url);
@@ -330,7 +330,7 @@ async function saveSettings(event) {
 
 async function performSave(serverUrl, pageId, name, url, category) {
     try {
-        const response = await fetch(`${serverUrl}/api/bookmarks/add`, {
+        const response = await fetch(new URL('/api/bookmarks/add', serverUrl), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
