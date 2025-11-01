@@ -51,6 +51,47 @@ func validateBookmarkURL(bookmarkURL string) error {
 	return nil
 }
 
+// isValidImportFilename validates that the filename is safe and allowed for import
+func (h *Handlers) isValidImportFilename(filename string) bool {
+	// Prevent path traversal
+	if strings.Contains(filename, "..") || strings.Contains(filename, "/") || strings.Contains(filename, "\\") {
+		return false
+	}
+
+	// Allow only specific filenames with their extensions
+	allowedFiles := []string{
+		"settings.json",
+		"colors.json",
+		"pages.json",
+		"favicon.ico",
+		"favicon.png",
+		"favicon.jpg",
+		"favicon.gif",
+		"font.woff",
+		"font.woff2",
+		"font.ttf",
+		"font.otf",
+	}
+
+	// Check if it's one of the specific files
+	for _, allowed := range allowedFiles {
+		if filename == allowed {
+			return true
+		}
+	}
+
+	// Check if it's a bookmarks file (bookmarks- followed by digits and .json)
+	if strings.HasPrefix(filename, "bookmarks-") && strings.HasSuffix(filename, ".json") {
+		// Extract the number part
+		numberPart := strings.TrimPrefix(strings.TrimSuffix(filename, ".json"), "bookmarks-")
+		if _, err := strconv.Atoi(numberPart); err == nil {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFS(h.files, "templates/dashboard.html")
 	if err != nil {
@@ -944,6 +985,14 @@ func (h *Handlers) Import(w http.ResponseWriter, r *http.Request) {
 
 	// Process each file
 	for _, fileHeader := range files {
+		filename := fileHeader.Filename
+
+		// Validate filename to prevent path traversal and ensure only allowed files
+		if !h.isValidImportFilename(filename) {
+			http.Error(w, fmt.Sprintf("Invalid filename: %s", filename), http.StatusBadRequest)
+			return
+		}
+
 		file, err := fileHeader.Open()
 		if err != nil {
 			http.Error(w, "Failed to open file", http.StatusInternalServerError)
@@ -958,8 +1007,15 @@ func (h *Handlers) Import(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// Validate JSON content for JSON files
+		if strings.HasSuffix(filename, ".json") {
+			if !json.Valid(content) {
+				http.Error(w, fmt.Sprintf("Invalid JSON content in file: %s", filename), http.StatusBadRequest)
+				return
+			}
+		}
+
 		// Determine destination path
-		filename := fileHeader.Filename
 		destPath := filepath.Join("data", filename)
 
 		// Write file to data directory
