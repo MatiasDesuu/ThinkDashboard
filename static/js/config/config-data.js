@@ -56,11 +56,18 @@ class ConfigData {
      */
     async saveBookmarks(bookmarks, pageId = null) {
         const url = pageId ? `/api/bookmarks?page=${pageId}` : '/api/bookmarks';
-        await fetch(url, {
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(bookmarks)
         });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to save bookmarks: ${errorText}`);
+        }
+        
+        return await response.json();
     }
 
     /**
@@ -80,11 +87,18 @@ class ConfigData {
      */
     async saveCategoriesByPage(categories, pageId = null) {
         const url = pageId ? `/api/categories?page=${pageId}` : '/api/categories';
-        await fetch(url, {
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(categories)
         });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to save categories: ${errorText}`);
+        }
+        
+        return await response.json();
     }
 
     /**
@@ -102,11 +116,18 @@ class ConfigData {
      * @param {Array} pages
      */
     async savePages(pages) {
-        await fetch('/api/pages', {
+        const response = await fetch('/api/pages', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(pages)
         });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to save pages: ${errorText}`);
+        }
+        
+        return await response.json();
     }
 
     /**
@@ -128,11 +149,18 @@ class ConfigData {
      * @param {Object} settings
      */
     async saveSettings(settings) {
-        await fetch('/api/settings', {
+        const response = await fetch('/api/settings', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(settings)
         });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to save settings: ${errorText}`);
+        }
+        
+        return await response.json();
     }
 
     /**

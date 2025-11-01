@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"embed"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
@@ -29,6 +30,25 @@ func NewHandlers(store Store, files embed.FS) *Handlers {
 		store: store,
 		files: files,
 	}
+}
+
+// validateBookmarkURL checks if the bookmark URL has a safe scheme (http or https)
+func validateBookmarkURL(bookmarkURL string) error {
+	if bookmarkURL == "" {
+		return nil // Allow empty URLs
+	}
+
+	parsedURL, err := url.Parse(bookmarkURL)
+	if err != nil {
+		return fmt.Errorf("invalid URL format")
+	}
+
+	// Only allow http and https schemes
+	if parsedURL.Scheme != "http" && parsedURL.Scheme != "https" {
+		return fmt.Errorf("URL scheme '%s' is not allowed. Only http and https are permitted", parsedURL.Scheme)
+	}
+
+	return nil
 }
 
 func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
@@ -185,6 +205,14 @@ func (h *Handlers) SaveBookmarks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Validate each bookmark URL
+	for _, bookmark := range bookmarks {
+		if err := validateBookmarkURL(bookmark.URL); err != nil {
+			http.Error(w, fmt.Sprintf("Invalid bookmark URL: %v", err), http.StatusBadRequest)
+			return
+		}
+	}
+
 	pageID, err := strconv.Atoi(pageIDStr)
 	if err != nil {
 		http.Error(w, "Invalid page ID", http.StatusBadRequest)
@@ -208,6 +236,12 @@ func (h *Handlers) AddBookmark(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Validate the bookmark URL
+	if err := validateBookmarkURL(request.Bookmark.URL); err != nil {
+		http.Error(w, fmt.Sprintf("Invalid bookmark URL: %v", err), http.StatusBadRequest)
 		return
 	}
 
@@ -727,6 +761,25 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"error":  "Invalid URL",
+			"status": "offline",
+			"ping":   nil,
+		})
+		return
+	}
+
+	// Validate that the URL belongs to a registered bookmark
+	allBookmarks := h.store.GetAllBookmarks()
+	isValidBookmark := false
+	for _, bookmark := range allBookmarks {
+		if bookmark.URL == urlParam {
+			isValidBookmark = true
+			break
+		}
+	}
+	if !isValidBookmark {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"error":  "URL is not a registered bookmark",
 			"status": "offline",
 			"ping":   nil,
 		})
