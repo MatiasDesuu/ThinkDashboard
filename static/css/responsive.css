@@ -35,6 +35,28 @@
         bottom: 1.75rem;
         padding: 0.8rem 1rem;
     }
+    
+    /* Tabs responsive - desktop */
+    .tabs {
+        flex-wrap: wrap;
+    }
+    
+    /* List items responsive - desktop */
+    .page-item,
+    .category-item,
+    .bookmark-item {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .form-group {
+        flex-wrap: wrap;
+    }
+    
+    .config-actions-top {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
 }
 
 /* Tablet (768px - 991px) */
