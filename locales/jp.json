@@ -216,6 +216,10 @@
     "closeShortcutHint": "(Ctrl+W または Cmd+W)",
     "confirmTitle": "確認",
     "confirmMessage": "よろしいですか？",
+    "confirmDelete": "削除の確認",
+    "confirmDeleteMessage": "\"{name}\" を削除してもよろしいですか？",
+    "yes": "はい",
+    "no": "いいえ",
     "ok": "OK"
 }
 }

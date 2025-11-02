@@ -1,18 +1,26 @@
 // Search Commands Component JavaScript
 class SearchCommandsComponent {
-    constructor(language = null) {
+    constructor(language = null, currentBookmarks = [], allBookmarks = []) {
         this.language = language;
         
         // Available commands
         this.availableCommands = {
             'theme': this.handleThemeCommand.bind(this),
             'fontsize': this.handleFontSizeCommand.bind(this),
-            'columns': this.handleColumnsCommand.bind(this)
+            'columns': this.handleColumnsCommand.bind(this),
+            'remove': this.handleRemoveCommand.bind(this)
         };
 
         // Available themes - will be loaded dynamically
         this.themes = [];
         this.customThemes = {};
+        
+        // Current page bookmarks and all bookmarks
+        this.currentBookmarks = currentBookmarks;
+        this.allBookmarks = allBookmarks;
+        
+        // Confirmation state for remove command
+        this.confirmationBookmark = null;
         
         // Load themes on initialization
         this.loadThemes();
@@ -24,6 +32,24 @@ class SearchCommandsComponent {
      */
     setLanguage(language) {
         this.language = language;
+    }
+
+    /**
+     * Set current page bookmarks and all bookmarks for remove command
+     * @param {Array} currentBookmarks - Bookmarks from current page
+     * @param {Array} allBookmarks - All bookmarks from all pages
+     */
+    setBookmarks(currentBookmarks, allBookmarks) {
+        this.currentBookmarks = currentBookmarks;
+        this.allBookmarks = allBookmarks;
+        this.resetState();
+    }
+
+    /**
+     * Reset internal state (confirmation mode, etc.)
+     */
+    resetState() {
+        this.confirmationBookmark = null;
     }
 
     /**
@@ -245,6 +271,126 @@ class SearchCommandsComponent {
                     type: 'command'
                 };
             });
+        }
+    }
+
+    /**
+     * Handle the :remove command
+     * Shows bookmarks from all pages by default, or current page if query contains '#'
+     * When a bookmark is selected, shows Yes/No confirmation
+     * @param {Array} args - Arguments after 'remove'
+     * @returns {Array} Array of bookmark matches or confirmation options
+     */
+    handleRemoveCommand(args) {
+        // If in confirmation mode, show Yes/No options
+        if (this.confirmationBookmark) {
+            return this.getConfirmationMatches();
+        }
+
+        // Parse query for current page mode (#) and fuzzy search
+        const effectiveArgs = (args.length === 1 && args[0] === '') ? [] : args;
+        const query = effectiveArgs.join(' ').toLowerCase();
+        const isCurrentPageMode = query.includes('#');
+        const bookmarksToSearch = isCurrentPageMode ? this.currentBookmarks : this.allBookmarks;
+        const fuzzyQuery = isCurrentPageMode ? query.replace('#', '').trim() : query;
+
+        return this.getBookmarkMatches(bookmarksToSearch, fuzzyQuery);
+    }
+
+    /**
+     * Get confirmation matches (Yes/No)
+     * @returns {Array} Confirmation options
+     */
+    getConfirmationMatches() {
+        return [
+            {
+                name: this.language ? this.language.t('others.yes') : 'Yes',
+                shortcut: ':remove',
+                action: () => this.removeBookmark(this.confirmationBookmark),
+                type: 'command'
+            },
+            {
+                name: this.language ? this.language.t('others.no') : 'No',
+                shortcut: ':remove',
+                action: () => { this.confirmationBookmark = null; },
+                type: 'command'
+            }
+        ];
+    }
+
+    /**
+     * Get bookmark matches for fuzzy search
+     * @param {Array} bookmarks - Bookmarks to search in
+     * @param {string} fuzzyQuery - Search query
+     * @returns {Array} Bookmark matches
+     */
+    getBookmarkMatches(bookmarks, fuzzyQuery) {
+        if (fuzzyQuery === '') {
+            // Show all bookmarks from selected scope
+            return bookmarks.map(bookmark => ({
+                name: bookmark.name,
+                shortcut: ':remove',
+                action: () => { this.confirmationBookmark = bookmark; return false; },
+                type: 'command'
+            }));
+        } else {
+            // Show matching bookmarks using fuzzy search
+            const matchingBookmarks = bookmarks.filter(bookmark => 
+                this.fuzzyMatch(fuzzyQuery, bookmark.name)
+            );
+
+            return matchingBookmarks.map(bookmark => ({
+                name: bookmark.name,
+                shortcut: ':remove',
+                action: () => { this.confirmationBookmark = bookmark; return false; },
+                type: 'command'
+            }));
+        }
+    }
+
+    /**
+     * Fuzzy match: checks if query is contained in text (case-insensitive)
+     * @param {string} query - The search query
+     * @param {string} text - The text to search in
+     * @returns {boolean} True if text contains query
+     */
+    fuzzyMatch(query, text) {
+        query = query.toLowerCase();
+        text = text.toLowerCase();
+        return text.includes(query);
+    }
+
+    /**
+     * Remove a bookmark from the current page
+     * @param {Object} bookmark - The bookmark to remove
+     */
+    async removeBookmark(bookmark) {
+        try {
+            // Get current page ID from dashboard
+            const currentPageId = window.dashboardInstance ? window.dashboardInstance.currentPageId : 1;
+            
+            const response = await fetch('/api/bookmarks', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    page: currentPageId,
+                    bookmark: bookmark
+                })
+            });
+
+            if (response.ok) {
+                // Reset confirmation state
+                this.confirmationBookmark = null;
+                // Refresh the dashboard
+                if (window.dashboardInstance) {
+                    window.dashboardInstance.loadPageBookmarks(currentPageId);
+                    window.dashboardInstance.updateSearchComponent();
+                }
+            } else {
+                console.error('Failed to delete bookmark');
+            }
+        } catch (error) {
+            console.error('Error deleting bookmark:', error);
         }
     }
 

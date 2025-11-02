@@ -321,7 +321,7 @@ class Dashboard {
         const bookmarksForSearch = this.settings.globalShortcuts ? this.allBookmarks : this.bookmarks;
         
         if (window.SearchComponent) {
-            this.searchComponent = new window.SearchComponent(bookmarksForSearch, this.settings, this.language);
+            this.searchComponent = new window.SearchComponent(bookmarksForSearch, this.bookmarks, this.allBookmarks, this.settings, this.language);
         } else {
             console.warn('SearchComponent not found. Make sure search.js is loaded.');
         }
@@ -332,7 +332,7 @@ class Dashboard {
         if (this.searchComponent) {
             // Use all bookmarks if global shortcuts is enabled, otherwise just current page
             const bookmarksForSearch = this.settings.globalShortcuts ? this.allBookmarks : this.bookmarks;
-            this.searchComponent.updateData(bookmarksForSearch, this.settings, this.language);
+            this.searchComponent.updateData(bookmarksForSearch, this.bookmarks, this.allBookmarks, this.settings, this.language);
         }
     }
 

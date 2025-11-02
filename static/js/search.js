@@ -1,7 +1,9 @@
 // Search Component JavaScript
 class SearchComponent {
-    constructor(bookmarks = [], settings = {}, language = null) {
-        this.bookmarks = bookmarks;
+    constructor(bookmarksForSearch, currentBookmarks, allBookmarks, settings = {}, language = null) {
+        this.bookmarks = bookmarksForSearch;
+        this.currentBookmarks = currentBookmarks;
+        this.allBookmarks = allBookmarks;
         this.settings = settings;
         this.language = language;
         this.shortcuts = new Map();
@@ -11,8 +13,9 @@ class SearchComponent {
         this.selectedMatchIndex = 0;
         this.matchElements = []; // Store references to DOM elements for selection highlighting
         this.justCompleted = false; // Flag to prevent accidental execution after completion
+        this.pendingConfirmation = false; // Flag to prevent accidental confirmation execution
         
-        this.commandsComponent = new window.SearchCommandsComponent(this.language);
+        this.commandsComponent = new window.SearchCommandsComponent(this.language, this.currentBookmarks, this.allBookmarks);
 
         this.fuzzySearchComponent = new window.FuzzySearchComponent(this.bookmarks, (bookmark) => this.openBookmark(bookmark));
 
@@ -26,12 +29,15 @@ class SearchComponent {
         this.setupEventListeners();
     }
 
-    updateData(bookmarks, settings, language = null) {
-        this.bookmarks = bookmarks;
+    updateData(bookmarksForSearch, currentBookmarks, allBookmarks, settings, language = null) {
+        this.bookmarks = bookmarksForSearch;
+        this.currentBookmarks = currentBookmarks;
+        this.allBookmarks = allBookmarks;
         this.settings = settings;
         this.language = language || this.language;
         this.commandsComponent.setLanguage(this.language);
-        this.fuzzySearchComponent.updateBookmarks(bookmarks);
+        this.commandsComponent.setBookmarks(this.currentBookmarks, this.allBookmarks);
+        this.fuzzySearchComponent.updateBookmarks(this.bookmarks);
         this.interleaveMode = settings.interleaveMode || false;
         this.buildShortcutsMap();
     }
@@ -60,7 +66,7 @@ class SearchComponent {
                 if (value.length > this.currentQuery.length) {
                     // Character added
                     const newChar = value[value.length - 1];
-                    if (/^[A-Z0-9: /]$/.test(newChar)) {
+                    if (/^[A-Z0-9: /#]$/.test(newChar)) {
                         this.addToQuery(newChar);
                     }
                 } else if (value.length < this.currentQuery.length) {
@@ -185,16 +191,16 @@ class SearchComponent {
 
         // Only handle letter keys (A-Z) and numbers (0-9) when search is active, otherwise only letters and :
         if (this.searchActive) {
-            if (!/^[A-Z0-9]$/.test(key)) {
+            if (!/^[A-Z0-9#]$/.test(key)) {
                 return;
             }
         } else {
             if (this.interleaveMode) {
-                if (!/^[A-Z0-9/]$/.test(key)) {
+                if (!/^[A-Z0-9/#]$/.test(key)) {
                     return;
                 }
             } else {
-                if (!/^[A-Z:/]$/.test(key)) {
+                if (!/^[A-Z:/#]$/.test(key)) {
                     return;
                 }
             }
@@ -206,6 +212,7 @@ class SearchComponent {
 
     addToQuery(key) {
         this.currentQuery += key;
+        this.commandsComponent.resetState();
         
         // Check for exact match first
         const query = this.currentQuery.startsWith('/') ? this.currentQuery.slice(1) : this.currentQuery;
@@ -236,6 +243,7 @@ class SearchComponent {
     removeLastChar() {
         if (this.currentQuery.length > 0) {
             this.currentQuery = this.currentQuery.slice(0, -1);
+            this.commandsComponent.resetState();
             if (this.currentQuery.length === 0 && !this.settings.keepSearchOpenWhenEmpty) {
                 this.closeSearch();
             } else {
@@ -440,8 +448,16 @@ class SearchComponent {
                 } else if (match.type === 'colors') {
                     this.openColors();
                 } else if (match.type === 'command') {
-                    match.action();
-                    this.closeSearch();
+                    const shouldClose = match.action();
+                    if (shouldClose !== false) {
+                        this.closeSearch();
+                    } else {
+                        // If action returned false, update search to show new matches (e.g., confirmation)
+                        this.updateSearch();
+                        this.selectedMatchIndex = 0; // Select first option (Yes)
+                        this.pendingConfirmation = true; // Protect against immediate execution
+                        this.updateSelectionHighlight();
+                    }
                 } else if (match.type === 'command-completion') {
                     this.currentQuery = match.completion;
                     this.updateSearch();
@@ -480,6 +496,12 @@ class SearchComponent {
             this.justCompleted = false;
             return;
         }
+
+        // Prevent accidental execution of confirmation options
+        if (this.pendingConfirmation) {
+            this.pendingConfirmation = false;
+            return;
+        }
         
         if (this.searchMatches.length > 0 && this.selectedMatchIndex >= 0) {
             const selectedMatch = this.searchMatches[this.selectedMatchIndex];
@@ -488,8 +510,15 @@ class SearchComponent {
             } else if (selectedMatch.type === 'colors') {
                 this.openColors();
             } else if (selectedMatch.type === 'command') {
-                selectedMatch.action();
-                this.closeSearch();
+                const shouldClose = selectedMatch.action();
+                if (shouldClose !== false) {
+                    this.closeSearch();
+                } else {
+                    this.updateSearch();
+                    this.selectedMatchIndex = 0; // Select first option (Yes)
+                    this.pendingConfirmation = true; // Protect against immediate execution
+                    this.updateSelectionHighlight();
+                }
             } else if (selectedMatch.type === 'command-completion') {
                 this.currentQuery = selectedMatch.completion;
                 this.updateSearch();
@@ -568,6 +597,7 @@ class SearchComponent {
             this.currentQuery = '';
             this.searchMatches = [];
             this.selectedMatchIndex = 0;
+            this.commandsComponent.resetState();
             this.showSearch();
             this.renderSearchMatches();
         }

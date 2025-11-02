@@ -216,6 +216,10 @@
     "closeShortcutHint": "(Ctrl+W lub Cmd+W)",
     "confirmTitle": "Potwierdź",
     "confirmMessage": "Czy jesteś pewny?",
+    "confirmDelete": "Potwierdź Usunięcie",
+    "confirmDeleteMessage": "Czy na pewno chcesz usunąć \"{name}\"?",
+    "yes": "Tak",
+    "no": "Nie",
     "ok": "OK"
 }
 }

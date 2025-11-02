@@ -291,6 +291,30 @@ func (h *Handlers) AddBookmark(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
+func (h *Handlers) DeleteBookmark(w http.ResponseWriter, r *http.Request) {
+	h.setCORSHeaders(w)
+	if r.Method == "OPTIONS" {
+		return
+	}
+	var request struct {
+		Page     int      `json:"page"`
+		Bookmark Bookmark `json:"bookmark"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.store.DeleteBookmarkFromPage(request.Page, request.Bookmark); err != nil {
+		http.Error(w, "Error deleting bookmark", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+}
+
 func (h *Handlers) GetCategories(w http.ResponseWriter, r *http.Request) {
 	pageIDStr := r.URL.Query().Get("page")
 	if pageIDStr == "" {

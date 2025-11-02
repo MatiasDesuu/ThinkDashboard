@@ -145,6 +145,10 @@
 .search-match-name {
     font-size: var(--font-size-text);
     font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
 }
 
 /* Special styling for config entry */

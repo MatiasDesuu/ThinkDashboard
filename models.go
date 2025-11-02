@@ -98,6 +98,7 @@ type Store interface {
 	GetAllBookmarks() []Bookmark
 	SaveBookmarksByPage(pageID int, bookmarks []Bookmark)
 	AddBookmarkToPage(pageID int, bookmark Bookmark)
+	DeleteBookmarkFromPage(pageID int, bookmark Bookmark) error
 	// Categories - per page only
 	GetCategoriesByPage(pageID int) []Category
 	SaveCategoriesByPage(pageID int, categories []Category)
@@ -304,6 +305,55 @@ func (fs *FileStore) AddBookmarkToPage(pageID int, bookmark Bookmark) {
 	pageWithBookmarks.Bookmarks = append(pageWithBookmarks.Bookmarks, bookmark)
 	newData, _ := json.MarshalIndent(pageWithBookmarks, "", "  ")
 	os.WriteFile(filePath, newData, 0644)
+}
+
+func (fs *FileStore) DeleteBookmarkFromPage(pageID int, bookmarkToDelete Bookmark) error {
+	fs.mutex.Lock()
+	defer fs.mutex.Unlock()
+
+	fs.ensureDataDir()
+
+	// Read the existing page data
+	filePath := fmt.Sprintf("%s/bookmarks-%d.json", fs.dataDir, pageID)
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+
+	var pageWithBookmarks PageWithBookmarks
+	if err := json.Unmarshal(data, &pageWithBookmarks); err != nil {
+		return err
+	}
+
+	// Find and remove the bookmark
+	originalLength := len(pageWithBookmarks.Bookmarks)
+	pageWithBookmarks.Bookmarks = fs.removeBookmarkFromSlice(pageWithBookmarks.Bookmarks, bookmarkToDelete)
+
+	// If no bookmark was removed, return error
+	if len(pageWithBookmarks.Bookmarks) == originalLength {
+		return fmt.Errorf("bookmark not found")
+	}
+
+	// Save the updated data
+	newData, err := json.MarshalIndent(pageWithBookmarks, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filePath, newData, 0644)
+}
+
+func (fs *FileStore) removeBookmarkFromSlice(bookmarks []Bookmark, toDelete Bookmark) []Bookmark {
+	result := make([]Bookmark, 0)
+	removed := false
+	for _, b := range bookmarks {
+		if !removed && b.Name == toDelete.Name && b.URL == toDelete.URL {
+			removed = true
+			// Skip this bookmark (remove only the first match)
+		} else {
+			result = append(result, b)
+		}
+	}
+	return result
 }
 
 func (fs *FileStore) GetAllBookmarks() []Bookmark {
