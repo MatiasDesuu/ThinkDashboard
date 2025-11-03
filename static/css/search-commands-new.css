@@ -1,0 +1,121 @@
+/* New Bookmark Modal Styles */
+
+.modal-new-bookmark {
+    max-width: 500px;
+    width: 90%;
+}
+
+.new-bookmark-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.new-bookmark-form .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.new-bookmark-form .form-field > label:not(.checkbox-label) {
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-secondary);
+}
+
+.new-bookmark-form input[type="text"],
+.new-bookmark-form input[type="url"],
+.new-bookmark-form select {
+    padding: 0.375rem 0.5rem;
+    background: var(--background-primary);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-text);
+    transition: border-color 0.3s ease;
+}
+
+.new-bookmark-form input[type="text"]:focus,
+.new-bookmark-form input[type="url"]:focus,
+.new-bookmark-form select:focus {
+    outline: none;
+    border-color: var(--text-secondary);
+}
+
+.new-bookmark-form input[type="text"]::placeholder,
+.new-bookmark-form input[type="url"]::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* Checkbox styling - matches config-bookmarks.js style */
+.new-bookmark-form .checkbox-label {
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: var(--font-size-text);
+    font-weight: var(--font-weight-normal);
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+.new-bookmark-form .checkbox-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px !important;
+    height: 14px !important;
+    max-width: none !important;
+    border: 1px solid var(--border-primary) !important;
+    border-radius: 0;
+    cursor: pointer;
+    position: relative;
+    margin: 0;
+    flex-shrink: 0;
+    background-color: var(--background-primary) !important;
+    opacity: 1 !important;
+}
+
+.new-bookmark-form .checkbox-label input[type="checkbox"]:checked::before {
+    content: 'X';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--font-size-checkbox);
+    font-weight: var(--font-weight-black);
+    line-height: 1;
+    color: var(--accent-success);
+    opacity: 1 !important;
+}
+
+.new-bookmark-form .checkbox-label input[type="checkbox"]:checked {
+    border-color: var(--accent-success) !important;
+}
+
+.new-bookmark-form .checkbox-label input[type="checkbox"]:hover {
+    opacity: 0.8;
+}
+
+.new-bookmark-form .checkbox-text {
+    user-select: none;
+}
+
+/* Select dropdown styling */
+.new-bookmark-form select option {
+    background: var(--background-primary);
+    color: var(--text-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-new-bookmark {
+        width: 95%;
+        max-width: none;
+    }
+    
+    .new-bookmark-form {
+        gap: 0.875rem;
+    }
+}

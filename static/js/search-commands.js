@@ -3,12 +3,16 @@ class SearchCommandsComponent {
     constructor(language = null, currentBookmarks = [], allBookmarks = []) {
         this.language = language;
         
+        // Initialize :new command handler
+        this.newCommandHandler = new SearchCommandNew(language);
+        
         // Available commands
         this.availableCommands = {
             'theme': this.handleThemeCommand.bind(this),
             'fontsize': this.handleFontSizeCommand.bind(this),
             'columns': this.handleColumnsCommand.bind(this),
-            'remove': this.handleRemoveCommand.bind(this)
+            'remove': this.handleRemoveCommand.bind(this),
+            'new': this.handleNewCommand.bind(this)
         };
 
         // Available themes - will be loaded dynamically
@@ -32,6 +36,9 @@ class SearchCommandsComponent {
      */
     setLanguage(language) {
         this.language = language;
+        if (this.newCommandHandler) {
+            this.newCommandHandler.setLanguage(language);
+        }
     }
 
     /**
@@ -275,6 +282,24 @@ class SearchCommandsComponent {
     }
 
     /**
+     * Handle the :new command
+     * Opens a modal to create a new bookmark
+     * @param {Array} args - Arguments after 'new'
+     * @returns {Array} Array with single action to open modal
+     */
+    handleNewCommand(args) {
+        // Update context for the new command handler
+        if (this.newCommandHandler && window.dashboardInstance) {
+            const currentPageId = window.dashboardInstance.currentPageId || 1;
+            const categories = window.dashboardInstance.categories || [];
+            const pages = window.dashboardInstance.pages || [];
+            this.newCommandHandler.setContext(currentPageId, categories, pages);
+        }
+        
+        return this.newCommandHandler.handle(args);
+    }
+
+    /**
      * Handle the :remove command
      * Shows bookmarks from all pages by default, or current page if query contains '#'
      * When a bookmark is selected, shows Yes/No confirmation
@@ -383,8 +408,8 @@ class SearchCommandsComponent {
                 this.confirmationBookmark = null;
                 // Refresh the dashboard
                 if (window.dashboardInstance) {
-                    window.dashboardInstance.loadPageBookmarks(currentPageId);
-                    window.dashboardInstance.updateSearchComponent();
+                    await window.dashboardInstance.loadAllBookmarks();
+                    await window.dashboardInstance.loadPageBookmarks(currentPageId);
                 }
             } else {
                 console.error('Failed to delete bookmark');
