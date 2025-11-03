@@ -375,16 +375,22 @@ class SearchComponent {
         this.matchElements.forEach((element, index) => {
             if (index === this.selectedMatchIndex) {
                 element.classList.add('keyboard-selected');
-                // Scroll the selected element into view
+                // Scroll the selected element into view (only vertical scroll)
                 element.scrollIntoView({
                     behavior: 'instant',
-                    block: 'nearest',
-                    inline: 'nearest'
+                    block: 'nearest'
+                    // No 'inline' option to prevent horizontal scrolling
                 });
             } else {
                 element.classList.remove('keyboard-selected');
             }
         });
+        
+        // Force horizontal scroll position to 0 to prevent drift
+        const matchesContainer = document.getElementById('search-matches');
+        if (matchesContainer) {
+            matchesContainer.scrollLeft = 0;
+        }
     }
 
     resetQuery() {

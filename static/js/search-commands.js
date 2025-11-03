@@ -21,11 +21,11 @@ class SearchCommandsComponent {
         
         // Available commands
         this.availableCommands = {
+            'new': this.handleNewCommand.bind(this),
+            'remove': this.handleRemoveCommand.bind(this),
             'theme': this.handleThemeCommand.bind(this),
             'fontsize': this.handleFontSizeCommand.bind(this),
-            'columns': this.handleColumnsCommand.bind(this),
-            'remove': this.handleRemoveCommand.bind(this),
-            'new': this.handleNewCommand.bind(this)
+            'columns': this.handleColumnsCommand.bind(this)
         };
 
         // Current page bookmarks and all bookmarks
