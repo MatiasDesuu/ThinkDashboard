@@ -10,6 +10,7 @@ class SearchCommandNew {
         this.currentPageId = null;
         this.categories = [];
         this.pages = [];
+        this._mouseDownTarget = null;
     }
 
     setLanguage(language) {
@@ -238,8 +239,12 @@ class SearchCommandNew {
             }
         }, false);
 
+        this.modal.addEventListener('mousedown', (e) => {
+            this._mouseDownTarget = e.target;
+        });
+
         this.modal.addEventListener('click', (e) => {
-            if (e.target === this.modal) {
+            if (e.target === this.modal && this._mouseDownTarget === this.modal) {
                 this.closeModal();
             }
         });

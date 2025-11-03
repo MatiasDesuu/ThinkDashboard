@@ -1,6 +1,7 @@
 class Modal {
     constructor(language = null) {
         this.language = language;
+        this._mouseDownTarget = null;
         this.createModalHTML();
         this.setupEventListeners();
     }
@@ -30,9 +31,13 @@ class Modal {
     }
 
     setupEventListeners() {
-        // Close modal when clicking overlay
-        document.addEventListener('click', (e) => {
-            if (e.target && e.target.classList.contains('modal-overlay')) {
+        // Close modal when clicking outside
+        this.modal.addEventListener('mousedown', (e) => {
+            this._mouseDownTarget = e.target;
+        });
+
+        this.modal.addEventListener('click', (e) => {
+            if (e.target === this.modal && this._mouseDownTarget === this.modal) {
                 this.hide();
             }
         });
