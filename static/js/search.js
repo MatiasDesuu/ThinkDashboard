@@ -337,6 +337,8 @@ class SearchComponent {
         
         if (searchElement && queryElement) {
             queryElement.textContent = this.currentQuery;
+            // Auto-scroll to the right to keep the cursor position visible
+            queryElement.scrollLeft = queryElement.scrollWidth;
             searchElement.classList.add('show');
             
             // Focus mobile input to show keyboard

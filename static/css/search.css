@@ -52,7 +52,15 @@
 .search-query {
     font-family: var(--font-family-main);
     color: var(--text-primary);
-    white-space: pre;
+    white-space: nowrap;
+    overflow-x: auto;
+    display: inline-block;
+    max-width: 100%;
+    scrollbar-width: none; /* Firefox */
+}
+
+.search-query::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
 }
 
 .search-cursor {
