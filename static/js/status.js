@@ -40,13 +40,20 @@ class StatusMonitor {
         this.setBookmarkStatus(bookmarkElement, 'checking', '');
 
         try {
+            // Create abort controller for timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout (reduced from 8s)
+
             // Use the server-side ping API which can handle HTTPS certificates
             const response = await fetch(`/api/ping?url=${encodeURIComponent(bookmark.url)}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);
@@ -68,7 +75,11 @@ class StatusMonitor {
             return { status: result.status, ping: result.ping };
 
         } catch (error) {
-            console.error('Ping error for', bookmark.url, ':', error);
+            if (error.name === 'AbortError') {
+                console.warn('Ping timeout for', bookmark.url);
+            } else {
+                console.error('Ping error for', bookmark.url, ':', error);
+            }
 
             // Cache the result
             this.statusCache.set(bookmark.url, {
@@ -129,22 +140,14 @@ class StatusMonitor {
         // Filter bookmarks that should be checked
         const bookmarksToCheck = bookmarks.filter(bookmark => bookmark.checkStatus);
 
-        // Check bookmarks in batches to avoid overwhelming the network
-        const batchSize = 5;
-        for (let i = 0; i < bookmarksToCheck.length; i += batchSize) {
-            const batch = bookmarksToCheck.slice(i, i + batchSize);
-            const promises = batch.map(bookmark => this.checkBookmarkStatus(bookmark));
-            
-            try {
-                await Promise.allSettled(promises);
-            } catch (error) {
-                console.error('Error checking bookmark batch:', error);
-            }
-
-            // Small delay between batches
-            if (i + batchSize < bookmarksToCheck.length) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
+        // Check ALL bookmarks in parallel for instant loading
+        const promises = bookmarksToCheck.map(bookmark => this.checkBookmarkStatus(bookmark));
+        
+        try {
+            // All requests fire at once, results come back as they complete
+            await Promise.allSettled(promises);
+        } catch (error) {
+            console.error('Error checking bookmarks:', error);
         }
 
         this.isChecking = false;
@@ -286,22 +289,14 @@ class StatusMonitor {
         this.isChecking = true;
         this.showLoadingIndicator();
 
-        // Check bookmarks in batches to avoid overwhelming the network
-        const batchSize = 5;
-        for (let i = 0; i < bookmarks.length; i += batchSize) {
-            const batch = bookmarks.slice(i, i + batchSize);
-            const promises = batch.map(bookmark => this.checkBookmarkStatus(bookmark));
-            
-            try {
-                await Promise.allSettled(promises);
-            } catch (error) {
-                console.error('Error checking bookmark batch:', error);
-            }
-
-            // Small delay between batches
-            if (i + batchSize < bookmarks.length) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
+        // Check ALL uncached bookmarks in parallel for instant loading
+        const promises = bookmarks.map(bookmark => this.checkBookmarkStatus(bookmark));
+        
+        try {
+            // All requests fire at once, results come back as they complete
+            await Promise.allSettled(promises);
+        } catch (error) {
+            console.error('Error checking bookmarks:', error);
         }
 
         this.isChecking = false;

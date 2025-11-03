@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -821,7 +822,7 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Parse and validate URL
-	_, err := url.Parse(urlParam)
+	parsedURL, err := url.Parse(urlParam)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{
@@ -851,82 +852,91 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create HTTP client with timeout and insecure TLS for local HTTPS
-	client := &http.Client{
-		Timeout: 10 * time.Second,
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true, // Skip certificate verification for local HTTPS
-			},
-			DisableKeepAlives: true, // Disable keep-alives to avoid connection issues
-		},
+	// Extract host and port
+	host := parsedURL.Hostname()
+	port := parsedURL.Port()
+	if port == "" {
+		if parsedURL.Scheme == "https" {
+			port = "443"
+		} else {
+			port = "80"
+		}
 	}
 
 	// Start timing
 	start := time.Now()
 
-	// Make HEAD request first, fallback to GET if needed
-	var resp *http.Response
-	var reqErr error
+	// Try TCP connection first (fast ping)
+	address := net.JoinHostPort(host, port)
+	conn, err := net.DialTimeout("tcp", address, 2*time.Second)
 
-	// Try HEAD request
+	if err == nil {
+		conn.Close()
+		elapsed := time.Since(start).Milliseconds()
+		// Ensure minimum of 1ms for display purposes
+		if elapsed < 1 {
+			elapsed = 1
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"status": "online",
+			"ping":   elapsed,
+		})
+		return
+	}
+
+	// If TCP fails, try a quick HTTP request as fallback
+	client := &http.Client{
+		Timeout: 3 * time.Second,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+			DialContext: (&net.Dialer{
+				Timeout: 2 * time.Second,
+			}).DialContext,
+			TLSHandshakeTimeout:   2 * time.Second,
+			ResponseHeaderTimeout: 2 * time.Second,
+		},
+	}
+
 	req, err := http.NewRequest("HEAD", urlParam, nil)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"error":  "Failed to create request",
 			"status": "offline",
 			"ping":   nil,
 		})
 		return
 	}
 
-	resp, reqErr = client.Do(req)
-
-	// Close response body if it exists
+	resp, err := client.Do(req)
 	if resp != nil {
 		defer resp.Body.Close()
 	}
 
-	// If HEAD fails with certain errors, try GET
-	if reqErr != nil || (resp != nil && (resp.StatusCode == 405 || resp.StatusCode == 501)) {
-		// Try GET request
-		req, err = http.NewRequest("GET", urlParam, nil)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]interface{}{
-				"error":  "Failed to create request",
-				"status": "offline",
-				"ping":   nil,
-			})
-			return
-		}
-
-		resp, reqErr = client.Do(req)
-
-		// Close response body if it exists
-		if resp != nil {
-			defer resp.Body.Close()
-		}
+	elapsed := time.Since(start).Milliseconds()
+	// Ensure minimum of 1ms for display purposes
+	if elapsed < 1 {
+		elapsed = 1
 	}
 
-	// Calculate response time
-	elapsed := time.Since(start).Milliseconds()
+	if err == nil && resp != nil {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"status": "online",
+			"ping":   elapsed,
+		})
+		return
+	}
 
-	// Prepare response
-	response := map[string]interface{}{
+	// Offline
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]interface{}{
 		"status": "offline",
 		"ping":   nil,
-	}
-
-	if reqErr == nil && resp != nil {
-		// Consider it online if we get any response (even 4xx/5xx)
-		response["status"] = "online"
-		response["ping"] = elapsed
-	}
-
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+	})
 }
 
 func (h *Handlers) Backup(w http.ResponseWriter, r *http.Request) {
