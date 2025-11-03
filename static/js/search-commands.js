@@ -1,13 +1,14 @@
 // Search Commands Component JavaScript
 class SearchCommandsComponent {
-    constructor(language = null, currentBookmarks = [], allBookmarks = []) {
+    constructor(language = null, currentBookmarks = [], allBookmarks = [], updateQueryCallback = null) {
         this.language = language;
+        this.updateQueryCallback = updateQueryCallback;
         
         // Initialize :new command handler
         this.newCommandHandler = new SearchCommandNew(language);
         
         // Initialize :remove command handler
-        this.removeCommandHandler = new SearchCommandRemove(language);
+        this.removeCommandHandler = new SearchCommandRemove(language, updateQueryCallback);
         
         // Initialize :columns command handler
         this.columnsCommandHandler = new SearchCommandColumns(language);
@@ -69,7 +70,10 @@ class SearchCommandsComponent {
      * Reset internal state (confirmation mode, etc.)
      */
     resetState() {
-        // State is now managed by individual command handlers
+        if (this.removeCommandHandler) {
+            this.removeCommandHandler.resetState();
+        }
+        // Add other handlers if they have state
     }
 
     /**
@@ -93,7 +97,7 @@ class SearchCommandsComponent {
 
         // Check if it's a complete command
         if (this.availableCommands[potentialCommand]) {
-            return this.availableCommands[potentialCommand](parts.slice(1));
+            return this.availableCommands[potentialCommand](parts.slice(1), query);
         }
 
         // Check if it's the start of a command
@@ -129,27 +133,30 @@ class SearchCommandsComponent {
     /**
      * Handle the :theme command
      * @param {Array} args - Arguments after 'theme'
+     * @param {string} fullQuery - The full query string
      * @returns {Array} Array of theme matches
      */
-    handleThemeCommand(args) {
+    handleThemeCommand(args, fullQuery) {
         return this.themeCommandHandler.handle(args);
     }
 
     /**
      * Handle the :fontsize command
      * @param {Array} args - Arguments after 'fontsize'
+     * @param {string} fullQuery - The full query string
      * @returns {Array} Array of font size matches
      */
-    handleFontSizeCommand(args) {
+    handleFontSizeCommand(args, fullQuery) {
         return this.fontSizeCommandHandler.handle(args);
     }
 
     /**
      * Handle the :columns command
      * @param {Array} args - Arguments after 'columns'
+     * @param {string} fullQuery - The full query string
      * @returns {Array} Array of column matches
      */
-    handleColumnsCommand(args) {
+    handleColumnsCommand(args, fullQuery) {
         return this.columnsCommandHandler.handle(args);
     }
 
@@ -157,9 +164,10 @@ class SearchCommandsComponent {
      * Handle the :new command
      * Opens a modal to create a new bookmark
      * @param {Array} args - Arguments after 'new'
+     * @param {string} fullQuery - The full query string
      * @returns {Array} Array with single action to open modal
      */
-    handleNewCommand(args) {
+    handleNewCommand(args, fullQuery) {
         // Update context for the new command handler
         if (this.newCommandHandler && window.dashboardInstance) {
             const currentPageId = window.dashboardInstance.currentPageId || 1;
@@ -176,10 +184,11 @@ class SearchCommandsComponent {
      * Shows bookmarks from all pages by default, or current page if query contains '#'
      * When a bookmark is selected, shows Yes/No confirmation
      * @param {Array} args - Arguments after 'remove'
+     * @param {string} fullQuery - The full query string
      * @returns {Array} Array of bookmark matches or confirmation options
      */
-    handleRemoveCommand(args) {
-        return this.removeCommandHandler.handle(args);
+    handleRemoveCommand(args, fullQuery) {
+        return this.removeCommandHandler.handle(args, fullQuery);
     }
 }
 

@@ -15,7 +15,10 @@ class SearchComponent {
         this.justCompleted = false; // Flag to prevent accidental execution after completion
         this.pendingConfirmation = false; // Flag to prevent accidental confirmation execution
         
-        this.commandsComponent = new window.SearchCommandsComponent(this.language, this.currentBookmarks, this.allBookmarks);
+        this.commandsComponent = new window.SearchCommandsComponent(this.language, this.currentBookmarks, this.allBookmarks, (newQuery) => {
+            this.currentQuery = newQuery;
+            this.updateSearch();
+        });
 
         this.fuzzySearchComponent = new window.FuzzySearchComponent(this.bookmarks, (bookmark) => this.openBookmark(bookmark));
 

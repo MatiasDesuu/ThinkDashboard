@@ -4,8 +4,9 @@
  */
 
 class SearchCommandRemove {
-    constructor(language = null) {
+    constructor(language = null, updateQueryCallback = null) {
         this.language = language;
+        this.updateQueryCallback = updateQueryCallback;
         this.currentBookmarks = [];
         this.allBookmarks = [];
         this.confirmationBookmark = null;
@@ -25,7 +26,12 @@ class SearchCommandRemove {
         this.confirmationBookmark = null;
     }
 
-    handle(args) {
+    handle(args, fullQuery) {
+        // If confirmation bookmark exists but query doesn't match, reset
+        if (this.confirmationBookmark && fullQuery !== ':remove ' + this.confirmationBookmark.name) {
+            this.confirmationBookmark = null;
+        }
+
         // If in confirmation mode, show Yes/No options
         if (this.confirmationBookmark) {
             return this.getConfirmationMatches();
@@ -74,7 +80,13 @@ class SearchCommandRemove {
             return bookmarks.map(bookmark => ({
                 name: bookmark.name,
                 shortcut: ':remove',
-                action: () => { this.confirmationBookmark = bookmark; return false; },
+                action: () => { 
+                    this.confirmationBookmark = bookmark; 
+                    if (this.updateQueryCallback) {
+                        this.updateQueryCallback(':remove ' + bookmark.name);
+                    }
+                    return false; 
+                },
                 type: 'command'
             }));
         } else {
@@ -86,7 +98,13 @@ class SearchCommandRemove {
             return matchingBookmarks.map(bookmark => ({
                 name: bookmark.name,
                 shortcut: ':remove',
-                action: () => { this.confirmationBookmark = bookmark; return false; },
+                action: () => { 
+                    this.confirmationBookmark = bookmark; 
+                    if (this.updateQueryCallback) {
+                        this.updateQueryCallback(':remove ' + bookmark.name);
+                    }
+                    return false; 
+                },
                 type: 'command'
             }));
         }
