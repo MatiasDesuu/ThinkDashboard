@@ -75,16 +75,17 @@
     51%, 100% { opacity: 0; }
 }
 
-/* Mobile input - invisible but functional */
+/* Mobile input - positioned off-screen but visible to Safari */
 .search-input-mobile {
     position: absolute;
-    opacity: 0;
-    pointer-events: none;
+    left: -9999px;
+    top: -9999px;
     width: 1px;
     height: 1px;
     border: none;
     padding: 0;
     margin: 0;
+    opacity: 0.01; /* Very low opacity but not zero for Safari */
 }
 
 .search-matches {
