@@ -53,6 +53,11 @@ class ConfigBookmarks {
             <input type="text" id="bookmark-name-${index}" name="bookmark-name-${index}" value="${bookmark.name}" placeholder="${this.t('config.bookmarkNamePlaceholder')}" data-bookmark-key="${index}" data-field="name">
             <input type="url" id="bookmark-url-${index}" name="bookmark-url-${index}" value="${bookmark.url}" placeholder="${this.t('config.bookmarkUrlPlaceholder')}" data-bookmark-key="${index}" data-field="url">
             <input type="text" id="bookmark-shortcut-${index}" name="bookmark-shortcut-${index}" value="${bookmark.shortcut || ''}" placeholder="${this.t('config.bookmarkShortcutPlaceholder')}" maxlength="5" data-bookmark-key="${index}" data-field="shortcut">
+            <div class="bookmark-icon-upload">
+                <input type="file" id="bookmark-icon-${index}" name="bookmark-icon-${index}" accept="image/*" style="display: none;" data-bookmark-key="${index}">
+                <button type="button" class="btn btn-secondary btn-small ${bookmark.icon ? 'has-icon' : ''}" onclick="document.getElementById('bookmark-icon-${index}').click()" title="${this.t('config.uploadIconTooltip')}">↑</button>
+                ${bookmark.icon ? `<button type="button" class="btn btn-danger btn-small btn-clear-icon" onclick="window.configBookmarks.clearIcon(${index})" title="${this.t('config.clearIcon')}">×</button>` : ''}
+            </div>
             <select id="bookmark-category-${index}" name="bookmark-category-${index}" data-bookmark-key="${index}" data-field="category">
                 <option value="">${this.t('config.noCategory')}</option>
                 ${categoryOptions}
@@ -90,6 +95,48 @@ class ConfigBookmarks {
                 }
             });
         });
+
+        // Add event listener for icon upload
+        const iconInput = div.querySelector(`#bookmark-icon-${index}`);
+        const iconButton = div.querySelector('.bookmark-icon-upload button');
+        if (iconInput && iconButton) {
+            iconInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('icon', file);
+
+                    try {
+                        const response = await fetch('/api/icon', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const result = await response.json();
+                        if (result.status === 'success') {
+                            bookmark.icon = result.icon;
+                            iconButton.classList.add('has-icon');
+                            
+                            // Add clear button if it doesn't exist
+                            let clearButton = div.querySelector('.btn-clear-icon');
+                            if (!clearButton) {
+                                clearButton = document.createElement('button');
+                                clearButton.type = 'button';
+                                clearButton.className = 'btn btn-danger btn-small btn-clear-icon';
+                                clearButton.onclick = () => window.configBookmarks.clearIcon(index);
+                                clearButton.title = window.configBookmarks ? window.configBookmarks.t('config.clearIcon') : 'Clear icon';
+                                clearButton.textContent = '×';
+                                iconButton.parentNode.appendChild(clearButton);
+                            }
+                        } else {
+                            alert('Error uploading icon');
+                        }
+                    } catch (error) {
+                        console.error('Error uploading icon:', error);
+                        alert('Error uploading icon');
+                    }
+                }
+            });
+        }
 
         // Initialize custom select for the category dropdown
         const selectElement = div.querySelector('select');
@@ -172,6 +219,35 @@ class ConfigBookmarks {
         
         bookmarks.splice(index, 1);
         return true;
+    }
+
+    /**
+     * Clear the icon from a bookmark
+     * @param {number} index - The index of the bookmark to clear the icon from
+     */
+    clearIcon(index) {
+        // Find the bookmark element
+        const bookmarkElement = document.querySelector(`[data-bookmark-index="${index}"]`);
+        if (!bookmarkElement || !bookmarkElement._bookmarkRef) {
+            return;
+        }
+
+        const bookmark = bookmarkElement._bookmarkRef;
+        
+        // Clear the icon
+        bookmark.icon = '';
+        
+        // Update the button styling
+        const iconButton = bookmarkElement.querySelector('.bookmark-icon-upload button');
+        if (iconButton) {
+            iconButton.classList.remove('has-icon');
+        }
+        
+        // Remove the clear button
+        const clearButton = bookmarkElement.querySelector('.btn-clear-icon');
+        if (clearButton) {
+            clearButton.remove();
+        }
     }
 }
 

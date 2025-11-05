@@ -237,6 +237,12 @@ body {
     max-width: 100%; /* Ensure bookmark doesn't exceed parent width */
 }
 
+.bookmark-icon {
+    height: var(--font-size-bookmark);
+    width: auto;
+    flex-shrink: 0;
+}
+
 .bookmark-link:hover {
     color: var(--text-primary);
     transform: translateX(4px);

@@ -607,6 +607,82 @@ func (h *Handlers) UploadFont(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "success", "path": settings.CustomFontPath})
 }
 
+func (h *Handlers) UploadIcon(w http.ResponseWriter, r *http.Request) {
+	// Parse multipart form
+	err := r.ParseMultipartForm(10 << 20) // 10 MB max
+	if err != nil {
+		http.Error(w, "Unable to parse form", http.StatusBadRequest)
+		return
+	}
+
+	file, header, err := r.FormFile("icon")
+	if err != nil {
+		http.Error(w, "Error retrieving file", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	// Validate file type (should be image)
+	contentType := header.Header.Get("Content-Type")
+	if contentType != "image/x-icon" && contentType != "image/png" && contentType != "image/jpeg" && contentType != "image/gif" && contentType != "image/svg+xml" {
+		http.Error(w, "Invalid file type. Only ico, png, jpg, gif, svg allowed", http.StatusBadRequest)
+		return
+	}
+
+	// Create data/icons directory if it doesn't exist
+	iconsDir := "data/icons"
+	if _, err := os.Stat(iconsDir); os.IsNotExist(err) {
+		os.MkdirAll(iconsDir, 0755)
+	}
+
+	// Determine file extension
+	var ext string
+	switch contentType {
+	case "image/x-icon":
+		ext = ".ico"
+	case "image/png":
+		ext = ".png"
+	case "image/jpeg":
+		ext = ".jpg"
+	case "image/gif":
+		ext = ".gif"
+	case "image/svg+xml":
+		ext = ".svg"
+	default:
+		ext = filepath.Ext(header.Filename)
+	}
+
+	// Generate unique filename based on original filename (without extension)
+	baseName := strings.TrimSuffix(header.Filename, filepath.Ext(header.Filename))
+	// Sanitize filename to prevent path traversal
+	baseName = strings.ReplaceAll(baseName, "..", "")
+	baseName = strings.ReplaceAll(baseName, "/", "")
+	baseName = strings.ReplaceAll(baseName, "\\", "")
+
+	// Check if file already exists
+	fileName := baseName + ext
+	filePath := filepath.Join(iconsDir, fileName)
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		// File doesn't exist, save it
+		dst, err := os.Create(filePath)
+		if err != nil {
+			http.Error(w, "Unable to save file", http.StatusInternalServerError)
+			return
+		}
+		defer dst.Close()
+
+		_, err = io.Copy(dst, file)
+		if err != nil {
+			http.Error(w, "Unable to save file", http.StatusInternalServerError)
+			return
+		}
+	}
+	// If file exists, we reuse it (no need to save again)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success", "icon": fileName})
+}
+
 func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFS(h.files, "templates/colors.html")
 	if err != nil {

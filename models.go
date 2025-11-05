@@ -14,6 +14,7 @@ type Bookmark struct {
 	Shortcut    string `json:"shortcut"`
 	Category    string `json:"category"`
 	CheckStatus bool   `json:"checkStatus"`
+	Icon        string `json:"icon"`
 }
 
 type Category struct {

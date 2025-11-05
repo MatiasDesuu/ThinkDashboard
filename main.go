@@ -46,6 +46,7 @@ func main() {
 	r.HandleFunc("/api/settings", handlers.SaveSettings).Methods("POST")
 	r.HandleFunc("/api/favicon", handlers.UploadFavicon).Methods("POST")
 	r.HandleFunc("/api/font", handlers.UploadFont).Methods("POST")
+	r.HandleFunc("/api/icon", handlers.UploadIcon).Methods("POST")
 	r.HandleFunc("/api/colors", handlers.GetColors).Methods("GET")
 	r.HandleFunc("/api/colors", handlers.SaveColors).Methods("POST")
 	r.HandleFunc("/api/colors/reset", handlers.ResetColors).Methods("POST")

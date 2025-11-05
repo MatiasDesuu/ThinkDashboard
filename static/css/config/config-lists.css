@@ -85,3 +85,25 @@
     text-align: center;
     text-transform: uppercase;
 }
+
+.bookmark-icon-upload {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.bookmark-icon-upload .btn.has-icon {
+    background-color: var(--accent-success);
+    color: var(--text-primary);
+    border-color: var(--border-primary);
+}
+
+.bookmark-icon-upload .btn.has-icon:hover {
+    background-color: var(--accent-success);
+    opacity: 0.8;
+}
+
+.btn-clear-icon {
+    padding: 0.375rem 0.5rem;
+    min-width: auto;
+}

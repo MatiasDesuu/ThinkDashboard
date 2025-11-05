@@ -552,6 +552,15 @@ class Dashboard {
         link.className = 'bookmark-link';
         link.setAttribute('data-bookmark-url', bookmark.url);
         
+        // Add icon if exists
+        if (bookmark.icon) {
+            const iconImg = document.createElement('img');
+            iconImg.src = `/data/icons/${bookmark.icon}`;
+            iconImg.className = 'bookmark-icon';
+            iconImg.alt = '';
+            link.appendChild(iconImg);
+        }
+        
         // Create text wrapper for ellipsis
         const textSpan = document.createElement('span');
         textSpan.className = 'bookmark-text';
