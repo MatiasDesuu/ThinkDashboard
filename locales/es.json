@@ -49,6 +49,7 @@
     "openLinksInNewTab": "Abrir enlaces en nueva pestaña",
     "hyprMode": "Modo Hypr (Modo lanzador para PWA)",
     "showBackgroundDots": "Mostrar puntos en el fondo",
+    "showIcons": "Mostrar iconos de marcadores",
     "showDashboardTitle": "Mostrar título del tablero",
     "enableCustomTitle": "Habilitar título personalizado",
     "customTitleLabel": "Título personalizado:",

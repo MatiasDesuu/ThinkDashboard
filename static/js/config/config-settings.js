@@ -218,6 +218,15 @@ class ConfigSettings {
             });
         }
 
+        // Show icons checkbox
+        const showIconsCheckbox = document.getElementById('show-icons-checkbox');
+        if (showIconsCheckbox) {
+            showIconsCheckbox.checked = settings.showIcons !== false;
+            showIconsCheckbox.addEventListener('change', (e) => {
+                settings.showIcons = e.target.checked;
+            });
+        }
+
         // Show title checkbox
         const showTitleCheckbox = document.getElementById('show-title-checkbox');
         if (showTitleCheckbox) {
@@ -546,6 +555,8 @@ class ConfigSettings {
         if (enableFuzzySuggestionsCheckbox) settings.enableFuzzySuggestions = enableFuzzySuggestionsCheckbox.checked;
         if (fuzzySuggestionsStartWithCheckbox) settings.fuzzySuggestionsStartWith = fuzzySuggestionsStartWithCheckbox.checked;
         if (keepSearchOpenWhenEmptyCheckbox) settings.keepSearchOpenWhenEmpty = keepSearchOpenWhenEmptyCheckbox.checked;
+        const showIconsCheckbox = document.getElementById('show-icons-checkbox');
+        if (showIconsCheckbox) settings.showIcons = showIconsCheckbox.checked;
     }
 
     /**

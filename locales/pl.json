@@ -49,6 +49,7 @@
     "openLinksInNewTab": "Otwieraj linki w nowej karcie",
     "hyprMode": "Tryb HyprMode (tryb launchera dla PWA)",
     "showBackgroundDots": "Pokaż kropki w tle",
+    "showIcons": "Pokaż ikony zakładek",
     "showDashboardTitle": "Pokaż tytuł panelu",
     "enableCustomTitle": "Włącz niestandardowy tytuł",
     "customTitleLabel": "Niestandardowy tytuł:",

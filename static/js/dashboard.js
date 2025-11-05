@@ -27,7 +27,8 @@ class Dashboard {
             showPageTabs: true,
             enableFuzzySuggestions: false,
             fuzzySuggestionsStartWith: false,
-            keepSearchOpenWhenEmpty: false
+            keepSearchOpenWhenEmpty: false,
+            showIcons: false
         };
         this.searchComponent = null;
         this.statusMonitor = null;
@@ -552,8 +553,8 @@ class Dashboard {
         link.className = 'bookmark-link';
         link.setAttribute('data-bookmark-url', bookmark.url);
         
-        // Add icon if exists
-        if (bookmark.icon) {
+        // Add icon if exists and showIcons is enabled
+        if (bookmark.icon && this.settings.showIcons) {
             const iconImg = document.createElement('img');
             iconImg.src = `/data/icons/${bookmark.icon}`;
             iconImg.className = 'bookmark-icon';

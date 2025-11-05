@@ -49,6 +49,7 @@
     "openLinksInNewTab": "リンクを新しいタブで開く",
     "hyprMode": "HyprMode (PWA用のランチャーモード)",
     "showBackgroundDots": "背景のドットを表示",
+    "showIcons": "ブックマークアイコンを表示",
     "showDashboardTitle": "ダッシュボードタイトルを表示",
     "enableCustomTitle": "カスタムタイトルを有効にする",
     "customTitleLabel": "カスタムタイトル:",

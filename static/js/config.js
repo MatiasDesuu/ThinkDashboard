@@ -48,7 +48,8 @@ class ConfigManager {
             showPageTabs: true,
             enableFuzzySuggestions: false,
             fuzzySuggestionsStartWith: false,
-            keepSearchOpenWhenEmpty: false
+            keepSearchOpenWhenEmpty: false,
+            showIcons: false
         };
         this.deviceSpecific = false;
 

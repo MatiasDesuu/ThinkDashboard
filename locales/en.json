@@ -49,6 +49,7 @@
     "openLinksInNewTab": "Open links in new tab",
     "hyprMode": "HyprMode (Launcher mode for PWA)",
     "showBackgroundDots": "Show background dots",
+    "showIcons": "Show bookmark icons",
     "showDashboardTitle": "Show dashboard title",
     "enableCustomTitle": "Enable custom title",
     "customTitleLabel": "Custom title:",

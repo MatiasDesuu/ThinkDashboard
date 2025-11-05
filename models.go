@@ -69,6 +69,7 @@ type Settings struct {
 	EnableFuzzySuggestions    bool   `json:"enableFuzzySuggestions"`    // Enable fuzzy suggestions in shortcut search
 	FuzzySuggestionsStartWith bool   `json:"fuzzySuggestionsStartWith"` // Fuzzy suggestions start with query instead of contains
 	KeepSearchOpenWhenEmpty   bool   `json:"keepSearchOpenWhenEmpty"`   // Keep search interface open when query is empty
+	ShowIcons                 bool   `json:"showIcons"`                 // Show bookmark icons
 }
 
 type ColorTheme struct {
@@ -192,6 +193,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			AnimationsEnabled:  true, // Default to animations enabled
 			Language:           "en",
 			ShowPageTabs:       true,
+			ShowIcons:          false,
 		}
 		data, _ := json.MarshalIndent(defaultSettings, "", "  ")
 		os.WriteFile(fs.settingsFile, data, 0644)
@@ -653,6 +655,7 @@ func (fs *FileStore) GetSettings() Settings {
 			EnableFuzzySuggestions:    false,
 			FuzzySuggestionsStartWith: false,
 			KeepSearchOpenWhenEmpty:   false,
+			ShowIcons:                 false,
 		}
 	}
 
