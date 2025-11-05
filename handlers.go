@@ -54,8 +54,15 @@ func validateBookmarkURL(bookmarkURL string) error {
 
 // isValidImportFilename validates that the filename is safe and allowed for import
 func (h *Handlers) isValidImportFilename(filename string) bool {
-	// Prevent path traversal
-	if strings.Contains(filename, "..") || strings.Contains(filename, "/") || strings.Contains(filename, "\\") {
+	// Prevent path traversal, but allow icons/ subdirectory
+	if strings.Contains(filename, "..") {
+		return false
+	}
+	if strings.Contains(filename, "\\") {
+		return false
+	}
+	// Allow / only in icons/ prefix
+	if strings.Contains(filename, "/") && !strings.HasPrefix(filename, "icons/") {
 		return false
 	}
 
@@ -87,6 +94,27 @@ func (h *Handlers) isValidImportFilename(filename string) bool {
 		numberPart := strings.TrimPrefix(strings.TrimSuffix(filename, ".json"), "bookmarks-")
 		if _, err := strconv.Atoi(numberPart); err == nil {
 			return true
+		}
+	}
+
+	// Check if it's an image file in root data directory
+	if !strings.Contains(filename, "/") {
+		validImageExtensions := []string{".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".webp"}
+		for _, ext := range validImageExtensions {
+			if strings.HasSuffix(filename, ext) {
+				return true
+			}
+		}
+	}
+
+	// Check if it's an icon file (icons/ followed by filename with image extension)
+	if strings.HasPrefix(filename, "icons/") {
+		// Allow common image extensions
+		validExtensions := []string{".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".webp"}
+		for _, ext := range validExtensions {
+			if strings.HasSuffix(filename, ext) {
+				return true
+			}
 		}
 	}
 
@@ -1097,8 +1125,14 @@ func (h *Handlers) Import(w http.ResponseWriter, r *http.Request) {
 	for _, fileHeader := range files {
 		filename := fileHeader.Filename
 
+		// Normalize path separators to /
+		filename = strings.ReplaceAll(filename, "\\", "/")
+
+		fmt.Printf("Processing file: %s\n", filename)
+
 		// Validate filename to prevent path traversal and ensure only allowed files
 		if !h.isValidImportFilename(filename) {
+			fmt.Printf("Invalid filename: %s\n", filename)
 			http.Error(w, fmt.Sprintf("Invalid filename: %s", filename), http.StatusBadRequest)
 			return
 		}
@@ -1120,15 +1154,29 @@ func (h *Handlers) Import(w http.ResponseWriter, r *http.Request) {
 		// Validate JSON content for JSON files
 		if strings.HasSuffix(filename, ".json") {
 			if !json.Valid(content) {
+				fmt.Printf("Invalid JSON in file: %s\n", filename)
 				http.Error(w, fmt.Sprintf("Invalid JSON content in file: %s", filename), http.StatusBadRequest)
 				return
 			}
 		}
 
 		// Determine destination path
-		destPath := filepath.Join("data", filename)
+		var destPath string
+		if strings.HasPrefix(filename, "favicon.") {
+			destPath = filename
+		} else {
+			destPath = filepath.Join("data", filename)
+		}
 
-		// Write file to data directory
+		// Ensure the directory exists
+		dir := filepath.Dir(destPath)
+		err = os.MkdirAll(dir, 0755)
+		if err != nil {
+			http.Error(w, "Failed to create directory", http.StatusInternalServerError)
+			return
+		}
+
+		// Write file
 		err = os.WriteFile(destPath, content, 0644)
 		if err != nil {
 			http.Error(w, "Failed to write file", http.StatusInternalServerError)
