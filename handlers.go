@@ -1164,6 +1164,21 @@ func (h *Handlers) Import(w http.ResponseWriter, r *http.Request) {
 		var destPath string
 		if strings.HasPrefix(filename, "favicon.") {
 			destPath = filename
+		} else if !strings.Contains(filename, "/") {
+			// Check if it's an image file that should go to icons/
+			validImageExtensions := []string{".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".webp"}
+			isImage := false
+			for _, ext := range validImageExtensions {
+				if strings.HasSuffix(filename, ext) {
+					isImage = true
+					break
+				}
+			}
+			if isImage {
+				destPath = filepath.Join("data", "icons", filename)
+			} else {
+				destPath = filepath.Join("data", filename)
+			}
 		} else {
 			destPath = filepath.Join("data", filename)
 		}
