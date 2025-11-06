@@ -360,7 +360,7 @@ class SearchComponent {
                 // Use setTimeout to ensure the search is visible before focusing
                 setTimeout(() => {
                     mobileInput.focus();
-                }, 100);
+                }, 300);
             }
         }
     }
