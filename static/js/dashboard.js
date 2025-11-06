@@ -729,8 +729,7 @@ class Dashboard {
             
             // Set date content
             const today = new Date();
-            const lang = this.settings.language;
-            const month = today.toLocaleString(lang, { month: 'short' });
+            const month = today.toLocaleString('default', { month: 'short' });
             const day = String(today.getDate()).padStart(2, '0');
             const year = today.getFullYear();
             dateElement.textContent = `${day}/${month}/${year}`;
