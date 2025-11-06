@@ -80,12 +80,12 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 1px;
+    height: 1px;
     border: none;
     padding: 0;
     margin: 0;
-    opacity: 0;
+    opacity: 1;
     background: transparent;
     z-index: 9999;
     pointer-events: none;
