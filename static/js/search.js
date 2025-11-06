@@ -342,25 +342,11 @@ class SearchComponent {
             searchElement.classList.add('show');
             
             // Focus mobile input to show keyboard
+            // Important: Don't use setTimeout on iOS - focus must be synchronous
+            // in response to user interaction to trigger the keyboard
             if (mobileInput) {
                 mobileInput.value = this.currentQuery;
-                // Make input visible on mobile for iOS keyboard
-                mobileInput.style.position = 'relative';
-                mobileInput.style.opacity = '1';
-                mobileInput.style.width = '100%';
-                mobileInput.style.height = '2em';
-                mobileInput.style.border = '1px solid #ccc';
-                mobileInput.style.padding = '0.5em';
-                mobileInput.style.zIndex = '10';
-                mobileInput.style.background = 'white';
-                mobileInput.style.color = 'black';
-                // Hide the prompt
-                const prompt = document.querySelector('.search-prompt');
-                if (prompt) prompt.style.display = 'none';
-                // Use setTimeout to ensure the search is visible before focusing
-                setTimeout(() => {
-                    mobileInput.focus();
-                }, 300);
+                mobileInput.focus();
             }
         }
     }
@@ -379,18 +365,6 @@ class SearchComponent {
         if (mobileInput) {
             mobileInput.blur();
             mobileInput.value = '';
-            // Revert styles
-            mobileInput.style.position = '';
-            mobileInput.style.opacity = '';
-            mobileInput.style.width = '';
-            mobileInput.style.height = '';
-            mobileInput.style.border = '';
-            mobileInput.style.padding = '';
-            mobileInput.style.zIndex = '';
-            mobileInput.style.background = '';
-            mobileInput.style.color = '';
-            const prompt = document.querySelector('.search-prompt');
-            if (prompt) prompt.style.display = '';
         }
         
         // Clear the displayed matches

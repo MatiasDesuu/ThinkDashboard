@@ -32,7 +32,6 @@
     display: flex;
     flex-direction: column;
     max-height: 80vh; /* Limitar altura total del contenedor */
-    position: relative;
 }
 
 .search-prompt {
@@ -79,17 +78,14 @@
 /* Mobile input - positioned off-screen but visible to Safari */
 .search-input-mobile {
     position: absolute;
-    top: 0;
-    left: 0;
+    left: -9999px;
+    top: -9999px;
     width: 1px;
     height: 1px;
     border: none;
     padding: 0;
     margin: 0;
-    opacity: 1;
-    background: transparent;
-    z-index: 9999;
-    pointer-events: none;
+    opacity: 0.01;
 }
 
 .search-matches {
