@@ -231,7 +231,6 @@
 .shortcut-search.show ~ .search-button {
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0s ease;
 }
 
 /* Preserve centering transform when animations are disabled */
