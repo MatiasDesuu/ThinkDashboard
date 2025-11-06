@@ -78,14 +78,17 @@
 /* Mobile input - positioned off-screen but visible to Safari */
 .search-input-mobile {
     position: absolute;
-    left: -9999px;
-    top: -9999px;
-    width: 1px;
-    height: 1px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     border: none;
     padding: 0;
     margin: 0;
-    opacity: 0.01;
+    opacity: 0;
+    background: transparent;
+    z-index: -1;
+    pointer-events: none;
 }
 
 .search-matches {
