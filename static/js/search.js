@@ -342,8 +342,6 @@ class SearchComponent {
             searchElement.classList.add('show');
             
             // Focus mobile input to show keyboard
-            // Important: Don't use setTimeout on iOS - focus must be synchronous
-            // in response to user interaction to trigger the keyboard
             if (mobileInput) {
                 mobileInput.value = this.currentQuery;
                 mobileInput.focus();
