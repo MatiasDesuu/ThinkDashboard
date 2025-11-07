@@ -171,6 +171,34 @@ class ConfigData {
         const settingsRes = await fetch('/api/settings');
         return await settingsRes.json();
     }
+
+    /**
+     * Load finders from server
+     * @returns {Promise<Array>}
+     */
+    async loadFinders() {
+        const res = await fetch('/api/finders');
+        return await res.json();
+    }
+
+    /**
+     * Save finders to server
+     * @param {Array} finders
+     */
+    async saveFinders(finders) {
+        const response = await fetch('/api/finders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(finders)
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to save finders: ${errorText}`);
+        }
+        
+        return await response.json();
+    }
 }
 
 // Export for use in other modules

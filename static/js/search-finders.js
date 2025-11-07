@@ -1,0 +1,120 @@
+/**
+ * Search Finders Component
+ * Handles finder search queries starting with ?
+ */
+
+class SearchFindersComponent {
+    constructor(language = null, finders = []) {
+        this.language = language;
+        this.finders = finders;
+        this.shortcuts = new Map();
+        this.buildShortcutsMap();
+    }
+
+    setLanguage(language) {
+        this.language = language;
+    }
+
+    setFinders(finders) {
+        this.finders = finders;
+        this.buildShortcutsMap();
+    }
+
+    buildShortcutsMap() {
+        this.shortcuts.clear();
+        this.finders.forEach(finder => {
+            if (finder.shortcut && finder.shortcut.trim()) {
+                this.shortcuts.set(finder.shortcut.toLowerCase(), finder);
+            }
+        });
+    }
+
+    /**
+     * Handle a finder query
+     * @param {string} query - The full query starting with ?
+     * @returns {Array} Array of match objects
+     */
+    handleQuery(query) {
+        if (!query.startsWith('?')) {
+            return [];
+        }
+
+        const afterQuestion = query.slice(1);
+        const parts = afterQuestion.split(' ');
+        const shortcut = parts[0].toLowerCase();
+
+        // If just "?", show available finders
+        if (query === '?') {
+            return this.getAvailableFinders();
+        }
+
+        // Check if it's a complete shortcut
+        const finder = this.shortcuts.get(shortcut);
+        if (finder) {
+            const searchText = parts.slice(1).join(' ');
+            return [{
+                name: finder.name,
+                shortcut: `?${finder.shortcut}`,
+                searchText: searchText,
+                url: finder.searchUrl.replace('%s', encodeURIComponent(searchText)),
+                action: () => this.openFinder(finder, searchText),
+                type: 'finder'
+            }];
+        }
+
+        // Check if it's the start of a shortcut
+        const matchingShortcuts = Array.from(this.shortcuts.keys()).filter(sc => 
+            sc.startsWith(shortcut)
+        );
+
+        if (matchingShortcuts.length > 0) {
+            return matchingShortcuts.map(sc => ({
+                name: '',
+                shortcut: `?${sc.toUpperCase()}`,
+                completion: `?${sc.toUpperCase()} `,
+                type: 'finder-completion'
+            }));
+        }
+
+        return [];
+    }
+
+    /**
+     * Get list of available finders
+     * @returns {Array} Array of finder matches
+     */
+    getAvailableFinders() {
+        return Array.from(this.shortcuts.values()).map(finder => ({
+            name: finder.name,
+            shortcut: `?${finder.shortcut.toUpperCase()}`,
+            completion: `?${finder.shortcut.toUpperCase()} `,
+            type: 'finder-completion'
+        }));
+    }
+
+    /**
+     * Open a finder with the given search text
+     * @param {Object} finder
+     * @param {string} searchText
+     */
+    openFinder(finder, searchText) {
+        let url = finder.searchUrl;
+        
+        // Convert search text to lowercase before encoding
+        const processedText = searchText.toLowerCase();
+        
+        if (url.includes('%s')) {
+            // Replace %s placeholder with encoded search text
+            url = url.replace('%s', encodeURIComponent(processedText));
+        } else {
+            // If no %s placeholder, append the search text to the URL
+            url += encodeURIComponent(processedText);
+        }
+        
+        // Open in the same tab instead of new tab
+        window.location.href = url;
+    }
+}
+
+// Export for use in other modules
+window.SearchFindersComponent = SearchFindersComponent;

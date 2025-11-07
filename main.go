@@ -37,6 +37,8 @@ func main() {
 	r.HandleFunc("/api/bookmarks", handlers.SaveBookmarks).Methods("POST")
 	r.HandleFunc("/api/bookmarks", handlers.DeleteBookmark).Methods("DELETE")
 	r.HandleFunc("/api/bookmarks/add", handlers.AddBookmark).Methods("POST")
+	r.HandleFunc("/api/finders", handlers.GetFinders).Methods("GET")
+	r.HandleFunc("/api/finders", handlers.SaveFinders).Methods("POST")
 	r.HandleFunc("/api/categories", handlers.GetCategories).Methods("GET")
 	r.HandleFunc("/api/categories", handlers.SaveCategories).Methods("POST")
 	r.HandleFunc("/api/pages", handlers.GetPages).Methods("GET")

@@ -1,7 +1,8 @@
 /* Lists */
 .pages-list,
 .categories-list,
-.bookmarks-list {
+.bookmarks-list,
+.finders-list {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -45,7 +46,8 @@
 
 .page-item,
 .category-item,
-.bookmark-item {
+.bookmark-item,
+.finder-item {
     display: flex;
     gap: 1rem;
     align-items: center;
@@ -54,11 +56,11 @@
 .page-item input,
 .category-item input,
 .bookmark-item input:not([type="checkbox"]),
-.bookmark-item select {
+.bookmark-item select,
+.finder-item input:not([type="checkbox"]) {
     flex: 1;
     min-width: 120px;
     padding: 0.375rem 0.5rem;
-    border: none;
     border: 1px solid var(--border-primary);
     background: var(--background-primary);
     color: var(--text-primary);
@@ -75,12 +77,14 @@
 .page-item input:focus,
 .category-item input:focus,
 .bookmark-item input:not([type="checkbox"]):focus,
-.bookmark-item select:focus {
+.bookmark-item select:focus,
+.finder-item input:not([type="checkbox"]):focus {
     outline: none;
     border-color: var(--text-secondary);
 }
 
-.bookmark-item input[name="shortcut"] {
+.bookmark-item input[name="shortcut"],
+.finder-item input[name="shortcut"] {
     flex: 0 0 100px;
     text-align: center;
     text-transform: uppercase;

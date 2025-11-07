@@ -63,7 +63,7 @@ class ConfigUI {
 
     // Check initial hash and switch to corresponding tab
     const initialHash = window.location.hash.substring(1);
-    const validTabs = ['general', 'pages', 'categories', 'bookmarks', 'backups', 'help'];
+    const validTabs = ['general', 'pages', 'categories', 'bookmarks', 'finders', 'backups', 'help'];
     if (validTabs.includes(initialHash)) {
         switchToTab(initialHash);
     } else {

@@ -55,6 +55,7 @@
                     <button class="tab-button" data-tab="pages" data-i18n="config.pagesTab">pages</button>
                     <button class="tab-button" data-tab="categories" data-i18n="config.categoriesTab">categories</button>
                     <button class="tab-button" data-tab="bookmarks" data-i18n="config.bookmarksTab">bookmarks</button>
+                    <button class="tab-button" data-tab="finders" data-i18n="config.findersTab">finders</button>
                     <button class="tab-button" data-tab="backups" data-i18n="config.backupsTab">backups</button>
                     <button class="tab-button" data-tab="help" data-i18n="config.aboutTab">help</button>
                 </div>
@@ -327,6 +328,15 @@
             </div>
             </div>
 
+            <div class="tab-content" data-tab-content="finders">
+            <div class="config-section">
+                <div id="finders-list" class="finders-list js-list">
+                    <!-- Finders will be loaded here -->
+                </div>
+                <button id="add-finder-btn" class="btn btn-primary" data-i18n="config.addFinder">Add Finder</button>
+            </div>
+            </div>
+
             <div class="tab-content" data-tab-content="backups">
             <div class="config-section">
                 <div class="form-group">
@@ -362,6 +372,14 @@
                     <li data-i18n="help.shortcutsLauncher">Bookmark Shortcuts: Press any letter key on the dashboard to start typing a shortcut. For example, if you have a bookmark with shortcut <code>yt</code>, just type <code>yt</code> and the app will open it automatically.</li>
                     <li data-i18n="help.fuzzySearch">Fuzzy Search: Press <code>/</code> to search for bookmarks by name. Start typing and it will find matches as you go.</li>
                     <li data-i18n="help.searchMode">Search Mode: You can switch the search behavior. By default, typing starts shortcuts and <code>/</code> starts fuzzy search. You can toggle this in <code>config#general</code>.</li>
+                </ul>
+                
+                <h3 class="section-title">Finders</h3>
+                <ul>
+                    <li data-i18n="help.findersIntro">Finders: Create shortcuts for search engines and websites. Start your search with <code>?</code> followed by your finder shortcut to quickly search on external sites.</li>
+                    <li data-i18n="help.findersActivation">Activation: Type <code>?shortcut searchterm</code> on the dashboard. For example, if you have a finder with shortcut <code>g</code> for Google, type <code>?g javascript</code> to search for "javascript" on Google.</li>
+                    <li data-i18n="help.findersConfig">Configuration: Go to <code>config#finders</code> to add, edit, or remove finders. Each finder needs a name, search URL, and shortcut.</li>
+                    <li data-i18n="help.findersUrlFormat">URL Format: Use <code>%s</code> in the URL where you want the search term to be inserted, or leave it out to append the search term to the end of the URL.</li>
                 </ul>
                 
                 <h3 class="section-title">Commands</h3>
@@ -413,6 +431,7 @@
     <script src="/static/js/config/config-pages.js"></script>
     <script src="/static/js/config/config-categories.js"></script>
     <script src="/static/js/config/config-bookmarks.js"></script>
+    <script src="/static/js/config/config-finders.js"></script>
     <script src="/static/js/config/config-backup.js"></script>
     <script src="/static/js/config/config-font.js"></script>
     <script src="/static/js/config/config-settings.js"></script>

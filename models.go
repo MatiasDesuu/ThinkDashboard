@@ -17,6 +17,12 @@ type Bookmark struct {
 	Icon        string `json:"icon"`
 }
 
+type Finder struct {
+	Name      string `json:"name"`
+	SearchUrl string `json:"searchUrl"`
+	Shortcut  string `json:"shortcut"`
+}
+
 type Category struct {
 	ID         string `json:"id"`
 	Name       string `json:"name"`
@@ -52,7 +58,7 @@ type Settings struct {
 	ShowStatus                bool   `json:"showStatus"`
 	ShowPing                  bool   `json:"showPing"`
 	ShowStatusLoading         bool   `json:"showStatusLoading"`
-	SkipFastPing		      bool   `json:"skipFastPing"`
+	SkipFastPing              bool   `json:"skipFastPing"`
 	GlobalShortcuts           bool   `json:"globalShortcuts"`           // Use shortcuts from all pages
 	HyprMode                  bool   `json:"hyprMode"`                  // Launcher mode for PWA usage
 	AnimationsEnabled         bool   `json:"animationsEnabled"`         // Enable or disable animations globally
@@ -105,6 +111,9 @@ type Store interface {
 	// Categories - per page only
 	GetCategoriesByPage(pageID int) []Category
 	SaveCategoriesByPage(pageID int, categories []Category)
+	// Finders
+	GetFinders() []Finder
+	SaveFinders(finders []Finder)
 	// Pages
 	GetPages() []Page
 	SavePage(page Page, bookmarks []Bookmark)
@@ -189,7 +198,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			ShowStatus:         false,
 			ShowPing:           false,
 			ShowStatusLoading:  true,
-			SkipFastPing: 		false,
+			SkipFastPing:       false,
 			GlobalShortcuts:    true,
 			HyprMode:           false,
 			AnimationsEnabled:  true, // Default to animations enabled
@@ -379,6 +388,41 @@ func (fs *FileStore) GetAllBookmarks() []Bookmark {
 	}
 
 	return allBookmarks
+}
+
+func (fs *FileStore) GetFinders() []Finder {
+	fs.mutex.RLock()
+	defer fs.mutex.RUnlock()
+
+	fs.ensureDataDir()
+
+	filePath := fmt.Sprintf("%s/finders.json", fs.dataDir)
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return []Finder{}
+	}
+
+	var finders []Finder
+	if err := json.Unmarshal(data, &finders); err != nil {
+		return []Finder{}
+	}
+
+	return finders
+}
+
+func (fs *FileStore) SaveFinders(finders []Finder) {
+	fs.mutex.Lock()
+	defer fs.mutex.Unlock()
+
+	fs.ensureDataDir()
+
+	filePath := fmt.Sprintf("%s/finders.json", fs.dataDir)
+	data, err := json.MarshalIndent(finders, "", "  ")
+	if err != nil {
+		return
+	}
+
+	os.WriteFile(filePath, data, 0644)
 }
 
 // GetCategoriesByPage returns categories stored inside bookmarks-{pageID}.json if present

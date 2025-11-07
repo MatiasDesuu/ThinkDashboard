@@ -14,6 +14,7 @@ class ConfigManager {
         this.categories = new ConfigCategories(this.language.t.bind(this.language));
         this.bookmarks = new ConfigBookmarks(this.language.t.bind(this.language));
         window.configBookmarks = this.bookmarks;
+        this.finders = new ConfigFinders(this.language.t.bind(this.language));
         this.backup = new ConfigBackup(this.language.t.bind(this.language));
         this.settings = new ConfigSettings(this.language);
 
@@ -23,6 +24,7 @@ class ConfigManager {
         this.currentPageId = 1; // Default to page 1
         this.currentCategoriesPageId = 1; // Default to page 1 for categories
         this.bookmarksData = [];
+        this.findersData = [];
         this.categoriesData = []; // Categories for the categories tab
         this.bookmarksPageCategories = []; // Categories for the bookmarks tab (read-only)
         this.settingsData = {
@@ -92,6 +94,7 @@ class ConfigManager {
             this.bookmarksData = bookmarks;
             this.pagesData = pages;
             this.originalPagesData = JSON.parse(JSON.stringify(pages));
+            this.findersData = await this.data.loadFinders();
             this.settingsData = { ...this.settingsData, ...settings };
             if (!this.settingsData.language || this.settingsData.language === "") {
                 this.settingsData.language = 'en';
@@ -201,6 +204,9 @@ class ConfigManager {
         const addBookmarkBtn = document.getElementById('add-bookmark-btn');
         if (addBookmarkBtn) addBookmarkBtn.addEventListener('click', () => this.addBookmark());
 
+        const addFinderBtn = document.getElementById('add-finder-btn');
+        if (addFinderBtn) addFinderBtn.addEventListener('click', () => this.addFinder());
+
         const pageSelector = document.getElementById('page-selector');
         if (pageSelector) {
             pageSelector.addEventListener('change', (e) => this.loadPageBookmarks(e.target.value));
@@ -247,6 +253,7 @@ class ConfigManager {
         }
 
         this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
+        this.finders.render(this.findersData);
         this.refreshCustomSelects();
         
         // Set checkbox states
@@ -310,6 +317,10 @@ class ConfigManager {
         this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
             this.bookmarksData = newBookmarks;
         });
+
+        this.finders.initReorder(this.findersData, (newFinders) => {
+            this.findersData = newFinders;
+        });
     }
 
     async addPage() {
@@ -368,6 +379,14 @@ class ConfigManager {
         this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
         this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
             this.bookmarksData = newBookmarks;
+        });
+    }
+
+    addFinder() {
+        this.finders.add(this.findersData);
+        this.finders.render(this.findersData);
+        this.finders.initReorder(this.findersData, (newFinders) => {
+            this.findersData = newFinders;
         });
     }
 
@@ -461,6 +480,16 @@ class ConfigManager {
             this.bookmarks.render(this.bookmarksData, this.bookmarksPageCategories);
             this.bookmarks.initReorder(this.bookmarksData, (newBookmarks) => {
                 this.bookmarksData = newBookmarks;
+            });
+        }
+    }
+
+    async removeFinder(index) {
+        const removed = await this.finders.remove(this.findersData, index);
+        if (removed) {
+            this.finders.render(this.findersData);
+            this.finders.initReorder(this.findersData, (newFinders) => {
+                this.findersData = newFinders;
             });
         }
     }
@@ -560,6 +589,7 @@ class ConfigManager {
             this.settingsData.currentPage = this.pagesData.length > 0 ? this.pagesData[0].id : 1;
 
             await this.data.saveBookmarks(this.bookmarksData, this.currentPageId);
+            await this.data.saveFinders(this.findersData);
             
             if (this.currentCategoriesPageId) {
                 const categoriesForSelectedPage = this.getCategoriesFromDOM();

@@ -365,6 +365,24 @@ func (h *Handlers) GetCategories(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(categories)
 }
 
+func (h *Handlers) GetFinders(w http.ResponseWriter, r *http.Request) {
+	finders := h.store.GetFinders()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(finders)
+}
+
+func (h *Handlers) SaveFinders(w http.ResponseWriter, r *http.Request) {
+	var finders []Finder
+	if err := json.NewDecoder(r.Body).Decode(&finders); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	h.store.SaveFinders(finders)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+}
+
 func (h *Handlers) SaveCategories(w http.ResponseWriter, r *http.Request) {
 	pageIDStr := r.URL.Query().Get("page")
 	if pageIDStr == "" {

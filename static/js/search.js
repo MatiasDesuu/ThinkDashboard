@@ -1,11 +1,12 @@
 // Search Component JavaScript
 class SearchComponent {
-    constructor(bookmarksForSearch, currentBookmarks, allBookmarks, settings = {}, language = null) {
+    constructor(bookmarksForSearch, currentBookmarks, allBookmarks, settings = {}, language = null, finders = []) {
         this.bookmarks = bookmarksForSearch;
         this.currentBookmarks = currentBookmarks;
         this.allBookmarks = allBookmarks;
         this.settings = settings;
         this.language = language;
+        this.finders = finders;
         this.shortcuts = new Map();
         this.currentQuery = '';
         this.searchActive = false;
@@ -20,6 +21,8 @@ class SearchComponent {
             this.updateSearch();
         });
 
+        this.findersComponent = new window.SearchFindersComponent(this.language, []);
+
         this.fuzzySearchComponent = new window.FuzzySearchComponent(this.bookmarks, (bookmark) => this.openBookmark(bookmark));
 
         this.interleaveMode = settings.interleaveMode || false;
@@ -32,14 +35,17 @@ class SearchComponent {
         this.setupEventListeners();
     }
 
-    updateData(bookmarksForSearch, currentBookmarks, allBookmarks, settings, language = null) {
+    updateData(bookmarksForSearch, currentBookmarks, allBookmarks, settings, language = null, finders = []) {
         this.bookmarks = bookmarksForSearch;
         this.currentBookmarks = currentBookmarks;
         this.allBookmarks = allBookmarks;
         this.settings = settings;
         this.language = language || this.language;
+        this.finders = finders;
         this.commandsComponent.setLanguage(this.language);
         this.commandsComponent.setBookmarks(this.currentBookmarks, this.allBookmarks);
+        this.findersComponent.setLanguage(this.language);
+        this.findersComponent.setFinders(this.finders);
         this.fuzzySearchComponent.updateBookmarks(this.bookmarks);
         this.interleaveMode = settings.interleaveMode || false;
         this.buildShortcutsMap();
@@ -185,8 +191,22 @@ class SearchComponent {
             return;
         }
 
+        // Handle ? key to start finders
+        if (key === '?') {
+            e.preventDefault();
+            this.addToQuery('?');
+            return;
+        }
+
         // Handle space key for commands
         if (key === ' ' && this.currentQuery.startsWith(':')) {
+            e.preventDefault();
+            this.addToQuery(' ');
+            return;
+        }
+
+        // Handle space key for finders
+        if (key === ' ' && this.currentQuery.startsWith('?')) {
             e.preventDefault();
             this.addToQuery(' ');
             return;
@@ -247,6 +267,7 @@ class SearchComponent {
         if (this.currentQuery.length > 0) {
             this.currentQuery = this.currentQuery.slice(0, -1);
             this.commandsComponent.resetState();
+            // No resetState for finders needed as they don't have state
             if (this.currentQuery.length === 0 && !this.settings.keepSearchOpenWhenEmpty) {
                 this.closeSearch();
             } else {
@@ -262,6 +283,9 @@ class SearchComponent {
         if (this.currentQuery.startsWith(':')) {
             // Handle commands
             this.searchMatches = this.commandsComponent.handleCommand(this.currentQuery);
+        } else if (this.currentQuery.startsWith('?')) {
+            // Handle finders
+            this.searchMatches = this.findersComponent.handleQuery(this.currentQuery);
         } else {
             const query = this.currentQuery.startsWith('/') ? this.currentQuery.slice(1) : this.currentQuery;
             const isShortcutMode = (this.currentQuery.startsWith('/') && this.interleaveMode) || (!this.currentQuery.startsWith('/') && !this.interleaveMode);
@@ -428,8 +452,9 @@ class SearchComponent {
             const baseClass = `search-match ${index === this.selectedMatchIndex ? 'keyboard-selected' : ''}`;
             const configClass = (match.type === 'config' || match.type === 'colors') ? ' config-entry' : '';
             const commandClass = (match.type === 'command' || match.type === 'command-completion') ? ' command-entry' : '';
+            const finderClass = (match.type === 'finder' || match.type === 'finder-completion') ? ' finder-entry' : '';
             const fuzzyClass = match.type === 'fuzzy' ? ' fuzzy-entry' : '';
-            matchElement.className = baseClass + configClass + commandClass + fuzzyClass;
+            matchElement.className = baseClass + configClass + commandClass + finderClass + fuzzyClass;
             
             // Get the display name based on match type
             let displayName;
@@ -467,6 +492,15 @@ class SearchComponent {
                         this.updateSelectionHighlight();
                     }
                 } else if (match.type === 'command-completion') {
+                    this.currentQuery = match.completion;
+                    this.updateSearch();
+                    this.selectedMatchIndex = 0; // Auto-select first match after completion
+                    this.updateSelectionHighlight(); // Update visual selection
+                    this.justCompleted = true; // Prevent immediate execution
+                } else if (match.type === 'finder') {
+                    match.action();
+                    this.closeSearch();
+                } else if (match.type === 'finder-completion') {
                     this.currentQuery = match.completion;
                     this.updateSearch();
                     this.selectedMatchIndex = 0; // Auto-select first match after completion
@@ -528,6 +562,15 @@ class SearchComponent {
                     this.updateSelectionHighlight();
                 }
             } else if (selectedMatch.type === 'command-completion') {
+                this.currentQuery = selectedMatch.completion;
+                this.updateSearch();
+                this.selectedMatchIndex = 0; // Auto-select first match after completion
+                this.updateSelectionHighlight(); // Update visual selection
+                this.justCompleted = true; // Prevent immediate execution
+            } else if (selectedMatch.type === 'finder') {
+                selectedMatch.action();
+                this.closeSearch();
+            } else if (selectedMatch.type === 'finder-completion') {
                 this.currentQuery = selectedMatch.completion;
                 this.updateSearch();
                 this.selectedMatchIndex = 0; // Auto-select first match after completion

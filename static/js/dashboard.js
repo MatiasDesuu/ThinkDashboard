@@ -3,6 +3,7 @@ class Dashboard {
     constructor() {
         this.bookmarks = [];
         this.allBookmarks = []; // For global shortcuts
+        this.finders = [];
         this.categories = [];
         this.pages = [];
         this.currentPageId = 'default';
@@ -75,12 +76,14 @@ class Dashboard {
 
     async loadData() {
         try {
-            const [pagesRes, settingsRes] = await Promise.all([
+            const [pagesRes, settingsRes, findersRes] = await Promise.all([
                 fetch('/api/pages'),
-                fetch('/api/settings')
+                fetch('/api/settings'),
+                fetch('/api/finders')
             ]);
 
             this.pages = await pagesRes.json();
+            this.finders = await findersRes.json();
             
             // Load settings from server first
             const serverSettings = await settingsRes.json();
@@ -322,7 +325,7 @@ class Dashboard {
         const bookmarksForSearch = this.settings.globalShortcuts ? this.allBookmarks : this.bookmarks;
         
         if (window.SearchComponent) {
-            this.searchComponent = new window.SearchComponent(bookmarksForSearch, this.bookmarks, this.allBookmarks, this.settings, this.language);
+            this.searchComponent = new window.SearchComponent(bookmarksForSearch, this.bookmarks, this.allBookmarks, this.settings, this.language, this.finders);
         } else {
             console.warn('SearchComponent not found. Make sure search.js is loaded.');
         }
@@ -333,7 +336,7 @@ class Dashboard {
         if (this.searchComponent) {
             // Use all bookmarks if global shortcuts is enabled, otherwise just current page
             const bookmarksForSearch = this.settings.globalShortcuts ? this.allBookmarks : this.bookmarks;
-            this.searchComponent.updateData(bookmarksForSearch, this.bookmarks, this.allBookmarks, this.settings, this.language);
+            this.searchComponent.updateData(bookmarksForSearch, this.bookmarks, this.allBookmarks, this.settings, this.language, this.finders);
         }
     }
 
