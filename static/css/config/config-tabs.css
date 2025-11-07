@@ -6,6 +6,7 @@
     margin-bottom: 0;
     border: 1px solid var(--border-primary);
     background: var(--background-primary);
+    flex-wrap: wrap;
 }
 
 .tab-button {
