@@ -76,6 +76,7 @@
     "showBookmarkStatus": "Pokaż status zakładek (online/offline)",
     "showPingTimes": "Pokaż czasy ping (ms)",
     "showStatusLoading": "Pokaż wskaźnik ładowania statusu",
+    "skipFastPing": "Pomiń szybkie sprawdzanie statusu (ping)",
     "categoriesPageLabel": "Strona kategorii:",
     "bookmarksPageLabel": "Strona zakładek:",
     "addPage": "Dodaj stronę",

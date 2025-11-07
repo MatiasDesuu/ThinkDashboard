@@ -45,7 +45,7 @@ class StatusMonitor {
             const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout (reduced from 8s)
 
             // Use the server-side ping API which can handle HTTPS certificates
-            const response = await fetch(`/api/ping?url=${encodeURIComponent(bookmark.url)}`, {
+            const response = await fetch(`/api/ping?url=${encodeURIComponent(bookmark.url)}${this.settings.skipFastPing ? "&skipFastPing=1" : ""}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

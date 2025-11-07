@@ -76,6 +76,7 @@
     "showBookmarkStatus": "ブックマークステータスを表示 (オンライン/オフライン)",
     "showPingTimes": "ピング時間を表示 (ms)",
     "showStatusLoading": "ステータス読み込みインジケーターを表示",
+    "skipFastPing": "Skip fast ping check",
     "categoriesPageLabel": "カテゴリページ:",
     "bookmarksPageLabel": "ブックマークページ:",
     "addPage": "ページを追加",
