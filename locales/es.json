@@ -76,6 +76,7 @@
     "showBookmarkStatus": "Mostrar estado del marcador (en línea/fuera de línea)",
     "showPingTimes": "Mostrar tiempos de ping (ms)",
     "showStatusLoading": "Mostrar indicador de carga de estado",
+    "skipFastPing": "Omitir comprobación rápida de ping",
     "categoriesPageLabel": "Página de categorías:",
     "bookmarksPageLabel": "Página de marcadores:",
     "addPage": "Agregar Página",

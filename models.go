@@ -52,6 +52,7 @@ type Settings struct {
 	ShowStatus                bool   `json:"showStatus"`
 	ShowPing                  bool   `json:"showPing"`
 	ShowStatusLoading         bool   `json:"showStatusLoading"`
+	SkipFastPing		      bool   `json:"skipFastPing"`
 	GlobalShortcuts           bool   `json:"globalShortcuts"`           // Use shortcuts from all pages
 	HyprMode                  bool   `json:"hyprMode"`                  // Launcher mode for PWA usage
 	AnimationsEnabled         bool   `json:"animationsEnabled"`         // Enable or disable animations globally
@@ -188,6 +189,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			ShowStatus:         false,
 			ShowPing:           false,
 			ShowStatusLoading:  true,
+			SkipFastPing: 		false,
 			GlobalShortcuts:    true,
 			HyprMode:           false,
 			AnimationsEnabled:  true, // Default to animations enabled

@@ -460,6 +460,15 @@ class ConfigSettings {
             });
         }
 
+        // Skip fast ping checkbox
+        const skipFastPingCheckbox = document.getElementById('skip-fast-ping-checkbox');
+        if (skipFastPingCheckbox) {
+            skipFastPingCheckbox.checked = settings.skipFastPing;
+            skipFastPingCheckbox.addEventListener('change', (e) => {
+                settings.skipFastPing = e.target.checked;
+            });
+        }
+
         // Global shortcuts checkbox
         const globalShortcutsCheckbox = document.getElementById('global-shortcuts-checkbox');
         if (globalShortcutsCheckbox) {
@@ -517,6 +526,7 @@ class ConfigSettings {
         const showStatusCheckbox = document.getElementById('show-status-checkbox');
         const showPingCheckbox = document.getElementById('show-ping-checkbox');
         const showStatusLoadingCheckbox = document.getElementById('show-status-loading-checkbox');
+        const skipFastPingCheckbox = document.getElementById('skip-fast-ping-checkbox');
         const globalShortcutsCheckbox = document.getElementById('global-shortcuts-checkbox');
         const animationsEnabledCheckbox = document.getElementById('animations-enabled-checkbox');
         const enableCustomTitleCheckbox = document.getElementById('enable-custom-title-checkbox');
@@ -542,6 +552,7 @@ class ConfigSettings {
         if (showStatusCheckbox) settings.showStatus = showStatusCheckbox.checked;
         if (showPingCheckbox) settings.showPing = showPingCheckbox.checked;
         if (showStatusLoadingCheckbox) settings.showStatusLoading = showStatusLoadingCheckbox.checked;
+        if (skipFastPingCheckbox) settings.skipFastPing = skipFastPingCheckbox.checked;
         if (globalShortcutsCheckbox) settings.globalShortcuts = globalShortcutsCheckbox.checked;
         if (enableCustomTitleCheckbox) settings.enableCustomTitle = enableCustomTitleCheckbox.checked;
         if (customTitleInput) settings.customTitle = customTitleInput.value;

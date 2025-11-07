@@ -76,6 +76,7 @@
     "showBookmarkStatus": "Show bookmark status (online/offline)",
     "showPingTimes": "Show ping times (ms)",
     "showStatusLoading": "Show status loading indicator",
+    "skipFastPing": "Skip fast ping check",
     "categoriesPageLabel": "Categories page:",
     "bookmarksPageLabel": "Bookmarks page:",
     "addPage": "Add Page",

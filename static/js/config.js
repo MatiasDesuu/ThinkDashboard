@@ -36,6 +36,7 @@ class ConfigManager {
             showDate: true,
             showStatus: false,
             showPing: false,
+            skipFastPing: false,
             globalShortcuts: true,
             hyprMode: false,
             showPageNamesInTabs: false,

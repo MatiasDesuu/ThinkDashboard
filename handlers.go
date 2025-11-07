@@ -967,30 +967,35 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Get skipFastPing query parameter
+	skipFastPing := r.URL.Query().Get("skipFastPing")
+
 	// Start timing
 	start := time.Now()
 
-	// Try TCP connection first (fast ping)
-	address := net.JoinHostPort(host, port)
-	conn, err := net.DialTimeout("tcp", address, 2*time.Second)
+	if skipFastPing == "" {
+		// Try TCP connection first (fast ping)
+		address := net.JoinHostPort(host, port)
+		conn, err := net.DialTimeout("tcp", address, 2*time.Second)
 
-	if err == nil {
-		conn.Close()
-		elapsed := time.Since(start).Milliseconds()
-		// Ensure minimum of 1ms for display purposes
-		if elapsed < 1 {
-			elapsed = 1
+		if err == nil {
+			conn.Close()
+			elapsed := time.Since(start).Milliseconds()
+			// Ensure minimum of 1ms for display purposes
+			if elapsed < 1 {
+				elapsed = 1
+			}
+
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"status": "online",
+				"ping":   elapsed,
+			})
+			return
 		}
-
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]interface{}{
-			"status": "online",
-			"ping":   elapsed,
-		})
-		return
 	}
 
-	// If TCP fails, try a quick HTTP request as fallback
+	// If TCP fails (or fast ping disabled), try a quick HTTP request as fallback
 	client := &http.Client{
 		Timeout: 3 * time.Second,
 		Transport: &http.Transport{
@@ -1005,7 +1010,7 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	req, err := http.NewRequest("HEAD", urlParam, nil)
+	req, err := http.NewRequest("GET", urlParam, nil)
 	if err != nil {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]interface{}{
@@ -1014,6 +1019,9 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	// Add User-Agent header to avoid being blocked by some servers
+	req.Header.Set("User-Agent", "ThinkDashboard-Ping/1.0")
 
 	resp, err := client.Do(req)
 	if resp != nil {
@@ -1026,7 +1034,7 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		elapsed = 1
 	}
 
-	if err == nil && resp != nil {
+	if err == nil && resp != nil && resp.StatusCode >= 200 && resp.StatusCode < 500 {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"status": "online",
