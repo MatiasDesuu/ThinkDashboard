@@ -1010,7 +1010,7 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	req, err := http.NewRequest("HEAD", urlParam, nil)
+	req, err := http.NewRequest("GET", urlParam, nil)
 	if err != nil {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]interface{}{
@@ -1019,6 +1019,9 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	// Add User-Agent header to avoid being blocked by some servers
+	req.Header.Set("User-Agent", "ThinkDashboard-Ping/1.0")
 
 	resp, err := client.Do(req)
 	if resp != nil {
@@ -1031,7 +1034,7 @@ func (h *Handlers) PingURL(w http.ResponseWriter, r *http.Request) {
 		elapsed = 1
 	}
 
-	if err == nil && resp != nil && resp.StatusCode >= 200 && resp.StatusCode < 400 {
+	if err == nil && resp != nil && resp.StatusCode >= 200 && resp.StatusCode < 500 {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"status": "online",
