@@ -48,30 +48,32 @@ class SearchFindersComponent {
             return this.getAvailableFinders();
         }
 
-        // Check if it's a complete shortcut
-        const finder = this.shortcuts.get(shortcut);
-        if (finder) {
-            const searchText = parts.slice(1).join(' ');
-            return [{
-                name: finder.name,
-                shortcut: `?${finder.shortcut}`,
-                searchText: searchText,
-                url: finder.searchUrl.replace('%s', encodeURIComponent(searchText)),
-                action: () => this.openFinder(finder, searchText),
-                type: 'finder'
-            }];
+        // If there's a space, it's a complete shortcut with search text
+        if (parts.length > 1) {
+            const finder = this.shortcuts.get(shortcut);
+            if (finder) {
+                const searchText = parts.slice(1).join(' ');
+                return [{
+                    name: finder.name,
+                    shortcut: `?${finder.shortcut}`,
+                    searchText: searchText,
+                    url: finder.searchUrl.replace('%s', encodeURIComponent(searchText)),
+                    action: () => this.openFinder(finder, searchText),
+                    type: 'finder'
+                }];
+            }
         }
 
-        // Check if it's the start of a shortcut
-        const matchingShortcuts = Array.from(this.shortcuts.keys()).filter(sc => 
-            sc.startsWith(shortcut)
+        // Otherwise, show finders whose shortcuts start with the typed letters
+        const matchingFinders = this.finders.filter(finder => 
+            finder.shortcut.toLowerCase().startsWith(shortcut)
         );
 
-        if (matchingShortcuts.length > 0) {
-            return matchingShortcuts.map(sc => ({
-                name: '',
-                shortcut: `?${sc.toUpperCase()}`,
-                completion: `?${sc.toUpperCase()} `,
+        if (matchingFinders.length > 0) {
+            return matchingFinders.map(finder => ({
+                name: finder.name,
+                shortcut: `?${finder.shortcut.toUpperCase()}`,
+                completion: `?${finder.shortcut.toUpperCase()} `,
                 type: 'finder-completion'
             }));
         }
