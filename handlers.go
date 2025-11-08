@@ -41,6 +41,8 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		ShowDate            bool
 		ShowConfigButton    bool
 		ShowSearchButton    bool
+		ShowFindersButton   bool
+		ShowCommandsButton  bool
 		EnableCustomTitle   bool
 		CustomTitle         string
 		EnableCustomFavicon bool
@@ -57,6 +59,8 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		ShowDate:            settings.ShowDate,
 		ShowConfigButton:    settings.ShowConfigButton,
 		ShowSearchButton:    settings.ShowSearchButton,
+		ShowFindersButton:   settings.ShowFindersButton,
+		ShowCommandsButton:  settings.ShowCommandsButton,
 		EnableCustomTitle:   settings.EnableCustomTitle,
 		CustomTitle:         settings.CustomTitle,
 		EnableCustomFavicon: settings.EnableCustomFavicon,

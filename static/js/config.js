@@ -658,6 +658,8 @@ class ConfigManager {
         document.getElementById('show-date-checkbox').checked = this.settingsData.showDate;
         document.getElementById('show-config-button-checkbox').checked = this.settingsData.showConfigButton;
         document.getElementById('show-search-button-checkbox').checked = this.settingsData.showSearchButton;
+        document.getElementById('show-finders-button-checkbox').checked = this.settingsData.showFindersButton;
+        document.getElementById('show-commands-button-checkbox').checked = this.settingsData.showCommandsButton;
         document.getElementById('interleave-mode-checkbox').checked = false;
         document.getElementById('show-page-tabs-checkbox').checked = this.settingsData.showPageTabs;
 

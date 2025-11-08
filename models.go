@@ -55,6 +55,8 @@ type Settings struct {
 	ShowDate                  bool   `json:"showDate"`
 	ShowConfigButton          bool   `json:"showConfigButton"`
 	ShowSearchButton          bool   `json:"showSearchButton"`
+	ShowFindersButton         bool   `json:"showFindersButton"`
+	ShowCommandsButton        bool   `json:"showCommandsButton"`
 	ShowStatus                bool   `json:"showStatus"`
 	ShowPing                  bool   `json:"showPing"`
 	ShowStatusLoading         bool   `json:"showStatusLoading"`

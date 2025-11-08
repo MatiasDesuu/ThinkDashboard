@@ -422,6 +422,24 @@ class ConfigSettings {
             });
         }
 
+        // Show finders button checkbox
+        const showFindersButtonCheckbox = document.getElementById('show-finders-button-checkbox');
+        if (showFindersButtonCheckbox) {
+            showFindersButtonCheckbox.checked = settings.showFindersButton;
+            showFindersButtonCheckbox.addEventListener('change', (e) => {
+                settings.showFindersButton = e.target.checked;
+            });
+        }
+
+        // Show commands button checkbox
+        const showCommandsButtonCheckbox = document.getElementById('show-commands-button-checkbox');
+        if (showCommandsButtonCheckbox) {
+            showCommandsButtonCheckbox.checked = settings.showCommandsButton;
+            showCommandsButtonCheckbox.addEventListener('change', (e) => {
+                settings.showCommandsButton = e.target.checked;
+            });
+        }
+
         // Animations enabled checkbox
         const animationsEnabledCheckbox = document.getElementById('animations-enabled-checkbox');
         if (animationsEnabledCheckbox) {
@@ -523,6 +541,8 @@ class ConfigSettings {
         const showDateCheckbox = document.getElementById('show-date-checkbox');
         const showConfigButtonCheckbox = document.getElementById('show-config-button-checkbox');
         const showSearchButtonCheckbox = document.getElementById('show-search-button-checkbox');
+        const showFindersButtonCheckbox = document.getElementById('show-finders-button-checkbox');
+        const showCommandsButtonCheckbox = document.getElementById('show-commands-button-checkbox');
         const showStatusCheckbox = document.getElementById('show-status-checkbox');
         const showPingCheckbox = document.getElementById('show-ping-checkbox');
         const showStatusLoadingCheckbox = document.getElementById('show-status-loading-checkbox');
@@ -548,6 +568,8 @@ class ConfigSettings {
         if (showDateCheckbox) settings.showDate = showDateCheckbox.checked;
         if (showConfigButtonCheckbox) settings.showConfigButton = showConfigButtonCheckbox.checked;
         if (showSearchButtonCheckbox) settings.showSearchButton = showSearchButtonCheckbox.checked;
+        if (showFindersButtonCheckbox) settings.showFindersButton = showFindersButtonCheckbox.checked;
+        if (showCommandsButtonCheckbox) settings.showCommandsButton = showCommandsButtonCheckbox.checked;
         if (animationsEnabledCheckbox) settings.animationsEnabled = animationsEnabledCheckbox.checked;
         if (showStatusCheckbox) settings.showStatus = showStatusCheckbox.checked;
         if (showPingCheckbox) settings.showPing = showPingCheckbox.checked;

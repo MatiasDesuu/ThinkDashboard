@@ -142,6 +142,28 @@ class SearchComponent {
                 this.openSearchInterface();
             });
         }
+
+        // Add finders button event listener
+        const findersButton = document.getElementById('finders-button');
+        if (findersButton) {
+            findersButton.addEventListener('click', () => {
+                this.openSearchInterface();
+                this.currentQuery = '?';
+                this.updateSearch();
+                this.renderSearchMatches();
+            });
+        }
+
+        // Add commands button event listener
+        const commandsButton = document.getElementById('commands-button');
+        if (commandsButton) {
+            commandsButton.addEventListener('click', () => {
+                this.openSearchInterface();
+                this.currentQuery = ':';
+                this.updateSearch();
+                this.renderSearchMatches();
+            });
+        }
     }
 
     handleKeyPress(e) {

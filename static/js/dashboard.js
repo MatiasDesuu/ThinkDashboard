@@ -282,6 +282,8 @@ class Dashboard {
         document.body.setAttribute('data-show-date', this.settings.showDate);
         document.body.setAttribute('data-show-config-button', this.settings.showConfigButton);
         document.body.setAttribute('data-show-search-button', this.settings.showSearchButton);
+        document.body.setAttribute('data-show-finders-button', this.settings.showFindersButton);
+        document.body.setAttribute('data-show-commands-button', this.settings.showCommandsButton);
 
         // Apply font size
         this.applyFontSize();
@@ -297,9 +299,6 @@ class Dashboard {
         
         // Control config button visibility dynamically  
         this.updateConfigButtonVisibility();
-
-        // Control search button visibility dynamically
-        this.updateSearchButtonVisibility();
 
         // Control page tabs visibility dynamically
         this.updatePageTabsVisibility();
@@ -667,39 +666,6 @@ class Dashboard {
             // Hide config button - remove if it exists
             if (configLink) {
                 configLink.remove();
-            }
-        }
-    }
-
-    updateSearchButtonVisibility() {
-        let searchButton = document.getElementById('search-button');
-        
-        if (this.settings.showSearchButton) {
-            // Show search button - create if it doesn't exist
-            if (!searchButton) {
-                searchButton = document.createElement('button');
-                searchButton.id = 'search-button';
-                searchButton.className = 'search-button';
-                searchButton.setAttribute('aria-label', this.language.t('dashboard.searchAriaLabel'));
-                searchButton.innerHTML = `
-                    <span class="search-button-icon">${this.language.t('dashboard.searchPrefix')}</span>
-                    <span class="search-button-text">${this.language.t('dashboard.searchButton')}</span>
-                `;
-                
-                // Add click handler
-                searchButton.addEventListener('click', () => {
-                    if (this.searchComponent) {
-                        this.searchComponent.openSearchInterface();
-                    }
-                });
-                
-                // Add to body
-                document.body.appendChild(searchButton);
-            }
-        } else {
-            // Hide search button - remove if it exists
-            if (searchButton) {
-                searchButton.remove();
             }
         }
     }

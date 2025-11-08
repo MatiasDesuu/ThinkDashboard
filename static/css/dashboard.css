@@ -309,6 +309,16 @@ body[data-show-config-button="false"] .config-button {
 }
 
 /* Hide search button when showSearchButton is false */
-body[data-show-search-button="false"] .search-button {
+body[data-show-search-button="false"] #search-button {
+    display: none;
+}
+
+/* Hide finders button when showFindersButton is false */
+body[data-show-finders-button="false"] .finders-button {
+    display: none;
+}
+
+/* Hide commands button when showCommandsButton is false */
+body[data-show-commands-button="false"] .commands-button {
     display: none;
 }

@@ -78,11 +78,19 @@
         </div>
     </div>
 
-    <!-- Search Button -->
-    {{if .ShowSearchButton}}<button id="search-button" class="search-button" data-i18n="dashboard.searchAriaLabel" aria-label="Open search">
-        <span class="search-button-icon" data-i18n="dashboard.searchPrefix">></span>
-        <span class="search-button-text" data-i18n="dashboard.searchButton">search</span>
-    </button>{{end}}
+    <!-- Search and Finders Buttons -->
+    <div class="button-container">
+        <button id="commands-button" class="search-button commands-button" aria-label="Open commands">
+            <span class="search-button-icon">:</span>
+        </button>
+        <button id="finders-button" class="search-button finders-button" aria-label="Open finders">
+            <span class="search-button-icon">?</span>
+        </button>
+        <button id="search-button" class="search-button" data-i18n="dashboard.searchAriaLabel" aria-label="Open search">
+            <span class="search-button-icon" data-i18n="dashboard.searchPrefix">></span>
+            <span class="search-button-text" data-i18n="dashboard.searchButton">search</span>
+        </button>
+    </div>
 
     <script src="/static/js/modal.js"></script>
     <script src="/static/js/config/config-language.js"></script>

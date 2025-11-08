@@ -1,5 +1,19 @@
 /* Responsive Design System */
 
+/* General mobile button styles */
+.button-container {
+    gap: 0.5rem;
+}
+
+.commands-button,
+.finders-button {
+    flex: none;
+}
+
+#search-button {
+    flex: 1;
+}
+
 /* Large Desktop (1200px+) - Default styles already applied */
 
 /* Desktop (992px - 1199px) */
@@ -217,7 +231,11 @@
         bottom: 1.5rem;
         padding: 0.8rem 1rem;
         font-size: var(--font-size-controls);
+    }
+    
+    .button-container {
         width: calc(100% - 2rem);
+        justify-content: center;
     }
     
     /* Header responsive - mobile large */
@@ -441,7 +459,11 @@
         bottom: 1.25rem;
         padding: 0.8rem 1rem;
         font-size: var(--font-size-text);
+    }
+    
+    .button-container {
         width: calc(100% - 2rem);
+        justify-content: center;
     }
     
     /* Header responsive - mobile small */
@@ -620,7 +642,11 @@
         bottom: 1rem;
         padding: 0.8rem 1rem;
         font-size: var(--font-size-controls);
+    }
+    
+    .button-container {
         width: calc(100% - 2rem);
+        justify-content: center;
     }
     
     .search-button-icon {
