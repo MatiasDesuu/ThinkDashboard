@@ -236,6 +236,7 @@
     .button-container {
         width: calc(100% - 2rem);
         justify-content: center;
+        bottom: 1rem;
     }
     
     /* Header responsive - mobile large */
