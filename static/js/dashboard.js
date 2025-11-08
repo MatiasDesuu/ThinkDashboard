@@ -72,6 +72,11 @@ class Dashboard {
 
         // Show body after everything is loaded and rendered
         document.body.classList.remove('loading');
+        
+        // Remove preload class after a short delay to enable transitions
+        setTimeout(() => {
+            document.body.classList.remove('preload');
+        }, 100);
     }
 
     async loadData() {
