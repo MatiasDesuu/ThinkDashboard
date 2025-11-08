@@ -20,9 +20,3 @@ body.no-animations * {
     transition: none !important;
     transform: none !important;
 }
-
-/* Preload State - Disable transitions until page is fully loaded */
-body.preload * {
-    animation: none !important;
-    transition: none !important;
-}

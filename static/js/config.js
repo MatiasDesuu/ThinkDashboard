@@ -78,11 +78,6 @@ class ConfigManager {
         }
 
         document.body.classList.remove('loading');
-        
-        // Remove preload class after a short delay to enable transitions
-        setTimeout(() => {
-            document.body.classList.remove('preload');
-        }, 100);
 
         const categoriesSelector = document.getElementById('categories-page-selector');
         if (categoriesSelector) {
