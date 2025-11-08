@@ -281,7 +281,12 @@ class SearchComponent {
                     shortcut.startsWith(query.toLowerCase())
                 );
                 
-                const hasFinder = this.settings.includeFindersInSearch && this.findersComponent.shortcuts.has(query.toLowerCase());
+                const hasFinder = this.settings.includeFindersInSearch && (
+                    this.findersComponent.shortcuts.has(query.toLowerCase()) ||
+                    Array.from(this.findersComponent.shortcuts.keys()).some(finderShortcut => 
+                        finderShortcut.startsWith(query.toLowerCase())
+                    )
+                );
                 
                 if (!hasLongerMatches && !hasFinder) {
                     // Open immediately if no longer matches exist and no finder conflicts
