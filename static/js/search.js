@@ -257,6 +257,15 @@ class SearchComponent {
 
     addToQuery(key) {
         this.currentQuery += key;
+        
+        // Auto-convert to finder mode if space is pressed after a finder shortcut
+        if (key === ' ' && this.settings.includeFindersInSearch) {
+            const trimmed = this.currentQuery.trim();
+            if (this.findersComponent.shortcuts.has(trimmed.toLowerCase())) {
+                this.currentQuery = `?${trimmed.toUpperCase()} `;
+            }
+        }
+        
         this.commandsComponent.resetState();
         
         // Check for exact match first
@@ -272,8 +281,10 @@ class SearchComponent {
                     shortcut.startsWith(query.toLowerCase())
                 );
                 
-                if (!hasLongerMatches) {
-                    // Open immediately if no longer matches exist
+                const hasFinder = this.settings.includeFindersInSearch && this.findersComponent.shortcuts.has(query.toLowerCase());
+                
+                if (!hasLongerMatches && !hasFinder) {
+                    // Open immediately if no longer matches exist and no finder conflicts
                     this.openBookmark(exactMatch);
                     this.resetQuery();
                     return;
@@ -355,6 +366,48 @@ class SearchComponent {
                         }
                         
                         this.searchMatches.push(...filteredFuzzy);
+                    }
+
+                    // Add finder matches for exact shortcut matches
+                    if (this.settings.includeFindersInSearch) {
+                        const finder = this.findersComponent.shortcuts.get(query.toLowerCase());
+                        if (finder) {
+                            this.searchMatches.push({
+                                name: finder.name,
+                                shortcut: `?${finder.shortcut.toUpperCase()}`,
+                                completion: `?${finder.shortcut.toUpperCase()} `,
+                                type: 'finder-completion'
+                            });
+                        }
+                    }
+
+                    // Add finder matches if enabled
+                    if (this.settings.includeFindersInSearch && query.includes(' ')) {
+                        const parts = query.split(' ');
+                        const finderShortcut = parts[0].toLowerCase();
+                        const finder = this.findersComponent.shortcuts.get(finderShortcut);
+                        if (finder) {
+                            const searchText = parts.slice(1).join(' ');
+                            if (searchText === '') {
+                                // If no search text, show as completion
+                                this.searchMatches.push({
+                                    name: finder.name,
+                                    shortcut: `?${finder.shortcut.toUpperCase()}`,
+                                    completion: `?${finder.shortcut.toUpperCase()} `,
+                                    type: 'finder-completion'
+                                });
+                            } else {
+                                // If there is search text, show as ready to open
+                                this.searchMatches.push({
+                                    name: finder.name,
+                                    shortcut: `?${finder.shortcut.toUpperCase()}`,
+                                    searchText: searchText,
+                                    url: finder.searchUrl.replace('%s', encodeURIComponent(searchText)),
+                                    action: () => this.findersComponent.openFinder(finder, searchText),
+                                    type: 'finder'
+                                });
+                            }
+                        }
                     }
                 }
             } else {

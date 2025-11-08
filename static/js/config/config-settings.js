@@ -208,6 +208,20 @@ class ConfigSettings {
             });
         }
 
+        // Include finders in search info button
+        const includeFindersInSearchInfoBtn = document.getElementById('include-finders-in-search-info-btn');
+        if (includeFindersInSearchInfoBtn) {
+            includeFindersInSearchInfoBtn.addEventListener('click', () => {
+                if (window.AppModal) {
+                    window.AppModal.alert({
+                        title: this.t('config.includeFindersInSearchInfoTitle'),
+                        htmlMessage: this.t('config.includeFindersInSearchInfoMessage').replace(/\n/g, '<br>'),
+                        confirmText: this.t('config.gotIt')
+                    });
+                }
+            });
+        }
+
         // Show background dots checkbox
         const showBackgroundDotsCheckbox = document.getElementById('show-background-dots-checkbox');
         if (showBackgroundDotsCheckbox) {
@@ -440,6 +454,15 @@ class ConfigSettings {
             });
         }
 
+        // Include finders in search checkbox
+        const includeFindersInSearchCheckbox = document.getElementById('include-finders-in-search-checkbox');
+        if (includeFindersInSearchCheckbox) {
+            includeFindersInSearchCheckbox.checked = settings.includeFindersInSearch;
+            includeFindersInSearchCheckbox.addEventListener('change', (e) => {
+                settings.includeFindersInSearch = e.target.checked;
+            });
+        }
+
         // Animations enabled checkbox
         const animationsEnabledCheckbox = document.getElementById('animations-enabled-checkbox');
         if (animationsEnabledCheckbox) {
@@ -543,6 +566,7 @@ class ConfigSettings {
         const showSearchButtonCheckbox = document.getElementById('show-search-button-checkbox');
         const showFindersButtonCheckbox = document.getElementById('show-finders-button-checkbox');
         const showCommandsButtonCheckbox = document.getElementById('show-commands-button-checkbox');
+        const includeFindersInSearchCheckbox = document.getElementById('include-finders-in-search-checkbox');
         const showStatusCheckbox = document.getElementById('show-status-checkbox');
         const showPingCheckbox = document.getElementById('show-ping-checkbox');
         const showStatusLoadingCheckbox = document.getElementById('show-status-loading-checkbox');
@@ -570,6 +594,7 @@ class ConfigSettings {
         if (showSearchButtonCheckbox) settings.showSearchButton = showSearchButtonCheckbox.checked;
         if (showFindersButtonCheckbox) settings.showFindersButton = showFindersButtonCheckbox.checked;
         if (showCommandsButtonCheckbox) settings.showCommandsButton = showCommandsButtonCheckbox.checked;
+        if (includeFindersInSearchCheckbox) settings.includeFindersInSearch = includeFindersInSearchCheckbox.checked;
         if (animationsEnabledCheckbox) settings.animationsEnabled = animationsEnabledCheckbox.checked;
         if (showStatusCheckbox) settings.showStatus = showStatusCheckbox.checked;
         if (showPingCheckbox) settings.showPing = showPingCheckbox.checked;

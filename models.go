@@ -79,6 +79,7 @@ type Settings struct {
 	FuzzySuggestionsStartWith bool   `json:"fuzzySuggestionsStartWith"` // Fuzzy suggestions start with query instead of contains
 	KeepSearchOpenWhenEmpty   bool   `json:"keepSearchOpenWhenEmpty"`   // Keep search interface open when query is empty
 	ShowIcons                 bool   `json:"showIcons"`                 // Show bookmark icons
+	IncludeFindersInSearch    bool   `json:"includeFindersInSearch"`    // Include finders in normal search
 }
 
 type ColorTheme struct {
@@ -188,25 +189,41 @@ func (fs *FileStore) initializeDefaultFiles() {
 	// Initialize settings if file doesn't exist
 	if _, err := os.Stat(fs.settingsFile); os.IsNotExist(err) {
 		defaultSettings := Settings{
-			CurrentPage:        1,
-			Theme:              "dark",
-			OpenInNewTab:       true,
-			ColumnsPerRow:      3,
-			FontSize:           "medium",
-			ShowBackgroundDots: true,
-			ShowTitle:          true,
-			ShowDate:           true,
-			ShowConfigButton:   true,
-			ShowStatus:         false,
-			ShowPing:           false,
-			ShowStatusLoading:  true,
-			SkipFastPing:       false,
-			GlobalShortcuts:    true,
-			HyprMode:           false,
-			AnimationsEnabled:  true, // Default to animations enabled
-			Language:           "en",
-			ShowPageTabs:       true,
-			ShowIcons:          false,
+			CurrentPage:               1,
+			Theme:                     "dark",
+			OpenInNewTab:              true,
+			ColumnsPerRow:             3,
+			FontSize:                  "medium",
+			ShowBackgroundDots:        true,
+			ShowTitle:                 true,
+			ShowDate:                  true,
+			ShowConfigButton:          true,
+			ShowSearchButton:          true,
+			ShowFindersButton:         false,
+			ShowCommandsButton:        false,
+			ShowStatus:                false,
+			ShowPing:                  false,
+			ShowStatusLoading:         false,
+			SkipFastPing:              false,
+			GlobalShortcuts:           true,
+			HyprMode:                  false,
+			AnimationsEnabled:         true,
+			EnableCustomTitle:         false,
+			CustomTitle:               "",
+			ShowPageInTitle:           false,
+			ShowPageNamesInTabs:       false,
+			EnableCustomFavicon:       false,
+			CustomFaviconPath:         "",
+			EnableCustomFont:          false,
+			CustomFontPath:            "",
+			Language:                  "en",
+			InterleaveMode:            false,
+			ShowPageTabs:              true,
+			EnableFuzzySuggestions:    false,
+			FuzzySuggestionsStartWith: false,
+			KeepSearchOpenWhenEmpty:   false,
+			ShowIcons:                 false,
+			IncludeFindersInSearch:    false,
 		}
 		data, _ := json.MarshalIndent(defaultSettings, "", "  ")
 		os.WriteFile(fs.settingsFile, data, 0644)
@@ -691,12 +708,24 @@ func (fs *FileStore) GetSettings() Settings {
 			ShowTitle:                 true,
 			ShowDate:                  true,
 			ShowConfigButton:          true,
+			ShowSearchButton:          true,
+			ShowFindersButton:         false,
+			ShowCommandsButton:        false,
 			ShowStatus:                false,
 			ShowPing:                  false,
-			ShowStatusLoading:         true,
+			ShowStatusLoading:         false,
+			SkipFastPing:              false,
 			GlobalShortcuts:           true,
 			HyprMode:                  false,
 			AnimationsEnabled:         true,
+			EnableCustomTitle:         false,
+			CustomTitle:               "",
+			ShowPageInTitle:           false,
+			ShowPageNamesInTabs:       false,
+			EnableCustomFavicon:       false,
+			CustomFaviconPath:         "",
+			EnableCustomFont:          false,
+			CustomFontPath:            "",
 			Language:                  "en",
 			InterleaveMode:            false,
 			ShowPageTabs:              true,
@@ -704,6 +733,7 @@ func (fs *FileStore) GetSettings() Settings {
 			FuzzySuggestionsStartWith: false,
 			KeepSearchOpenWhenEmpty:   false,
 			ShowIcons:                 false,
+			IncludeFindersInSearch:    false,
 		}
 	}
 
@@ -715,6 +745,15 @@ func (fs *FileStore) GetSettings() Settings {
 	json.Unmarshal(data, &raw)
 	if _, exists := raw["showPageTabs"]; !exists {
 		settings.ShowPageTabs = true
+	}
+	if _, exists := raw["showSearchButton"]; !exists {
+		settings.ShowSearchButton = true
+	}
+	if _, exists := raw["showFindersButton"]; !exists {
+		settings.ShowFindersButton = false
+	}
+	if _, exists := raw["includeFindersInSearch"]; !exists {
+		settings.IncludeFindersInSearch = false
 	}
 
 	// Normalize legacy fontSize values (one-time migration)

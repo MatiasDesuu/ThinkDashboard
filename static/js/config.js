@@ -660,6 +660,7 @@ class ConfigManager {
         document.getElementById('show-search-button-checkbox').checked = this.settingsData.showSearchButton;
         document.getElementById('show-finders-button-checkbox').checked = this.settingsData.showFindersButton;
         document.getElementById('show-commands-button-checkbox').checked = this.settingsData.showCommandsButton;
+        document.getElementById('include-finders-in-search-checkbox').checked = this.settingsData.includeFindersInSearch;
         document.getElementById('interleave-mode-checkbox').checked = false;
         document.getElementById('show-page-tabs-checkbox').checked = this.settingsData.showPageTabs;
 
