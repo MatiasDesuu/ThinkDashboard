@@ -75,7 +75,7 @@ class SearchComponent {
                 if (value.length > this.currentQuery.length) {
                     // Character added
                     const newChar = value[value.length - 1];
-                    if (/^[A-Z0-9: /#]$/.test(newChar)) {
+                    if (/^[A-Z0-9: \?/#]$/.test(newChar)) {
                         this.addToQuery(newChar);
                     }
                 } else if (value.length < this.currentQuery.length) {

@@ -44,7 +44,8 @@
     /* List items responsive - desktop */
     .page-item,
     .category-item,
-    .bookmark-item {
+    .bookmark-item,
+    .finder-item {
         flex-wrap: wrap;
         gap: 0.5rem;
     }
@@ -124,11 +125,19 @@
     
     /* Config page tablet styles */
     .bookmark-item {
+        display: grid;
         grid-template-columns: 1fr 1fr 100px 120px 80px;
         gap: 0.75rem;
     }
     
+    .finder-item {
+        display: grid;
+        grid-template-columns: 1fr 1fr 100px 80px;
+        gap: 0.75rem;
+    }
+    
     .category-item {
+        display: grid;
         grid-template-columns: 1fr 80px;
     }
     
@@ -311,7 +320,8 @@
     }
     
     .category-item,
-    .bookmark-item {
+    .bookmark-item,
+    .finder-item {
         display: flex;
         flex-direction: column;
         align-items: stretch;
@@ -320,7 +330,8 @@
     
     .category-item input,
     .bookmark-item input,
-    .bookmark-item select {
+    .bookmark-item select,
+    .finder-item input {
         width: 100%;
         margin-bottom: 0.5rem;
     }
@@ -741,13 +752,15 @@
     }
     
     .category-item,
-    .bookmark-item {
+    .bookmark-item,
+    .finder-item {
         gap: 0.5rem;
     }
     
     .category-item input,
     .bookmark-item input,
-    .bookmark-item select {
+    .bookmark-item select,
+    .finder-item input {
         margin-bottom: 0.375rem;
     }
     
