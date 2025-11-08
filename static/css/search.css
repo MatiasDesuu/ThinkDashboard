@@ -258,6 +258,11 @@ body.no-animations .search-match.keyboard-selected {
     transform: none !important;
 }
 
+/* Ensure button container remains centered when animations are disabled */
+body.no-animations .button-container {
+    transform: translateX(-50%) !important;
+}
+
 /* Fuzzy search highlight */
 .fuzzy-highlight {
     font-weight: var(--font-weight-bold);
