@@ -740,47 +740,9 @@ func (fs *FileStore) GetSettings() Settings {
 	var settings Settings
 	json.Unmarshal(data, &settings)
 
-	// Check if showPageTabs was present in the JSON, if not, default to true
-	var raw map[string]interface{}
-	json.Unmarshal(data, &raw)
-	if _, exists := raw["showPageTabs"]; !exists {
-		settings.ShowPageTabs = true
-	}
-	if _, exists := raw["showSearchButton"]; !exists {
-		settings.ShowSearchButton = true
-	}
-	if _, exists := raw["showFindersButton"]; !exists {
-		settings.ShowFindersButton = false
-	}
-	if _, exists := raw["includeFindersInSearch"]; !exists {
-		settings.IncludeFindersInSearch = false
-	}
-
-	// Normalize legacy fontSize values (one-time migration)
-	switch settings.FontSize {
-	case "small":
-		settings.FontSize = "sm"
-	case "medium":
-		settings.FontSize = "m"
-	case "large":
-		settings.FontSize = "l"
-	}
-
 	// Set default language if empty
 	if settings.Language == "" {
 		settings.Language = "en"
-	}
-
-	// If we migrated a legacy value, persist it back to disk so clients receive normalized values
-	if dataStr := string(data); dataStr != "" {
-		// If normalization changed the value, save the settings file
-		// (quick compare by marshalling current settings)
-		if b, err := json.MarshalIndent(settings, "", "  "); err == nil {
-			// Only write if content differs
-			if string(b) != dataStr {
-				_ = os.WriteFile(fs.settingsFile, b, 0644)
-			}
-		}
 	}
 
 	return settings
