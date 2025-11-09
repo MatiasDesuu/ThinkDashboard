@@ -70,6 +70,8 @@
     "uploadFontLabel": "Subir fuente:",
     "chooseFile": "Elegir Archivo",
     "showSearchButton": "Mostrar botón de búsqueda",
+    "showFindersButton": "Mostrar botón de buscadores",
+    "showCommandsButton": "Mostrar botón de comandos",
     "interleaveMode": "Cambiar modo de búsqueda",
     "interleaveModeInfoTitle": "Información del modo de búsqueda",
     "interleaveModeInfoMessage": "Habilitado:\n• Presiona cualquier letra para iniciar búsqueda difusa (encontrar bookmarks por nombre)\n• Presiona '/' seguido de letras para usar atajos (ej. /yt para YouTube)\n\nDeshabilitado:\n• Presiona cualquier letra para iniciar búsqueda de atajos\n• Presiona '/' seguido de letras para usar búsqueda difusa",
