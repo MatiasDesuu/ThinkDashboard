@@ -53,12 +53,6 @@ class Dashboard {
         this.renderDashboard();
         this.setupPageShortcuts();
         
-        // Set initial page title
-        const firstPage = this.pages.length > 0 ? this.pages[0] : null;
-        if (firstPage) {
-            this.updatePageTitle(firstPage.name);
-        }
-
         // Add hash change listener for navigation
         window.addEventListener('hashchange', () => {
             const hash = window.location.hash.substring(1);
@@ -605,7 +599,8 @@ class Dashboard {
         // Update the title text if showing
         const titleElement = document.querySelector('.title');
         if (titleElement && this.settings.showTitle) {
-            titleElement.textContent = this.pages.length > 0 ? this.pages[0].name : this.language.t('dashboard.defaultPageTitle');
+            const currentPage = this.pages.find(p => p.id === this.currentPageId);
+            titleElement.textContent = currentPage ? currentPage.name : this.language.t('dashboard.defaultPageTitle');
         }
     }
 
