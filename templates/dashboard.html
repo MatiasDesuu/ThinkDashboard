@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{.Theme}}" data-font-size="{{.FontSize}}" data-show-background-dots="{{.ShowBackgroundDots}}" data-enable-custom-font="{{.EnableCustomFont}}" data-custom-font-path="{{.CustomFontPath}}" data-lang="{{.Language}}">
+<html lang="en" data-theme="{{.Theme}}" data-font-size="{{.FontSize}}" data-show-background-dots="{{.ShowBackgroundDots}}" data-enable-custom-font="{{.EnableCustomFont}}" data-custom-font-path="{{.CustomFontPath}}" data-lang="{{.Language}}" data-show-search-button-text="{{.ShowSearchButtonText}}" data-show-finders-button-text="{{.ShowFindersButtonText}}" data-show-commands-button-text="{{.ShowCommandsButtonText}}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,11 +82,11 @@
     <div class="button-container">
         <button id="commands-button" class="search-button commands-button" aria-label="Open commands">
             <span class="search-button-icon">:</span>
-            <span class="search-button-text">commands</span>
+            <span class="search-button-text" data-i18n="dashboard.commandsButton">commands</span>
         </button>
         <button id="finders-button" class="search-button finders-button" aria-label="Open finders">
             <span class="search-button-icon">?</span>
-            <span class="search-button-text">finders</span>
+            <span class="search-button-text" data-i18n="dashboard.findersButton">finders</span>
         </button>
         <button id="search-button" class="search-button" data-i18n="dashboard.searchAriaLabel" aria-label="Open search">
             <span class="search-button-icon" data-i18n="dashboard.searchPrefix">></span>
