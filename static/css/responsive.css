@@ -5,15 +5,6 @@
     gap: 0.5rem;
 }
 
-.commands-button,
-.finders-button {
-    flex: none;
-}
-
-#search-button {
-    flex: 1;
-}
-
 /* Large Desktop (1200px+) - Default styles already applied */
 
 /* Desktop (992px - 1199px) */
@@ -237,6 +228,18 @@
         width: calc(100% - 2rem);
         justify-content: center;
         bottom: 1rem;
+    }
+    
+    /* Responsive button flex based on text visibility */
+    .search-button,
+    .finders-button,
+    .commands-button {
+        flex: none;
+    }
+    body[data-show-search-button-text="true"] #search-button,
+    body[data-show-finders-button-text="true"] #finders-button,
+    body[data-show-commands-button-text="true"] #commands-button {
+        flex: 1;
     }
     
     /* Header responsive - mobile large */
@@ -467,6 +470,18 @@
         justify-content: center;
     }
     
+    /* Responsive button flex based on text visibility */
+    .search-button,
+    .finders-button,
+    .commands-button {
+        flex: none;
+    }
+    body[data-show-search-button-text="true"] #search-button,
+    body[data-show-finders-button-text="true"] #finders-button,
+    body[data-show-commands-button-text="true"] #commands-button {
+        flex: 1;
+    }
+    
     /* Header responsive - mobile small */
     .dashboard-section,
     .config-section {
@@ -648,6 +663,18 @@
     .button-container {
         width: calc(100% - 2rem);
         justify-content: center;
+    }
+    
+    /* Responsive button flex based on text visibility */
+    .search-button,
+    .finders-button,
+    .commands-button {
+        flex: none;
+    }
+    body[data-show-search-button-text="true"] #search-button,
+    body[data-show-finders-button-text="true"] #finders-button,
+    body[data-show-commands-button-text="true"] #commands-button {
+        flex: 1;
     }
     
     .search-button-icon {

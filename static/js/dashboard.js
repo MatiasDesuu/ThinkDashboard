@@ -53,12 +53,6 @@ class Dashboard {
         this.renderDashboard();
         this.setupPageShortcuts();
         
-        // Set initial page title
-        const firstPage = this.pages.length > 0 ? this.pages[0] : null;
-        if (firstPage) {
-            this.updatePageTitle(firstPage.name);
-        }
-
         // Add hash change listener for navigation
         window.addEventListener('hashchange', () => {
             const hash = window.location.hash.substring(1);
@@ -284,6 +278,9 @@ class Dashboard {
         document.body.setAttribute('data-show-search-button', this.settings.showSearchButton);
         document.body.setAttribute('data-show-finders-button', this.settings.showFindersButton);
         document.body.setAttribute('data-show-commands-button', this.settings.showCommandsButton);
+        document.body.setAttribute('data-show-search-button-text', this.settings.showSearchButtonText);
+        document.body.setAttribute('data-show-finders-button-text', this.settings.showFindersButtonText);
+        document.body.setAttribute('data-show-commands-button-text', this.settings.showCommandsButtonText);
 
         // Apply font size
         this.applyFontSize();
@@ -605,7 +602,8 @@ class Dashboard {
         // Update the title text if showing
         const titleElement = document.querySelector('.title');
         if (titleElement && this.settings.showTitle) {
-            titleElement.textContent = this.pages.length > 0 ? this.pages[0].name : this.language.t('dashboard.defaultPageTitle');
+            const currentPage = this.pages.find(p => p.id === this.currentPageId);
+            titleElement.textContent = currentPage ? currentPage.name : this.language.t('dashboard.defaultPageTitle');
         }
     }
 

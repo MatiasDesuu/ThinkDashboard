@@ -359,6 +359,9 @@ func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
 		ShowSearchButton          bool
 		ShowFindersButton         bool
 		ShowCommandsButton        bool
+		ShowSearchButtonText      bool
+		ShowFindersButtonText     bool
+		ShowCommandsButtonText    bool
 		ShowStatus                bool
 		ShowPing                  bool
 		ShowStatusLoading         bool
@@ -392,6 +395,9 @@ func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
 		ShowSearchButton:          settings.ShowSearchButton,
 		ShowFindersButton:         settings.ShowFindersButton,
 		ShowCommandsButton:        settings.ShowCommandsButton,
+		ShowSearchButtonText:      settings.ShowSearchButtonText,
+		ShowFindersButtonText:     settings.ShowFindersButtonText,
+		ShowCommandsButtonText:    settings.ShowCommandsButtonText,
 		ShowStatus:                settings.ShowStatus,
 		ShowPing:                  settings.ShowPing,
 		ShowStatusLoading:         settings.ShowStatusLoading,

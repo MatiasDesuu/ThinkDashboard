@@ -454,6 +454,33 @@ class ConfigSettings {
             });
         }
 
+        // Show search button text checkbox
+        const showSearchButtonTextCheckbox = document.getElementById('show-search-button-text-checkbox');
+        if (showSearchButtonTextCheckbox) {
+            showSearchButtonTextCheckbox.checked = settings.showSearchButtonText !== false;
+            showSearchButtonTextCheckbox.addEventListener('change', (e) => {
+                settings.showSearchButtonText = e.target.checked;
+            });
+        }
+
+        // Show finders button text checkbox
+        const showFindersButtonTextCheckbox = document.getElementById('show-finders-button-text-checkbox');
+        if (showFindersButtonTextCheckbox) {
+            showFindersButtonTextCheckbox.checked = settings.showFindersButtonText !== false;
+            showFindersButtonTextCheckbox.addEventListener('change', (e) => {
+                settings.showFindersButtonText = e.target.checked;
+            });
+        }
+
+        // Show commands button text checkbox
+        const showCommandsButtonTextCheckbox = document.getElementById('show-commands-button-text-checkbox');
+        if (showCommandsButtonTextCheckbox) {
+            showCommandsButtonTextCheckbox.checked = settings.showCommandsButtonText !== false;
+            showCommandsButtonTextCheckbox.addEventListener('change', (e) => {
+                settings.showCommandsButtonText = e.target.checked;
+            });
+        }
+
         // Include finders in search checkbox
         const includeFindersInSearchCheckbox = document.getElementById('include-finders-in-search-checkbox');
         if (includeFindersInSearchCheckbox) {
@@ -566,6 +593,9 @@ class ConfigSettings {
         const showSearchButtonCheckbox = document.getElementById('show-search-button-checkbox');
         const showFindersButtonCheckbox = document.getElementById('show-finders-button-checkbox');
         const showCommandsButtonCheckbox = document.getElementById('show-commands-button-checkbox');
+        const showSearchButtonTextCheckbox = document.getElementById('show-search-button-text-checkbox');
+        const showFindersButtonTextCheckbox = document.getElementById('show-finders-button-text-checkbox');
+        const showCommandsButtonTextCheckbox = document.getElementById('show-commands-button-text-checkbox');
         const includeFindersInSearchCheckbox = document.getElementById('include-finders-in-search-checkbox');
         const showStatusCheckbox = document.getElementById('show-status-checkbox');
         const showPingCheckbox = document.getElementById('show-ping-checkbox');
@@ -594,6 +624,9 @@ class ConfigSettings {
         if (showSearchButtonCheckbox) settings.showSearchButton = showSearchButtonCheckbox.checked;
         if (showFindersButtonCheckbox) settings.showFindersButton = showFindersButtonCheckbox.checked;
         if (showCommandsButtonCheckbox) settings.showCommandsButton = showCommandsButtonCheckbox.checked;
+        if (showSearchButtonTextCheckbox) settings.showSearchButtonText = showSearchButtonTextCheckbox.checked;
+        if (showFindersButtonTextCheckbox) settings.showFindersButtonText = showFindersButtonTextCheckbox.checked;
+        if (showCommandsButtonTextCheckbox) settings.showCommandsButtonText = showCommandsButtonTextCheckbox.checked;
         if (includeFindersInSearchCheckbox) settings.includeFindersInSearch = includeFindersInSearchCheckbox.checked;
         if (animationsEnabledCheckbox) settings.animationsEnabled = animationsEnabledCheckbox.checked;
         if (showStatusCheckbox) settings.showStatus = showStatusCheckbox.checked;
@@ -830,6 +863,11 @@ class ConfigSettings {
             showDate: true,
             showConfigButton: true,
             showSearchButton: true,
+            showFindersButton: true,
+            showCommandsButton: true,
+            showSearchButtonText: true,
+            showFindersButtonText: true,
+            showCommandsButtonText: true,
             showStatus: false,
             showPing: false,
             globalShortcuts: true,

@@ -238,6 +238,13 @@
     pointer-events: none;
 }
 
+/* Hide button text based on settings */
+body[data-show-search-button-text="false"] #search-button .search-button-text,
+body[data-show-finders-button-text="false"] #finders-button .search-button-text,
+body[data-show-commands-button-text="false"] #commands-button .search-button-text {
+    display: none;
+}
+
 /* Preserve transforms when animations are disabled */
 body.no-animations .search-button {
     transform: none !important;

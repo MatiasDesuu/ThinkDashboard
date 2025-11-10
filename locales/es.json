@@ -6,6 +6,8 @@
     "searchPrefix": ">",
     "searchCursor": "_",
     "searchButton": "buscar",
+    "findersButton": "buscadores",
+    "commandsButton": "comandos",
     "searchAriaLabel": "buscar",
     "defaultPageTitle": "tablero",
     "uncategorized": "Otros",
