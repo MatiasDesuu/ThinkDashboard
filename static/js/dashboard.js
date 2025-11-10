@@ -278,6 +278,9 @@ class Dashboard {
         document.body.setAttribute('data-show-search-button', this.settings.showSearchButton);
         document.body.setAttribute('data-show-finders-button', this.settings.showFindersButton);
         document.body.setAttribute('data-show-commands-button', this.settings.showCommandsButton);
+        document.body.setAttribute('data-show-search-button-text', this.settings.showSearchButtonText);
+        document.body.setAttribute('data-show-finders-button-text', this.settings.showFindersButtonText);
+        document.body.setAttribute('data-show-commands-button-text', this.settings.showCommandsButtonText);
 
         // Apply font size
         this.applyFontSize();
