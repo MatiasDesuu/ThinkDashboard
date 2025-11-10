@@ -6,6 +6,8 @@
     "searchPrefix": ">",
     "searchCursor": "_",
     "searchButton": "Suchen",
+    "findersButton": "Finders",
+    "commandsButton": "Befehle",
     "searchAriaLabel": "Suche",
     "defaultPageTitle": "Dashboard",
     "uncategorized": "Sonstiges",
