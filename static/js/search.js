@@ -199,6 +199,13 @@ class SearchComponent {
             return;
         }
 
+        // Handle > key to open normal search
+        if (key === '>') {
+            e.preventDefault();
+            this.openSearchInterface();
+            return;
+        }
+
         // Handle colon key to start commands
         if (key === ':') {
             e.preventDefault();
