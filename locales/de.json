@@ -72,6 +72,7 @@
     "showSearchButton": "Suchen-Schaltfläche anzeigen",
     "showFindersButton": "Finder-Schaltfläche anzeigen",
     "showCommandsButton": "Befehle-Schaltfläche anzeigen",
+    "showButtonText": "Text neben der Schaltfläche anzeigen",
     "interleaveMode": "Suchmodus umschalten",
     "interleaveModeInfoTitle": "Informationen zum Suchmodus",
     "interleaveModeInfoMessage": "Aktiviert:\n• Beliebigen Buchstaben eingeben, um eine Fuzzy-Suche zu starten (Lesezeichen nach Namen suchen)\n• drücke '/' gefolgt von Buchstaben, um Kürzel zu verwenden (z. B. /yt für YouTube)\n\nDeaktiviert:\n• beliebige Buchstaben eingeben, um Kürzelsuche zu starten\n• '/' eingeben, um die Fuzzy-Suche zu verwenden",

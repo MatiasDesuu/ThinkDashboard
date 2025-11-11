@@ -72,6 +72,7 @@
     "showSearchButton": "Pokaż przycisk wyszukiwania",
     "showFindersButton": "Pokaż przycisk wyszukiwarek",
     "showCommandsButton": "Pokaż przycisk komend",
+    "showButtonText": "Pokaż tekst obok przycisku",
     "interleaveMode": "Przełącz tryb wyszukiwania",
     "interleaveModeInfoTitle": "Informacje o przełączaniu trybu wyszukiwania",
     "interleaveModeInfoMessage": "Włączone:\n• Naciśnij dowolną literę, aby rozpocząć wyszukiwanie rozmyte (znajdź zakładki po nazwie)\n• Naciśnij '/' a następnie litery, aby używać skrótów (np. /yt dla YouTube)\n\nWyłączone:\n• Naciśnij dowolną literę, aby rozpocząć wyszukiwanie skrótów\n• Naciśnij '/' a następnie litery, aby używać wyszukiwania rozmytego",

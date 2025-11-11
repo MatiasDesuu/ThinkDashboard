@@ -72,6 +72,7 @@
     "showSearchButton": "Show search button",
     "showFindersButton": "Show finders button",
     "showCommandsButton": "Show commands button",
+    "showButtonText": "Show text next to the button",
     "interleaveMode": "Switch Search Mode",
     "interleaveModeInfoTitle": "Switch Search Mode Information",
     "interleaveModeInfoMessage": "Enabled:\n• Press any letter to start fuzzy search (find bookmarks by name)\n• Press '/' followed by letters to use shortcuts (e.g., /yt for YouTube)\n\nDisabled:\n• Press any letter to start shortcut search\n• Press '/' followed by letters to use fuzzy search",
