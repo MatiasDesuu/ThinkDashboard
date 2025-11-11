@@ -547,7 +547,7 @@ class SearchComponent {
             // Get the display name based on match type
             let displayName;
             if (match.type === 'fuzzy') {
-                displayName = this.fuzzySearchComponent.highlightFuzzyMatch(match.name, this.currentQuery.slice(1));
+                displayName = this.fuzzySearchComponent.highlightFuzzyMatch(match.name, match.query);
             } else {
                 displayName = (match.type === 'bookmark' || match.type === 'config' || match.type === 'colors') ? match.bookmark.name : match.name;
             }
