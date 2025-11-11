@@ -11,7 +11,8 @@ class ConfigLanguage {
             'en': 'English',
             'es': 'Español',
             'jp': '日本語',
-            'pl': 'Polski'
+            'pl': 'Polski',
+            'de': 'Deutsch'
         };
     }
 
