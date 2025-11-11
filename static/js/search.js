@@ -21,7 +21,7 @@ class SearchComponent {
             this.updateSearch();
         });
 
-        this.findersComponent = new window.SearchFindersComponent(this.language, []);
+        this.findersComponent = new window.SearchFindersComponent(this.language, [], this.settings);
 
         this.fuzzySearchComponent = new window.FuzzySearchComponent(this.bookmarks, (bookmark) => this.openBookmark(bookmark));
 
@@ -46,6 +46,7 @@ class SearchComponent {
         this.commandsComponent.setBookmarks(this.currentBookmarks, this.allBookmarks);
         this.findersComponent.setLanguage(this.language);
         this.findersComponent.setFinders(this.finders);
+        this.findersComponent.setSettings(this.settings);
         this.fuzzySearchComponent.updateBookmarks(this.bookmarks);
         this.interleaveMode = settings.interleaveMode || false;
         this.buildShortcutsMap();

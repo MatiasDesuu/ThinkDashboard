@@ -133,8 +133,9 @@
      * @param {string} theme - The theme to apply ('dark' or 'light')
      * @param {boolean} showBackgroundDots - Whether to show background dots
      * @param {string} fontSize - The font size to apply ('xs', 's', 'sm', 'm', 'lg', 'l', 'xl')
+     * @param {Object} buttonTextSettings - Button text visibility settings
      */
-    function applyTheme(theme, showBackgroundDots = true, fontSize = 'm') {
+    function applyTheme(theme, showBackgroundDots = true, fontSize = 'm', buttonTextSettings = {}) {
         // Remove existing FOUC prevention style if present
         const existingStyle = document.head.querySelector('style[data-fouc-prevention]');
         if (existingStyle) {
@@ -144,6 +145,11 @@
         // Set data-theme on html element
         document.documentElement.setAttribute('data-theme', theme);
         
+        // Set button text attributes on html element immediately
+        document.documentElement.setAttribute('data-show-search-button-text', buttonTextSettings.showSearchButtonText);
+        document.documentElement.setAttribute('data-show-finders-button-text', buttonTextSettings.showFindersButtonText);
+        document.documentElement.setAttribute('data-show-commands-button-text', buttonTextSettings.showCommandsButtonText);
+        
         // Create and inject critical CSS using CSS variables
         const style = document.createElement('style');
         style.setAttribute('data-fouc-prevention', 'true');
@@ -152,11 +158,111 @@
             ? 'background-image: radial-gradient(var(--background-dots) 1px, transparent 1px) !important; background-size: 15px 15px !important;'
             : 'background-image: none !important;';
         
+        // Build responsive button flex rules based on actual settings
+        let searchButtonFlex = '';
+        let findersButtonFlex = '';
+        let commandsButtonFlex = '';
+        
+        if (buttonTextSettings.showSearchButtonText) {
+            searchButtonFlex = `
+                body[data-show-search-button-text="true"] #search-button,
+                html[data-show-search-button-text="true"] #search-button {
+                    flex: 1 !important;
+                }`;
+        }
+        
+        if (buttonTextSettings.showFindersButtonText) {
+            findersButtonFlex = `
+                body[data-show-finders-button-text="true"] #finders-button,
+                html[data-show-finders-button-text="true"] #finders-button {
+                    flex: 1 !important;
+                }`;
+        }
+        
+        if (buttonTextSettings.showCommandsButtonText) {
+            commandsButtonFlex = `
+                body[data-show-commands-button-text="true"] #commands-button,
+                html[data-show-commands-button-text="true"] #commands-button {
+                    flex: 1 !important;
+                }`;
+        }
+        
         style.textContent = `
             body { 
                 background-color: var(--background-primary) !important;
                 color: var(--text-primary) !important;
                 ${backgroundImage}
+            }
+            
+            /* Hide button text based on settings immediately */
+            body[data-show-search-button-text="false"] #search-button .search-button-text,
+            html[data-show-search-button-text="false"] #search-button .search-button-text {
+                display: none !important;
+            }
+            
+            body[data-show-finders-button-text="false"] #finders-button .search-button-text,
+            html[data-show-finders-button-text="false"] #finders-button .search-button-text {
+                display: none !important;
+            }
+            
+            body[data-show-commands-button-text="false"] #commands-button .search-button-text,
+            html[data-show-commands-button-text="false"] #commands-button .search-button-text {
+                display: none !important;
+            }
+            
+            /* Critical responsive styles to prevent FOUC on mobile */
+            @media (max-width: 760px) {
+                .button-container {
+                    width: calc(100% - 2rem) !important;
+                    justify-content: center !important;
+                    gap: 0.5rem !important;
+                }
+                
+                .search-button,
+                .finders-button,
+                .commands-button {
+                    flex: none !important;
+                }
+                ${searchButtonFlex}
+                ${findersButtonFlex}
+                ${commandsButtonFlex}
+                
+                .search-container {
+                    max-width: 320px !important;
+                    width: 95% !important;
+                    padding: 1rem 1.25rem 0.75rem 2rem !important;
+                }
+                
+                .search-button {
+                    bottom: 1.5rem !important;
+                    padding: 0.8rem 1rem !important;
+                }
+            }
+            
+            @media (max-width: 575px) {
+                .search-container {
+                    max-width: 280px !important;
+                    width: 90% !important;
+                    padding: 0.875rem 1rem 0.625rem 2rem !important;
+                }
+                
+                .search-button {
+                    bottom: 1.25rem !important;
+                    padding: 0.8rem 1rem !important;
+                }
+            }
+            
+            @media (max-width: 479px) {
+                .search-container {
+                    max-width: 250px !important;
+                    width: 85% !important;
+                    padding: 0.75rem 0.875rem 0.5rem 2rem !important;
+                }
+                
+                .search-button {
+                    bottom: 1rem !important;
+                    padding: 0.8rem 1rem !important;
+                }
             }
         `;
         
@@ -199,6 +305,13 @@
             // Apply font size class
             document.body.classList.remove('font-size-xs', 'font-size-s', 'font-size-sm', 'font-size-m', 'font-size-lg', 'font-size-l', 'font-size-xl');
             document.body.classList.add(`font-size-${fontSize}`);
+            
+            // Apply button text settings to body
+            if (buttonTextSettings) {
+                document.body.setAttribute('data-show-search-button-text', buttonTextSettings.showSearchButtonText);
+                document.body.setAttribute('data-show-finders-button-text', buttonTextSettings.showFindersButtonText);
+                document.body.setAttribute('data-show-commands-button-text', buttonTextSettings.showCommandsButtonText);
+            }
         }
     }
     
@@ -207,7 +320,7 @@
     const showBackgroundDots = getShowBackgroundDots();
     const fontSize = getFontSize();
     const buttonTextSettings = getButtonTextSettings();
-    applyTheme(theme, showBackgroundDots, fontSize);
+    applyTheme(theme, showBackgroundDots, fontSize, buttonTextSettings);
     
     // Apply button text settings to body to prevent layout shift
     if (document.body) {
