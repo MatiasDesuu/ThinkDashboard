@@ -57,6 +57,9 @@ type Settings struct {
 	ShowSearchButton          bool   `json:"showSearchButton"`
 	ShowFindersButton         bool   `json:"showFindersButton"`
 	ShowCommandsButton        bool   `json:"showCommandsButton"`
+	ShowSearchButtonText      bool   `json:"showSearchButtonText"`
+	ShowFindersButtonText     bool   `json:"showFindersButtonText"`
+	ShowCommandsButtonText    bool   `json:"showCommandsButtonText"`
 	ShowStatus                bool   `json:"showStatus"`
 	ShowPing                  bool   `json:"showPing"`
 	ShowStatusLoading         bool   `json:"showStatusLoading"`
@@ -201,6 +204,9 @@ func (fs *FileStore) initializeDefaultFiles() {
 			ShowSearchButton:          true,
 			ShowFindersButton:         false,
 			ShowCommandsButton:        false,
+			ShowSearchButtonText:      true,
+			ShowFindersButtonText:     true,
+			ShowCommandsButtonText:    true,
 			ShowStatus:                false,
 			ShowPing:                  false,
 			ShowStatusLoading:         false,
@@ -711,6 +717,9 @@ func (fs *FileStore) GetSettings() Settings {
 			ShowSearchButton:          true,
 			ShowFindersButton:         false,
 			ShowCommandsButton:        false,
+			ShowSearchButtonText:      true,
+			ShowFindersButtonText:     true,
+			ShowCommandsButtonText:    true,
 			ShowStatus:                false,
 			ShowPing:                  false,
 			ShowStatusLoading:         false,

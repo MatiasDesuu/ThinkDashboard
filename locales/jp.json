@@ -6,6 +6,8 @@
     "searchPrefix": ">",
     "searchCursor": "_",
     "searchButton": "検索",
+    "findersButton": "ファインダー",
+    "commandsButton": "コマンド",
     "searchAriaLabel": "検索",
     "defaultPageTitle": "ダッシュボード",
     "uncategorized": "その他",

@@ -4,9 +4,10 @@
  */
 
 class SearchFindersComponent {
-    constructor(language = null, finders = []) {
+    constructor(language = null, finders = [], settings = {}) {
         this.language = language;
         this.finders = finders;
+        this.settings = settings;
         this.shortcuts = new Map();
         this.buildShortcutsMap();
     }
@@ -18,6 +19,10 @@ class SearchFindersComponent {
     setFinders(finders) {
         this.finders = finders;
         this.buildShortcutsMap();
+    }
+
+    setSettings(settings) {
+        this.settings = settings;
     }
 
     buildShortcutsMap() {
@@ -113,8 +118,12 @@ class SearchFindersComponent {
             url += encodeURIComponent(processedText);
         }
         
-        // Open in the same tab instead of new tab
-        window.location.href = url;
+        // Open in new tab if setting is enabled, otherwise same tab
+        if (this.settings.openInNewTab) {
+            window.open(url, '_blank');
+        } else {
+            window.location.href = url;
+        }
     }
 }
 

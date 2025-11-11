@@ -6,6 +6,8 @@
     "searchPrefix": ">",
     "searchCursor": "_",
     "searchButton": "szukaj",
+    "findersButton": "wyszukiwarki",
+    "commandsButton": "polecenia",
     "searchAriaLabel": "szukaj",
     "defaultPageTitle": "panel",
     "uncategorized": "Inne",
