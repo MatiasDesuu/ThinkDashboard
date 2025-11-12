@@ -455,14 +455,21 @@ class SearchComponent {
             queryElement.scrollLeft = queryElement.scrollWidth;
             searchElement.classList.add('show');
             
-            // Prevent body scroll
-            this.previousOverflow = document.body.style.overflow;
-            document.body.style.overflow = 'hidden';
-            
-            // Prevent scroll events
-            this.preventScrollHandler = (e) => e.preventDefault();
-            document.body.addEventListener('touchmove', this.preventScrollHandler, { passive: false });
-            document.body.addEventListener('wheel', this.preventScrollHandler, { passive: false });
+            // Prevent body scroll only if not already prevented
+            if (document.body.style.overflow !== 'hidden') {
+                this.previousOverflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+                
+                // Prevent scroll events outside the search modal
+                this.preventScrollHandler = (e) => {
+                    const searchElement = document.getElementById('shortcut-search');
+                    if (searchElement && !searchElement.contains(e.target)) {
+                        e.preventDefault();
+                    }
+                };
+                document.body.addEventListener('touchmove', this.preventScrollHandler, { passive: false });
+                document.body.addEventListener('wheel', this.preventScrollHandler, { passive: false });
+            }
             
             // Focus mobile input to show keyboard
             if (mobileInput) {
@@ -482,13 +489,17 @@ class SearchComponent {
             searchElement.classList.remove('show');
         }
         
-        // Restore body scroll
-        document.body.style.overflow = this.previousOverflow || '';
+        // Restore body scroll only if this component changed it
+        if (this.previousOverflow !== null) {
+            document.body.style.overflow = this.previousOverflow;
+            this.previousOverflow = null;
+        }
         
         // Remove scroll prevention
         if (this.preventScrollHandler) {
             document.body.removeEventListener('touchmove', this.preventScrollHandler);
             document.body.removeEventListener('wheel', this.preventScrollHandler);
+            this.preventScrollHandler = null;
         }
         
         // Blur mobile input to hide keyboard
