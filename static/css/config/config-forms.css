@@ -152,7 +152,7 @@
 
 .checkbox-tree-child .checkbox-label {
     display: inline-flex !important;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .tree-symbol {
@@ -172,6 +172,24 @@
     font-weight: var(--font-weight-normal);
     margin: 0;
     padding: 0;
+}
+
+/* Special layout for checkbox labels with info buttons to keep button with wrapped text */
+.checkbox-label:has(.info-button) {
+    display: block !important;
+}
+
+.checkbox-label:has(.info-button) input[type="checkbox"] {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.checkbox-label:has(.info-button) .checkbox-text {
+    display: inline;
+}
+
+.checkbox-label:has(.info-button) .info-button {
+    display: inline;
 }
 
 /* Override opacity for bookmark status toggle */
@@ -248,6 +266,8 @@
 
 .checkbox-text {
     user-select: none;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* Info button for HyprMode */
