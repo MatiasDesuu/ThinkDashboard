@@ -450,8 +450,9 @@
     }
     
     .search-container {
-        max-width: 280px;
-        width: 90%;
+        max-width: 80%;
+        width: 100%;
+        margin: 0 auto;
         padding: 0.875rem 1rem 0.625rem 2rem;
     }
     
@@ -637,8 +638,9 @@
     }
     
     .search-container {
-        max-width: 250px;
-        width: 85%;
+        max-width: 80%;
+        width: 100%;
+        margin: 0 auto;
         padding: 0.75rem 0.875rem 0.5rem 2rem;
     }
     

@@ -241,8 +241,9 @@
             
             @media (max-width: 575px) {
                 .search-container {
-                    max-width: 280px !important;
-                    width: 90% !important;
+                    max-width: 80% !important;
+                    width: 100% !important;
+                    margin: 0 auto !important;
                     padding: 0.875rem 1rem 0.625rem 2rem !important;
                 }
                 
@@ -254,8 +255,9 @@
             
             @media (max-width: 479px) {
                 .search-container {
-                    max-width: 250px !important;
-                    width: 85% !important;
+                    max-width: 80% !important;
+                    width: 100% !important;
+                    margin: 0 auto !important;
                     padding: 0.75rem 0.875rem 0.5rem 2rem !important;
                 }
                 

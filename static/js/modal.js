@@ -108,6 +108,11 @@ class Modal {
         this.previousOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
         
+        // Prevent scroll events
+        this.preventScrollHandler = (e) => e.preventDefault();
+        document.body.addEventListener('touchmove', this.preventScrollHandler, { passive: false });
+        document.body.addEventListener('wheel', this.preventScrollHandler, { passive: false });
+        
         // Focus on confirm button for keyboard navigation
         setTimeout(() => {
             confirmButton.focus();
@@ -120,6 +125,12 @@ class Modal {
         }
         // Restore body scroll
         document.body.style.overflow = this.previousOverflow || '';
+        
+        // Remove scroll prevention
+        if (this.preventScrollHandler) {
+            document.body.removeEventListener('touchmove', this.preventScrollHandler);
+            document.body.removeEventListener('wheel', this.preventScrollHandler);
+        }
     }
 
     // Convenience methods for common modal types
