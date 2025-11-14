@@ -1,0 +1,39 @@
+{
+  "name": "thinkdashboard-mcp",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for ThinkDashboard - allows LLM assistants to interact with the dashboard through structured tool calls.",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "thinkdashboard-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "prepare": "npm run build || true"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "thinkdashboard",
+    "bookmarks",
+    "llm",
+    "claude",
+    "AI",
+    "assistant",
+    "automation",
+    "dashboard"
+  ],
+  "author": "Alejandro Z.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alebcj/ThinkDashboard"
+  },
+  "homepage": "https://github.com/alebcj/ThinkDashboard/tree/feature/mcp-integration",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
