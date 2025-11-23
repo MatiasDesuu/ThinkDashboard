@@ -118,12 +118,19 @@ class SearchFindersComponent {
             url += encodeURIComponent(processedText);
         }
         
-        // Open in new tab if setting is enabled, otherwise same tab
+        // Create a link element to open the URL with rel attributes to prevent Referer leakage
+        const link = document.createElement('a');
+        link.href = url;
+        link.style.display = 'none'; // Hide the link
         if (this.settings.openInNewTab) {
-            window.open(url, '_blank');
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
         } else {
-            window.location.href = url;
+            link.rel = 'noreferrer';
         }
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 }
 

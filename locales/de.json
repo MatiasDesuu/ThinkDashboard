@@ -202,10 +202,10 @@
     "findersUrlFormat": "URL-Format: Verwende <code>%s</code> in der URL, wo du den Suchbegriff einfügen möchtest, oder lasse ihn weg, um den Suchbegriff an das Ende der URL anzuhängen. Beispiele: <code>https://google.com/search?q=%s</code>, <code>https://youtube.com/search?q=%s</code>, <code>https://github.com/search?q=%s</code>, <code>https://store.steampowered.com/search?term=%s</code>.",
     "dataStorage": "Datenspeicherung: Alle Daten liegen im Verzeichnis <code>/data</code>. Dazu gehören Einstellungen, Seiten, Farben, Favicons, Fonts und Lesezeichen-Dateien.",
     "deviceSpecificSettings": "Gerätespezifische Einstellungen: Wenn aktiviert, werden deine Einstellungen lokal im Browser gespeichert und nicht zwischen Geräten synchronisiert.",
-    "feedback": "Fehler gefunden oder Feedback? Besuche das <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>GitHub-Repository</code></a>.",
+    "feedback": "Fehler gefunden oder Feedback? Besuche das <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\" rel=\"noopener noreferrer\"><code>GitHub-Repository</code></a>.",
     "chromeExtension": "Chrome-Erweiterung",
     "extensionIntro": "ThinkDashboard bietet eine Chrome-Erweiterung zum schnellen Hinzufügen von Lesezeichen direkt aus Webseiten.",
-    "extensionInstall": "Installation: Klone das <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>GitHub-Repository</code></a> oder lade die ZIP-Version herunter. Öffne <code>chrome://extensions/</code>, aktiviere „Entwicklermodus“ und lade den Ordner <code>extension</code>.",
+    "extensionInstall": "Installation: Klone das <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\" rel=\"noopener noreferrer\"><code>GitHub-Repository</code></a> oder lade die ZIP-Version herunter. Öffne <code>chrome://extensions/</code>, aktiviere „Entwicklermodus“ und lade den Ordner <code>extension</code>.",
     "extensionConfig": "Konfiguration: Öffne die Erweiterung, gehe in die Einstellungen und gib die ThinkDashboard-URL sowie Standardseite und Kategorie an.",
     "extensionUsage": "Verwendung: Klicke auf das Symbol, passe bei Bedarf Name, URL, Seite oder Kategorie an und speichere das Lesezeichen."
 },

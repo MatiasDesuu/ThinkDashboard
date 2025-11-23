@@ -202,10 +202,10 @@
     "commands": "コマンド: <code>:</code> に続けてコマンドを入力してアプリを制御します。利用可能なコマンドには <code>theme</code> (テーマ切り替え)、<code>columns</code> (列変更)、<code>fontsize</code> (フォントサイズ変更) などがあります。さらに追加予定です。",
     "dataStorage": "データストレージ: すべてのアプリデータは <code>/data</code> ディレクトリに保存されます。これには settings (ダッシュボード設定)、pages (ページ順序)、colors (カスタムテーマ) の JSON ファイル、アップロードされた favicon、フォント、個別のブックマークページ (bookmarks-1.json、bookmarks-2.json など) が含まれます。",
     "deviceSpecificSettings": "デバイス固有設定: 有効にすると、ダッシュボード設定はサーバーではなくブラウザにローカルに保存されます。つまり、設定はこのデバイス/ブラウザに固有であり、異なるデバイス間で同期されません。",
-    "feedback": "バグを見つけたか、フィードバックがありますか？ <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>GitHub リポジトリ</code></a> にアクセスして問題を報告したり改善を提案したりしてください。",
+    "feedback": "バグを見つけたか、フィードバックがありますか？ <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\" rel=\"noopener noreferrer\"><code>GitHub リポジトリ</code></a> にアクセスして問題を報告したり改善を提案したりしてください。",
     "chromeExtension": "Chrome 拡張機能",
     "extensionIntro": "ThinkDashboard には、任意のウェブページからダッシュボードに直接ブックマークを素早く追加できる Chrome 拡張機能が含まれています。",
-    "extensionInstall": "拡張機能をインストールするには: <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\"><code>GitHub リポジトリ</code></a> をローカルマシンにクローンするか、最新バージョンを <a href=\"https://github.com/MatiasDesuu/ThinkDashboard/archive/refs/heads/main.zip\" target=\"_blank\"><code>ここ</code></a> からダウンロードします。次に、Chrome の拡張機能設定 (chrome://extensions/) に移動し、「開発者モード」を有効にして、「パッケージ化されていない拡張機能を読み込む」をクリックします。クローンまたはダウンロードしたリポジトリから <code>extension</code> フォルダを選択します。",
+    "extensionInstall": "拡張機能をインストールするには: <a href=\"https://github.com/MatiasDesuu/ThinkDashboard\" target=\"_blank\" rel=\"noopener noreferrer\"><code>GitHub リポジトリ</code></a> をローカルマシンにクローンするか、最新バージョンを <a href=\"https://github.com/MatiasDesuu/ThinkDashboard/archive/refs/heads/main.zip\" target=\"_blank\" rel=\"noopener noreferrer\"><code>ここ</code></a> からダウンロードします。次に、Chrome の拡張機能設定 (chrome://extensions/) に移動し、「開発者モード」を有効にして、「パッケージ化されていない拡張機能を読み込む」をクリックします。クローンまたはダウンロードしたリポジトリから <code>extension</code> フォルダを選択します。",
     "extensionConfig": "設定: インストール後、拡張機能を開き、Settings タブに移動します。ThinkDashboard の URL を入力し、ブックマークが保存される Default Page を設定し、そのページ内のカテゴリを選択します。",
     "extensionUsage": "使用方法: 拡張機能アイコンをクリックし、オプションで名前、URL、ページ、カテゴリを変更してから、Save Bookmark をクリックします。"
 },
