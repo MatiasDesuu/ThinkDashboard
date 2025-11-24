@@ -78,6 +78,7 @@ type Settings struct {
 	Language                  string `json:"language"`                  // Language code, e.g., "en" or "es"
 	InterleaveMode            bool   `json:"interleaveMode"`            // Interleave mode for search (/ for shortcuts, direct input for fuzzy)
 	ShowPageTabs              bool   `json:"showPageTabs"`              // Show page navigation tabs
+	AlwaysCollapseCategories  bool   `json:"alwaysCollapseCategories"`  // Always collapse categories on load
 	EnableFuzzySuggestions    bool   `json:"enableFuzzySuggestions"`    // Enable fuzzy suggestions in shortcut search
 	FuzzySuggestionsStartWith bool   `json:"fuzzySuggestionsStartWith"` // Fuzzy suggestions start with query instead of contains
 	KeepSearchOpenWhenEmpty   bool   `json:"keepSearchOpenWhenEmpty"`   // Keep search interface open when query is empty
@@ -225,6 +226,7 @@ func (fs *FileStore) initializeDefaultFiles() {
 			Language:                  "en",
 			InterleaveMode:            false,
 			ShowPageTabs:              true,
+			AlwaysCollapseCategories:  false,
 			EnableFuzzySuggestions:    false,
 			FuzzySuggestionsStartWith: false,
 			KeepSearchOpenWhenEmpty:   false,
@@ -738,6 +740,7 @@ func (fs *FileStore) GetSettings() Settings {
 			Language:                  "en",
 			InterleaveMode:            false,
 			ShowPageTabs:              true,
+			AlwaysCollapseCategories:  false,
 			EnableFuzzySuggestions:    false,
 			FuzzySuggestionsStartWith: false,
 			KeepSearchOpenWhenEmpty:   false,

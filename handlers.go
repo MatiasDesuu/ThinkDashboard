@@ -385,6 +385,7 @@ func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
 		KeepSearchOpenWhenEmpty   bool
 		ShowIcons                 bool
 		IncludeFindersInSearch    bool
+		AlwaysCollapseCategories  bool
 	}{
 		Theme:                     settings.Theme,
 		FontSize:                  settings.FontSize,
@@ -421,6 +422,7 @@ func (h *Handlers) Colors(w http.ResponseWriter, r *http.Request) {
 		KeepSearchOpenWhenEmpty:   settings.KeepSearchOpenWhenEmpty,
 		ShowIcons:                 settings.ShowIcons,
 		IncludeFindersInSearch:    settings.IncludeFindersInSearch,
+		AlwaysCollapseCategories:  settings.AlwaysCollapseCategories,
 	}
 
 	var buf bytes.Buffer

@@ -427,6 +427,15 @@ class ConfigSettings {
             });
         }
 
+        // Always collapse categories checkbox
+        const alwaysCollapseCategoriesCheckbox = document.getElementById('always-collapse-categories-checkbox');
+        if (alwaysCollapseCategoriesCheckbox) {
+            alwaysCollapseCategoriesCheckbox.checked = settings.alwaysCollapseCategories;
+            alwaysCollapseCategoriesCheckbox.addEventListener('change', (e) => {
+                settings.alwaysCollapseCategories = e.target.checked;
+            });
+        }
+
         // Show search button checkbox
         const showSearchButtonCheckbox = document.getElementById('show-search-button-checkbox');
         if (showSearchButtonCheckbox) {
@@ -640,6 +649,8 @@ class ConfigSettings {
         if (showPageNamesInTabsCheckbox) settings.showPageNamesInTabs = showPageNamesInTabsCheckbox.checked;
         const showPageTabsCheckbox = document.getElementById('show-page-tabs-checkbox');
         if (showPageTabsCheckbox) settings.showPageTabs = showPageTabsCheckbox.checked;
+        const alwaysCollapseCategoriesCheckbox = document.getElementById('always-collapse-categories-checkbox');
+        if (alwaysCollapseCategoriesCheckbox) settings.alwaysCollapseCategories = alwaysCollapseCategoriesCheckbox.checked;
         if (enableCustomFaviconCheckbox) settings.enableCustomFavicon = enableCustomFaviconCheckbox.checked;
         if (languageSelect) settings.language = languageSelect.value;
         if (interleaveModeCheckbox) settings.interleaveMode = interleaveModeCheckbox.checked;
@@ -881,7 +892,8 @@ class ConfigSettings {
             customFaviconPath: '',
             language: 'en',
             interleaveMode: false,
-            showPageTabs: true
+            showPageTabs: true,
+            alwaysCollapseCategories: false
         };
     }
 

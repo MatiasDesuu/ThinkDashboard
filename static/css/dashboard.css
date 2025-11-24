@@ -214,6 +214,15 @@ body {
     content: '// ';
 }
 
+.category[data-collapsed="true"] .bookmarks-list {
+    display: none;
+}
+
+.category-title {
+    cursor: pointer;
+    user-select: none;
+}
+
 /* Bookmarks */
 .bookmarks-list {
     display: flex;

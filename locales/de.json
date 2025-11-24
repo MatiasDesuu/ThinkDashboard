@@ -62,6 +62,7 @@
     "showConfigButton": "Konfigurationsschaltfläche anzeigen",
     "showPageNamesInTabs": "Seitennamen in Tabs anzeigen",
     "showPageTabs": "Seitentabs anzeigen",
+    "alwaysCollapseCategories": "Kategorien immer einklappen",
     "dashboardSection": "Dashboard",
     "advancedSection": "Erweitert",
     "enableCustomFavicon": "Eigenes Favicon aktivieren",

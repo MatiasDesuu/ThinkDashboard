@@ -5,6 +5,7 @@ class Dashboard {
         this.allBookmarks = []; // For global shortcuts
         this.finders = [];
         this.categories = [];
+        this.collapsedCategories = {};
         this.pages = [];
         this.currentPageId = 'default';
         this.settings = {
@@ -42,6 +43,7 @@ class Dashboard {
 
     async init() {
         await this.loadData();
+        this.loadCollapsedStates();
         await this.language.init(this.settings.language);
         this.setupDOM();
         this.initializeSearchComponent();
@@ -118,6 +120,17 @@ class Dashboard {
         } catch (error) {
             console.error('Error loading data:', error);
         }
+    }
+
+    loadCollapsedStates() {
+        const stored = localStorage.getItem('collapsedCategories');
+        if (stored) {
+            this.collapsedCategories = JSON.parse(stored);
+        }
+    }
+
+    saveCollapsedStates() {
+        localStorage.setItem('collapsedCategories', JSON.stringify(this.collapsedCategories));
     }
 
     async loadPageBookmarks(pageId) {
@@ -526,11 +539,19 @@ class Dashboard {
     createCategoryElement(category, bookmarks) {
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'category';
+        const isCollapsed = this.settings.alwaysCollapseCategories ? true : (this.collapsedCategories[category.id] || false);
+        categoryDiv.setAttribute('data-collapsed', isCollapsed ? 'true' : 'false');
 
         // Category title
         const titleElement = document.createElement('h2');
         titleElement.className = 'category-title';
         titleElement.textContent = category.name.toLowerCase();
+        titleElement.addEventListener('click', () => {
+            const isCollapsed = categoryDiv.getAttribute('data-collapsed') === 'true';
+            categoryDiv.setAttribute('data-collapsed', isCollapsed ? 'false' : 'true');
+            this.collapsedCategories[category.id] = !isCollapsed;
+            this.saveCollapsedStates();
+        });
         categoryDiv.appendChild(titleElement);
 
         // Bookmarks list

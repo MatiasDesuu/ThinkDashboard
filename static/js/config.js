@@ -666,6 +666,7 @@ class ConfigManager {
         document.getElementById('include-finders-in-search-checkbox').checked = this.settingsData.includeFindersInSearch;
         document.getElementById('interleave-mode-checkbox').checked = false;
         document.getElementById('show-page-tabs-checkbox').checked = this.settingsData.showPageTabs;
+        document.getElementById('always-collapse-categories-checkbox').checked = this.settingsData.alwaysCollapseCategories;
 
         this.setupDOM();
         this.renderConfig();

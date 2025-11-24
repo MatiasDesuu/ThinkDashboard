@@ -62,6 +62,7 @@
     "showConfigButton": "Show config button",
     "showPageNamesInTabs": "Show page names in tabs",
     "showPageTabs": "Show page tabs",
+    "alwaysCollapseCategories": "Always collapse categories",
     "dashboardSection": "Dashboard",
     "advancedSection": "General",
     "enableCustomFavicon": "Enable custom favicon",

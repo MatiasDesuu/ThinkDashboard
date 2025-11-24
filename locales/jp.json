@@ -62,6 +62,7 @@
     "showConfigButton": "設定ボタンを表示",
     "showPageNamesInTabs": "タブにページ名を表示",
     "showPageTabs": "ページタブを表示",
+    "alwaysCollapseCategories": "カテゴリを常に折りたたむ",
     "dashboardSection": "ダッシュボード",
     "advancedSection": "一般",
     "enableCustomFavicon": "カスタムファビコンを有効にする",
