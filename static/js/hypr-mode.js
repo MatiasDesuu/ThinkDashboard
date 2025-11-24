@@ -46,8 +46,15 @@ class HyprMode {
             return false; // Let normal behavior handle it
         }
 
-        // Open the URL in a new tab
-        window.open(url, '_blank', 'noopener,noreferrer');
+        // Create a link element to open the URL with rel attributes to prevent Referer leakage
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.style.display = 'none'; // Hide the link
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         
         // Try multiple strategies to close the window
         setTimeout(() => {
