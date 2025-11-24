@@ -716,10 +716,20 @@ class SearchComponent {
             // Check if HyprMode is enabled
             if (window.hyprMode && window.hyprMode.isEnabled()) {
                 window.hyprMode.handleBookmarkClick(bookmark.url);
-            } else if (this.settings.openInNewTab) {
-                window.open(bookmark.url, '_blank', 'noopener,noreferrer');
             } else {
-                window.location.href = bookmark.url;
+                // Create a link element to open the URL with rel attributes to prevent Referer leakage
+                const link = document.createElement('a');
+                link.href = bookmark.url;
+                link.style.display = 'none'; // Hide the link
+                if (this.settings.openInNewTab) {
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                } else {
+                    link.rel = 'noreferrer';
+                }
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
         }, 100);
     }
