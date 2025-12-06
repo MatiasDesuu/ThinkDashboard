@@ -12,7 +12,9 @@ class ConfigLanguage {
             'es': 'Español',
             'jp': '日本語',
             'pl': 'Polski',
-            'de': 'Deutsch'
+            'de': 'Deutsch',
+            'nl': 'Dutch',
+
         };
     }
 
