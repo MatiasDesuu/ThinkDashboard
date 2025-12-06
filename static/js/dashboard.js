@@ -552,20 +552,6 @@ class Dashboard {
             this.collapsedCategories[category.id] = !isCollapsed;
             this.saveCollapsedStates();
         });
-        
-        // Middle-click to open all bookmarks in new tabs
-        titleElement.addEventListener('mousedown', (e) => {
-            if (e.button === 1) { // Middle mouse button
-                e.preventDefault();
-                this.openAllCategoryBookmarks(bookmarks);
-            }
-        });
-        // Prevent default middle-click behavior (auto-scroll)
-        titleElement.addEventListener('auxclick', (e) => {
-            if (e.button === 1) {
-                e.preventDefault();
-            }
-        });
         categoryDiv.appendChild(titleElement);
 
         // Bookmarks list
@@ -742,15 +728,6 @@ class Dashboard {
                 dateElement.remove();
             }
         }
-    }
-
-    openAllCategoryBookmarks(bookmarks) {
-        // Open all bookmarks in the category in new tabs
-        bookmarks.forEach(bookmark => {
-            if (bookmark.url) {
-                window.open(bookmark.url, '_blank', 'noopener,noreferrer');
-            }
-        });
     }
 }
 
