@@ -9,6 +9,7 @@ class ConfigLanguage {
         this.translations = {};
         this.availableLanguages = {
             'en': 'English',
+            'ru': 'Русский',
             'es': 'Español',
             'jp': '日本語',
             'pl': 'Polski',
